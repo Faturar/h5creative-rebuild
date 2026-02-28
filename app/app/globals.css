@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@keyframes slide {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slideToR {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@layer base {
+  .pause-animate {
+    animation-play-state: paused;
+  }
+
+  .animate-slide-left {
+    animation: slide 50s linear infinite;
+  }
+
+  .animate-slide-right {
+    animation: slideToR 50s linear infinite;
+  }
+
+  .slider-hover-pause:hover .pause-animate {
+    animation-play-state: paused;
+  }
+
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 300ms ease-in-out;
+  }
+}
