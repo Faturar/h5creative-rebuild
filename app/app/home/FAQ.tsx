@@ -21,7 +21,7 @@ export default function FAQ() {
           </div>
           <a
             href="#"
-            className="bg-portto-black font-bold text-lg text-white rounded-full p-[14px_30px] w-fit transition-all duration-300 hover:bg-white hover:text-portto-black hover:ring hover:ring-portto-black"
+            className="bg-[#0B0B1B] font-bold text-lg text-white rounded-full p-[14px_30px] w-fit transition-all duration-300 hover:bg-white hover:text-[#0B0B1B] hover:ring hover:ring-[#0B0B1B]"
           >
             Contact Me
           </a>

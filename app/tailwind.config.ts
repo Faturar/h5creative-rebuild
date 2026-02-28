@@ -37,9 +37,6 @@ const config: Config = {
           "100%": { transform: "translateY(0%)" },
         },
       },
-      // backgroundImage: {
-      //   background1: "url('/assets/images/background/background1.png')",
-      // },
     },
   },
   plugins: [],

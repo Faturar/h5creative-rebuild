@@ -9,7 +9,7 @@ export default function Projects() {
   return (
     <section
       id="Projects"
-      className="w-full flex flex-col py-[100px] bg-background1 bg-cover bg-center bg-no-repeat"
+      className="w-full flex flex-col py-[100px] bg-[url('/assets/images/background/background1.png')] bg-cover bg-center bg-no-repeat"
     >
       <div className="flex flex-col gap-[10px] mb-[50px]">
         <h2 className="font-extrabold text-[50px] leading-[70px] text-center text-white">
@@ -30,7 +30,7 @@ export default function Projects() {
                   alt="thumbnail"
                 />
               </div>
-              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-portto-black rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
+              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-[#0B0B1B] rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="text-center z-10">
                   <p className="font-extrabold text-[32px] leading-[48px] mb-[10px] text-white">
                     AI Finance SaaS <br />
@@ -40,7 +40,7 @@ export default function Projects() {
                 </div>
                 <a
                   href="#"
-                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-portto-light-gold rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-[#FFE7C2] rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
                 >
                   View Details
                 </a>
@@ -59,7 +59,7 @@ export default function Projects() {
                   alt="thumbnail"
                 />
               </div>
-              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-portto-black rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
+              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-[#0B0B1B] rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="text-center z-10">
                   <p className="font-extrabold text-[32px] leading-[48px] mb-[10px] text-white">
                     AI Finance SaaS <br />
@@ -69,7 +69,7 @@ export default function Projects() {
                 </div>
                 <a
                   href="#"
-                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-portto-light-gold rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-[#FFE7C2] rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
                 >
                   View Details
                 </a>
@@ -88,7 +88,7 @@ export default function Projects() {
                   alt="thumbnail"
                 />
               </div>
-              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-portto-black rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
+              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-[#0B0B1B] rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="text-center z-10">
                   <p className="font-extrabold text-[32px] leading-[48px] mb-[10px] text-white">
                     AI Finance SaaS <br />
@@ -98,7 +98,7 @@ export default function Projects() {
                 </div>
                 <a
                   href="#"
-                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-portto-light-gold rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-[#FFE7C2] rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
                 >
                   View Details
                 </a>
@@ -119,7 +119,7 @@ export default function Projects() {
                   alt="thumbnail"
                 />
               </div>
-              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-portto-black rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
+              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-[#0B0B1B] rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="text-center z-10">
                   <p className="font-extrabold text-[32px] leading-[48px] mb-[10px] text-white">
                     AI Finance SaaS <br />
@@ -129,7 +129,7 @@ export default function Projects() {
                 </div>
                 <a
                   href="#"
-                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-portto-light-gold rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-[#FFE7C2] rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
                 >
                   View Details
                 </a>
@@ -148,7 +148,7 @@ export default function Projects() {
                   alt="thumbnail"
                 />
               </div>
-              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-portto-black rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
+              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-[#0B0B1B] rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="text-center z-10">
                   <p className="font-extrabold text-[32px] leading-[48px] mb-[10px] text-white">
                     AI Finance SaaS <br />
@@ -158,7 +158,7 @@ export default function Projects() {
                 </div>
                 <a
                   href="#"
-                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-portto-light-gold rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-[#FFE7C2] rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
                 >
                   View Details
                 </a>
@@ -177,7 +177,7 @@ export default function Projects() {
                   alt="thumbnail"
                 />
               </div>
-              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-portto-black rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
+              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-[#0B0B1B] rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="text-center z-10">
                   <p className="font-extrabold text-[32px] leading-[48px] mb-[10px] text-white">
                     AI Finance SaaS <br />
@@ -187,7 +187,7 @@ export default function Projects() {
                 </div>
                 <a
                   href="#"
-                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-portto-light-gold rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-[#FFE7C2] rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
                 >
                   View Details
                 </a>
@@ -212,7 +212,7 @@ export default function Projects() {
                   alt="thumbnail"
                 />
               </div>
-              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-portto-black rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
+              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-[#0B0B1B] rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="text-center z-10">
                   <p className="font-extrabold text-[32px] leading-[48px] mb-[10px] text-white">
                     AI Finance SaaS <br />
@@ -222,7 +222,7 @@ export default function Projects() {
                 </div>
                 <a
                   href="#"
-                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-portto-light-gold rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-[#FFE7C2] rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
                 >
                   View Details
                 </a>
@@ -241,7 +241,7 @@ export default function Projects() {
                   alt="thumbnail"
                 />
               </div>
-              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-portto-black rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
+              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-[#0B0B1B] rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="text-center z-10">
                   <p className="font-extrabold text-[32px] leading-[48px] mb-[10px] text-white">
                     AI Finance SaaS <br />
@@ -251,7 +251,7 @@ export default function Projects() {
                 </div>
                 <a
                   href="#"
-                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-portto-light-gold rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-[#FFE7C2] rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
                 >
                   View Details
                 </a>
@@ -270,7 +270,7 @@ export default function Projects() {
                   alt="thumbnail"
                 />
               </div>
-              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-portto-black rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
+              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-[#0B0B1B] rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="text-center z-10">
                   <p className="font-extrabold text-[32px] leading-[48px] mb-[10px] text-white">
                     AI Finance SaaS <br />
@@ -280,7 +280,7 @@ export default function Projects() {
                 </div>
                 <a
                   href="#"
-                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-portto-light-gold rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-[#FFE7C2] rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
                 >
                   View Details
                 </a>
@@ -301,7 +301,7 @@ export default function Projects() {
                   alt="thumbnail"
                 />
               </div>
-              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-portto-black rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
+              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-[#0B0B1B] rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="text-center z-10">
                   <p className="font-extrabold text-[32px] leading-[48px] mb-[10px] text-white">
                     AI Finance SaaS <br />
@@ -311,7 +311,7 @@ export default function Projects() {
                 </div>
                 <a
                   href="#"
-                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-portto-light-gold rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-[#FFE7C2] rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
                 >
                   View Details
                 </a>
@@ -330,7 +330,7 @@ export default function Projects() {
                   alt="thumbnail"
                 />
               </div>
-              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-portto-black rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
+              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-[#0B0B1B] rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="text-center z-10">
                   <p className="font-extrabold text-[32px] leading-[48px] mb-[10px] text-white">
                     AI Finance SaaS <br />
@@ -340,7 +340,7 @@ export default function Projects() {
                 </div>
                 <a
                   href="#"
-                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-portto-light-gold rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-[#FFE7C2] rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
                 >
                   View Details
                 </a>
@@ -359,7 +359,7 @@ export default function Projects() {
                   alt="thumbnail"
                 />
               </div>
-              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-portto-black rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
+              <div className="flex flex-col w-full items-center justify-center gap-[50px] bg-[#0B0B1B] rounded-[30px] relative opacity-0 hover:opacity-100 transition-all duration-300">
                 <div className="text-center z-10">
                   <p className="font-extrabold text-[32px] leading-[48px] mb-[10px] text-white">
                     AI Finance SaaS <br />
@@ -369,7 +369,7 @@ export default function Projects() {
                 </div>
                 <a
                   href="#"
-                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-portto-light-gold rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+                  className="z-10 font-bold text-lg text-center w-fit h-fit bg-[#FFE7C2] rounded-full p-[14px_30px] transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
                 >
                   View Details
                 </a>

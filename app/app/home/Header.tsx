@@ -12,7 +12,7 @@ export default function Header() {
   return (
     <section
       id="Header"
-      className="flex flex-col gap-[100px] bg-portto-black relative"
+      className="flex flex-col gap-[100px] bg-[#0B0B1B] relative"
     >
       <nav className="container max-w-[1130px] mx-auto flex justify-between items-center pt-[30px] z-10">
         <a href="#" className="w-[161px] flex shrink-0 h-fit w-fit">
@@ -23,7 +23,7 @@ export default function Header() {
             <li>
               <a
                 href="#"
-                className="font-medium text-lg hover:text-portto-light-gold transition-all duration-300"
+                className="font-medium text-lg hover:text-[#FFE7C2] transition-all duration-300"
               >
                 Home
               </a>
@@ -31,7 +31,7 @@ export default function Header() {
             <li>
               <a
                 href="#"
-                className="font-medium text-lg hover:text-portto-light-gold transition-all duration-300"
+                className="font-medium text-lg hover:text-[#FFE7C2] transition-all duration-300"
               >
                 Services
               </a>
@@ -39,7 +39,7 @@ export default function Header() {
             <li>
               <a
                 href="#"
-                className="font-medium text-lg hover:text-portto-light-gold transition-all duration-300"
+                className="font-medium text-lg hover:text-[#FFE7C2] transition-all duration-300"
               >
                 Testimonials
               </a>
@@ -47,7 +47,7 @@ export default function Header() {
             <li>
               <a
                 href="#"
-                className="font-medium text-lg hover:text-portto-light-gold transition-all duration-300"
+                className="font-medium text-lg hover:text-[#FFE7C2] transition-all duration-300"
               >
                 Pricing
               </a>
@@ -55,28 +55,28 @@ export default function Header() {
             <li>
               <a
                 href="#"
-                className="font-medium text-lg hover:text-portto-light-gold transition-all duration-300"
+                className="font-medium text-lg hover:text-[#FFE7C2] transition-all duration-300"
               >
                 About
               </a>
             </li>
           </ul>
-          <button className="bg-portto-light-gold font-bold text-lg p-[14px_30px] rounded-full transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]">
+          <button className="bg-[#FFE7C2] font-bold text-lg p-[14px_30px] rounded-full transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]">
             Hire Me
           </button>
         </div>
       </nav>
-      <div className="hero container max-w-[1130px] mx-auto flex justify-between items-center relative">
-        <div className="flex flex-col gap-[50px] h-fit w-fit text-white z-10">
+      <div className="hero container max-w-282.5 mx-auto flex justify-between items-center relative">
+        <div className="flex flex-col gap-12.5 h-fit w-fit text-white z-10">
           <p className="font-semibold text-2xl">I'm Shayna 👋</p>
-          <h1 className="font-extrabold text-[80px] leading-[90px]">
+          <h1 className="font-extrabold text-[80px] leading-22.5">
             Professional Designer & Dev
           </h1>
-          <button className="font-bold text-[26px] leading-[39px] rounded-[30px] p-[30px_40px] bg-portto-purple w-fit transition-all duration-300 hover:shadow-[0_10px_20px_0_#4920E5]">
+          <button className="font-bold text-[26px] leading-9.75 rounded-[30px] p-[30px_40px] bg-[#4920E5] w-fit transition-all duration-300 hover:shadow-[0_10px_20px_0_#4920E5]">
             Explore Now
           </button>
         </div>
-        <div className="flex max-w-[471px] max-h-[567px] z-10">
+        <div className="flex max-w-117.75 max-h-141.75 z-10">
           <Image
             src={heroImage}
             className="w-full h-full object-contain"
@@ -89,59 +89,59 @@ export default function Header() {
           alt="background icon"
         />
       </div>
-      <div className="company-logos w-full overflow-hidden pb-[190px]">
+      <div className="company-logos w-full overflow-hidden pb-47.5">
         <div className="group/slider flex flex-nowrap w-max items-center">
-          <div className="logo-container animate-[slide_25s_linear_infinite] group-hover/slider:pause-animate flex gap-[70px] pl-[70px] items-center flex-nowrap">
-            <div className="flex w-fit h-[40px] shrink-0">
+          <div className="logo-container animate-[slide_25s_linear_infinite] group-hover/slider:pause-animate flex gap-17.5 pl-17.5 items-center flex-nowrap">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo1}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo2}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo3}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo4}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo1}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo2}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo3}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo4}
                 className="w-full h-full object-contain"
@@ -149,57 +149,57 @@ export default function Header() {
               />
             </div>
           </div>
-          <div className="logo-container animate-[slide_25s_linear_infinite] group-hover/slider:pause-animate flex gap-[70px] pl-[70px] items-center flex-nowrap">
-            <div className="flex w-fit h-[40px] shrink-0">
+          <div className="logo-container animate-[slide_25s_linear_infinite] group-hover/slider:pause-animate flex gap-17.5 pl-17.5 items-center flex-nowrap">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo1}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo2}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo3}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo4}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo1}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo2}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo3}
                 className="w-full h-full object-contain"
                 alt="logo"
               />
             </div>
-            <div className="flex w-fit h-[40px] shrink-0">
+            <div className="flex w-fit h-10 shrink-0">
               <Image
                 src={logo4}
                 className="w-full h-full object-contain"
@@ -209,25 +209,25 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <div className="stats container max-w-[1130px] mx-auto bg-gradient-to-r from-[#FFEDD3] to-[#FFCD83] flex justify-between items-center px-[100px] rounded-[30px] w-full h-[180px] absolute transform -translate-x-1/2 translate-y-1/2 bottom-0 left-1/2">
+      <div className="stats container max-w-282.5 mx-auto bg-linear-to-r from-[#FFEDD3] to-[#FFCD83] flex justify-between items-center px-25 rounded-[30px] w-full h-45 absolute transform -translate-x-1/2 translate-y-1/2 bottom-0 left-1/2">
         <div className="text-center w-fit h-fit">
-          <p className="font-extrabold text-[40px] leading-[60px]">$230M</p>
+          <p className="font-extrabold text-[40px] leading-15">$230M</p>
           <p className="font-semibold text-lg">Valuation</p>
         </div>
         <div className="text-center w-fit h-fit">
-          <p className="font-extrabold text-[40px] leading-[60px]">31,934</p>
+          <p className="font-extrabold text-[40px] leading-15">31,934</p>
           <p className="font-semibold text-lg">Projects</p>
         </div>
         <div className="text-center w-fit h-fit">
-          <p className="font-extrabold text-[40px] leading-[60px]">245</p>
+          <p className="font-extrabold text-[40px] leading-15">245</p>
           <p className="font-semibold text-lg">Startups IPO</p>
         </div>
         <div className="text-center w-fit h-fit">
-          <p className="font-extrabold text-[40px] leading-[60px]">9/10</p>
+          <p className="font-extrabold text-[40px] leading-15">9/10</p>
           <p className="font-semibold text-lg">Successful</p>
         </div>
         <div className="text-center w-fit h-fit">
-          <p className="font-extrabold text-[40px] leading-[60px]">562</p>
+          <p className="font-extrabold text-[40px] leading-15">562</p>
           <p className="font-semibold text-lg">Companies</p>
         </div>
       </div>

@@ -20,6 +20,26 @@
   }
 }
 
+@keyframes slideToT {
+  0% {
+    transform: translateY(0%);
+  }
+
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes slideToB {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(0%);
+  }
+}
+
 @layer base {
   .pause-animate {
     animation-play-state: paused;

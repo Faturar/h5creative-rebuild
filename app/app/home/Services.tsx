@@ -20,14 +20,14 @@ export default function Services() {
           </h2>
           <a
             href="#"
-            className="font-bold text-lg bg-portto-black rounded-full w-fit h-fit p-[14px_30px] text-white transition-all duration-300 hover:bg-white hover:text-portto-black hover:ring hover:ring-portto-black"
+            className="font-bold text-lg bg-[#0B0B1B] rounded-full w-fit h-fit p-[14px_30px] text-white transition-all duration-300 hover:bg-white hover:text-[#0B0B1B] hover:ring hover:ring-[#0B0B1B]"
           >
             All Services
           </a>
         </div>
         <div className="grid grid-cols-2 gap-[30px]">
           <div className="p-[50px] pb-0 rounded-[30px] flex flex-col gap-[50px] bg-[#F4F5F8]">
-            <div className="flex items-center justify-center shrink-0 w-20 h-20 rounded-full bg-portto-purple">
+            <div className="flex items-center justify-center shrink-0 w-20 h-20 rounded-full bg-[#4920E5]">
               <Image
                 src={crownIcon}
                 className="w-10 h-10 object-contain"
@@ -52,7 +52,7 @@ export default function Services() {
             </div>
           </div>
           <div className="p-[50px] pb-0 rounded-[30px] flex flex-col gap-[50px] bg-[#F4F5F8]">
-            <div className="flex items-center justify-center shrink-0 w-20 h-20 rounded-full bg-portto-green">
+            <div className="flex items-center justify-center shrink-0 w-20 h-20 rounded-full bg-[#12BB74]">
               <Image
                 src={codeIcon}
                 className="w-10 h-10 object-contain"
@@ -78,7 +78,7 @@ export default function Services() {
           </div>
           <div className="col-span-2 p-[50px] pb-0 rounded-[30px] flex gap-[50px] bg-[#F4F5F8]">
             <div className="flex flex-col gap-[50px]">
-              <div className="flex items-center justify-center shrink-0 w-20 h-20 rounded-full bg-portto-red">
+              <div className="flex items-center justify-center shrink-0 w-20 h-20 rounded-full bg-[#E64D56]">
                 <Image
                   src={cubeIcon}
                   className="w-10 h-10 object-contain"
