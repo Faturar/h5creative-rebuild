@@ -1,6 +1,7 @@
 import Image, { type StaticImageData } from "next/image"
 import Link from "next/link"
 
+import Navbar from "@/app/components/Navbar"
 import FAQ from "@/app/home/FAQ"
 import Footer from "@/app/home/Footer"
 
@@ -93,61 +94,15 @@ export default function DetailPage() {
         id="Header"
         className="flex flex-col gap-[100px] bg-[#0B0B1B] relative max-h-[665px] mb-[493px]"
       >
-        <nav className="container max-w-[1130px] mx-auto flex justify-between items-center pt-[30px] z-10">
-          <Link href="/" className="flex shrink-0 h-fit w-fit">
-            <Image src={logo} alt="logo" />
-          </Link>
-          <div className="hidden lg:flex gap-[50px] items-center">
-            <ul className="flex gap-[50px] items-center text-white">
-              <li>
-                <Link
-                  href="/"
-                  className="font-medium text-lg hover:text-portto-light-gold transition-all duration-300"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="font-medium text-lg hover:text-portto-light-gold transition-all duration-300"
-                >
-                  Services
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="font-medium text-lg hover:text-portto-light-gold transition-all duration-300"
-                >
-                  Testimonials
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="font-medium text-lg hover:text-portto-light-gold transition-all duration-300"
-                >
-                  Pricing
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="font-medium text-lg hover:text-portto-light-gold transition-all duration-300"
-                >
-                  About
-                </a>
-              </li>
-            </ul>
-            <Link
-              href="/book"
-              className="bg-portto-light-gold font-bold text-lg p-[14px_30px] rounded-full transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
-            >
-              Hire Me
-            </Link>
-          </div>
-        </nav>
+        <Navbar
+          logo={logo}
+          logoClassName=""
+          ctaLabel="Hire Me"
+          ctaHref="/book"
+          rightSectionClassName="hidden lg:flex gap-[50px] items-center"
+          hoverColorClassName="hover:text-portto-light-gold"
+          ctaClassName="bg-portto-light-gold font-bold text-lg p-[14px_30px] rounded-full transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
+        />
 
         <div className="hero container max-w-[1130px] mx-auto flex flex-col justify-center items-center relative">
           <h1 className="font-extrabold text-[50px] leading-[70px] text-white text-center z-10">
