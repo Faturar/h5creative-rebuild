@@ -1,23 +1,28 @@
-import Header from "./home/Header"
-import Services from "./home/Services"
-import Projects from "./home/Projects"
-import Workflow from "./home/Workflow"
-import Testimonials from "./home/Testimonials"
-import FAQ from "./home/FAQ"
-import Footer from "./home/Footer"
-import FeaturedProjects from "./home/FeaturedProjects"
+import Header from "./components/home/Header"
+import FAQ from "./components/home/FAQ"
+import BusinessSection from "./components/home/BusinessSection"
+import HeroSection from "./components/home/HeroSection"
+import RecentWorkSection from "./components/home/RecentWorkSection"
+import FooterFix from "./components/home/FooterFix"
+import AboutSection from "./components/home/AboutSection"
+import Navbar from "./components/home/Navbar"
+import ClientsSection from "./components/home/ClientSection"
+import LogoSection from "./components/home/LogoSection"
+import Services2 from "./components/home/Services2"
 
 export default function Home() {
   return (
     <>
       <Header />
-      <FeaturedProjects />
-      <Services />
-      <Projects />
-      <Workflow />
-      <Testimonials />
+      {/*<HeroSection />
+      <AboutSection /> */}
+      <Services2 />
+
+      <LogoSection />
+      <RecentWorkSection />
+      <BusinessSection />
       <FAQ />
-      <Footer />
+      <FooterFix />
     </>
   )
 }

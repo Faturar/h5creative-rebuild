@@ -1,28 +1,67 @@
+"use client"
+
 import Image from "next/image"
+import { motion, Easing } from "framer-motion"
 
 import thumbnail1 from "@/public/assets/images/thumbnails/thumbnail1.png"
 import thumbnail2 from "@/public/assets/images/thumbnails/thumbnail2.png"
 import thumbnail3 from "@/public/assets/images/thumbnails/thumbnail3.png"
 import eclipseImage from "@/public/assets/images/Ellipse.svg"
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.25, 0.1, 0.25, 1] as Easing,
+    },
+  },
+}
+
 export default function Projects() {
   return (
-    <section
+    <motion.section
       id="Projects"
       className="w-full flex flex-col py-[100px] bg-[url('/assets/images/background/background1.png')] bg-cover bg-center bg-no-repeat"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={containerVariants}
     >
-      <div className="flex flex-col gap-[10px] mb-[50px]">
+      <motion.div
+        className="flex flex-col gap-[10px] mb-[50px]"
+        variants={itemVariants}
+      >
         <h2 className="font-extrabold text-[50px] leading-[70px] text-center text-white">
           Great Projects
         </h2>
         <p className="text-lg text-center text-white">
           Working with awesome team from around the world
         </p>
-      </div>
-      <div className="projects w-full flex flex-col mb-[30px] overflow-hidden">
+      </motion.div>
+      <motion.div
+        className="projects w-full flex flex-col mb-[30px] overflow-hidden"
+        variants={itemVariants}
+      >
         <div className="group/slider slider flex flex-nowrap w-max items-center">
           <div className="project-container animate-[slide_50s_linear_infinite] group-hover/slider:pause-animate flex gap-[30px] pl-[30px] items-center flex-nowrap">
-            <div className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative">
+            <motion.div
+              className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="w-[608px] h-[408px] rounded-[30px] overflow-hidden absolute">
                 <Image
                   src={thumbnail1}
@@ -50,8 +89,12 @@ export default function Projects() {
                   alt="background icon"
                 />
               </div>
-            </div>
-            <div className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative">
+            </motion.div>
+            <motion.div
+              className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="w-[608px] h-[408px] rounded-[30px] overflow-hidden absolute">
                 <Image
                   src={thumbnail2}
@@ -79,8 +122,12 @@ export default function Projects() {
                   alt="background icon"
                 />
               </div>
-            </div>
-            <div className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative">
+            </motion.div>
+            <motion.div
+              className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="w-[608px] h-[408px] rounded-[30px] overflow-hidden absolute">
                 <Image
                   src={thumbnail3}
@@ -108,10 +155,14 @@ export default function Projects() {
                   alt="background icon"
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
           <div className="project-container animate-[slide_50s_linear_infinite] group-hover/slider:pause-animate flex gap-[30px] pl-[30px] items-center flex-nowrap">
-            <div className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative">
+            <motion.div
+              className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="w-[608px] h-[408px] rounded-[30px] overflow-hidden absolute">
                 <Image
                   src={thumbnail1}
@@ -139,8 +190,12 @@ export default function Projects() {
                   alt="background icon"
                 />
               </div>
-            </div>
-            <div className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative">
+            </motion.div>
+            <motion.div
+              className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="w-[608px] h-[408px] rounded-[30px] overflow-hidden absolute">
                 <Image
                   src={thumbnail2}
@@ -168,8 +223,12 @@ export default function Projects() {
                   alt="background icon"
                 />
               </div>
-            </div>
-            <div className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative">
+            </motion.div>
+            <motion.div
+              className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="w-[608px] h-[408px] rounded-[30px] overflow-hidden absolute">
                 <Image
                   src={thumbnail3}
@@ -197,14 +256,21 @@ export default function Projects() {
                   alt="background icon"
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </div>
-      <div className="projects w-full flex flex-col overflow-hidden">
+      </motion.div>
+      <motion.div
+        className="projects w-full flex flex-col overflow-hidden"
+        variants={itemVariants}
+      >
         <div className="group/slider slider flex flex-nowrap w-max items-center">
           <div className="project-container animate-[slideToR_50s_linear_infinite] group-hover/slider:pause-animate flex gap-[30px] pl-[30px] items-center flex-nowrap">
-            <div className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative">
+            <motion.div
+              className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="w-[608px] h-[408px] rounded-[30px] overflow-hidden absolute">
                 <Image
                   src={thumbnail1}
@@ -232,8 +298,12 @@ export default function Projects() {
                   alt="background icon"
                 />
               </div>
-            </div>
-            <div className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative">
+            </motion.div>
+            <motion.div
+              className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="w-[608px] h-[408px] rounded-[30px] overflow-hidden absolute">
                 <Image
                   src={thumbnail2}
@@ -261,8 +331,12 @@ export default function Projects() {
                   alt="background icon"
                 />
               </div>
-            </div>
-            <div className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative">
+            </motion.div>
+            <motion.div
+              className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="w-[608px] h-[408px] rounded-[30px] overflow-hidden absolute">
                 <Image
                   src={thumbnail3}
@@ -290,10 +364,14 @@ export default function Projects() {
                   alt="background icon"
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
           <div className="project-container animate-[slideToR_50s_linear_infinite] group-hover/slider:pause-animate flex gap-[30px] pl-[30px] items-center flex-nowrap">
-            <div className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative">
+            <motion.div
+              className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="w-[608px] h-[408px] rounded-[30px] overflow-hidden absolute">
                 <Image
                   src={thumbnail1}
@@ -321,8 +399,12 @@ export default function Projects() {
                   alt="background icon"
                 />
               </div>
-            </div>
-            <div className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative">
+            </motion.div>
+            <motion.div
+              className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="w-[608px] h-[408px] rounded-[30px] overflow-hidden absolute">
                 <Image
                   src={thumbnail2}
@@ -350,8 +432,12 @@ export default function Projects() {
                   alt="background icon"
                 />
               </div>
-            </div>
-            <div className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative">
+            </motion.div>
+            <motion.div
+              className="group w-[650px] h-[450px] flex shrink-0 rounded-[30px] border border-white p-5 bg-[#FFFFFF33] backdrop-blur relative"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="w-[608px] h-[408px] rounded-[30px] overflow-hidden absolute">
                 <Image
                   src={thumbnail3}
@@ -379,10 +465,10 @@ export default function Projects() {
                   alt="background icon"
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   )
 }

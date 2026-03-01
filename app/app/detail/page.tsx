@@ -2,8 +2,8 @@ import Image, { type StaticImageData } from "next/image"
 import Link from "next/link"
 
 import Navbar from "@/app/components/Navbar"
-import FAQ from "@/app/home/FAQ"
-import Footer from "@/app/home/Footer"
+import FAQ from "@/app/components/home/FAQ"
+import Footer from "@/app/components/home/Footer"
 
 import logo from "@/public/assets/images/logos/logo.svg"
 import ellipse from "@/public/assets/images/Ellipse.svg"

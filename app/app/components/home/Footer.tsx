@@ -1,4 +1,7 @@
+"use client"
+
 import Image from "next/image"
+import { motion, Easing } from "framer-motion"
 
 import logo from "@/public/assets/images/logos/logo.svg"
 import eclipseImage from "@/public/assets/images/Ellipse.svg"
@@ -6,20 +9,54 @@ import callIcon from "@/public/assets/images/icons/call.svg"
 import dribbbleIcon from "@/public/assets/images/icons/dribbble.svg"
 import smsIcon from "@/public/assets/images/icons/sms.svg"
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.25, 0.1, 0.25, 1] as Easing,
+    },
+  },
+}
+
 export default function Footer() {
   return (
-    <footer className="bg-[#0B0B1B] text-white pb-[50px] border-t-[10px] border-[#4920E5]">
+    <motion.footer
+      className="bg-[#0B0B1B] text-white pb-[50px] border-t-[10px] border-[#4920E5]"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={containerVariants}
+    >
       <div className="container max-w-[1130px] mx-auto flex justify-between pt-[100px] pb-[50px] mb-[50px] relative border-b border-[#585867]">
         <Image
           src={eclipseImage}
           className="absolute h-[300px] top-[70px] -left-[20px] z-0"
           alt="icon"
         />
-        <div className="flex shrink-0 h-fit z-10">
+        <motion.div
+          className="flex shrink-0 h-fit z-10"
+          variants={itemVariants}
+        >
           <Image src={logo} alt="logo" />
-        </div>
-        <div className="flex gap-[100px] z-10">
-          <div className="flex flex-col gap-5">
+        </motion.div>
+        <motion.div
+          className="flex gap-[100px] z-10"
+          variants={containerVariants}
+        >
+          <motion.div className="flex flex-col gap-5" variants={itemVariants}>
             <p className="font-bold text-lg">Explore</p>
             <a
               href="#"
@@ -45,8 +82,8 @@ export default function Footer() {
             >
               About
             </a>
-          </div>
-          <div className="flex flex-col gap-5">
+          </motion.div>
+          <motion.div className="flex flex-col gap-5" variants={itemVariants}>
             <p className="font-bold text-lg">Services</p>
             <a
               href="#"
@@ -72,8 +109,8 @@ export default function Footer() {
             >
               Digital Marketing
             </a>
-          </div>
-          <div className="flex flex-col gap-5">
+          </motion.div>
+          <motion.div className="flex flex-col gap-5" variants={itemVariants}>
             <p className="font-bold text-lg">About</p>
             <a
               href="#"
@@ -99,8 +136,8 @@ export default function Footer() {
             >
               Team A
             </a>
-          </div>
-          <div className="flex flex-col gap-5">
+          </motion.div>
+          <motion.div className="flex flex-col gap-5" variants={itemVariants}>
             <p className="font-bold text-lg">Connect</p>
             <a
               href="#"
@@ -123,12 +160,15 @@ export default function Footer() {
               <Image src={smsIcon} alt="icon" />
               team@bwa.com
             </a>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-      <p className="text-sm text-[#A0A0AC] text-center">
+      <motion.p
+        className="text-sm text-[#A0A0AC] text-center"
+        variants={itemVariants}
+      >
         All Rights Reserved. Copyright BuildWithAngga 2024.
-      </p>
-    </footer>
+      </motion.p>
+    </motion.footer>
   )
 }

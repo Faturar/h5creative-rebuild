@@ -1,4 +1,7 @@
+"use client"
+
 import Image from "next/image"
+import { motion, Easing } from "framer-motion"
 
 import starIcon from "@/public/assets/images/icons/Star.svg"
 import logoTesti1 from "@/public/assets/images/logos/logo-testi.svg"
@@ -9,16 +12,56 @@ import photo1 from "@/public/assets/images/photo/photo.png"
 import photo2 from "@/public/assets/images/photo/photo2.png"
 import photo3 from "@/public/assets/images/photo/photo3.png"
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.25, 0.1, 0.25, 1] as Easing,
+    },
+  },
+}
+
 export default function Testimonials() {
   return (
-    <section id="Testimonials" className="bg-[#F4F5F8]">
+    <motion.section
+      id="Testimonials"
+      className="bg-[#F4F5F8]"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={containerVariants}
+    >
       <div className="container max-w-[1130px] mx-auto pt-[180px] pb-[100px]">
-        <h2 className="font-extrabold text-[50px] leading-[70px] text-center">
+        <motion.h2
+          className="font-extrabold text-[50px] leading-[70px] text-center"
+          variants={itemVariants}
+        >
           I Have Delivered Success <br />
           For All My Clients
-        </h2>
-        <div className="grid grid-cols-2 gap-[30px] mt-[50px]">
-          <div className="card-testi bg-white rounded-[30px] flex flex-col p-5 gap-5">
+        </motion.h2>
+        <motion.div
+          className="grid grid-cols-2 gap-[30px] mt-[50px]"
+          variants={containerVariants}
+        >
+          <motion.div
+            className="card-testi bg-white rounded-[30px] flex flex-col p-5 gap-5"
+            variants={itemVariants}
+            whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+            transition={{ duration: 0.3 }}
+          >
             <div className="h-[40px] flex shrink-0">
               <Image src={logoTesti1} alt="logo" />
             </div>
@@ -43,8 +86,13 @@ export default function Testimonials() {
                 <p className="text-lg text-[#878C9C]">CPO Agolia Modd</p>
               </div>
             </div>
-          </div>
-          <div className="card-testi bg-white rounded-[30px] flex flex-col p-5 gap-5">
+          </motion.div>
+          <motion.div
+            className="card-testi bg-white rounded-[30px] flex flex-col p-5 gap-5"
+            variants={itemVariants}
+            whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+            transition={{ duration: 0.3 }}
+          >
             <div className="h-[40px] flex shrink-0">
               <Image src={logoTesti2} alt="logo" />
             </div>
@@ -69,8 +117,13 @@ export default function Testimonials() {
                 <p className="text-lg text-[#878C9C]">Founder TinderJobs</p>
               </div>
             </div>
-          </div>
-          <div className="card-testi bg-white rounded-[30px] flex flex-col p-5 gap-5">
+          </motion.div>
+          <motion.div
+            className="card-testi bg-white rounded-[30px] flex flex-col p-5 gap-5"
+            variants={itemVariants}
+            whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+            transition={{ duration: 0.3 }}
+          >
             <div className="h-[40px] flex shrink-0">
               <Image src={logoTesti3} alt="logo" />
             </div>
@@ -95,8 +148,13 @@ export default function Testimonials() {
                 <p className="text-lg text-[#878C9C]">Investor at Wokiya</p>
               </div>
             </div>
-          </div>
-          <div className="card-testi bg-white rounded-[30px] flex flex-col p-5 gap-5">
+          </motion.div>
+          <motion.div
+            className="card-testi bg-white rounded-[30px] flex flex-col p-5 gap-5"
+            variants={itemVariants}
+            whileHover={{ y: -8, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+            transition={{ duration: 0.3 }}
+          >
             <div className="h-[40px] flex shrink-0">
               <Image src={logoTesti4} alt="logo" />
             </div>
@@ -121,9 +179,9 @@ export default function Testimonials() {
                 <p className="text-lg text-[#878C9C]">CMO Waniwani</p>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   )
 }
