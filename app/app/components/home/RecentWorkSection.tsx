@@ -2,6 +2,9 @@
 
 import Image from "next/image"
 import { motion, Easing } from "framer-motion"
+import { ArrowRight } from "lucide-react"
+
+import { RECENT_WORK_SECTION_DATA } from "@/app/constants/landingPageData"
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -25,6 +28,51 @@ const itemVariants = {
   },
 }
 
+// Project Card Component
+function ProjectCard({
+  project,
+}: {
+  project: (typeof RECENT_WORK_SECTION_DATA.projects)[0]
+}) {
+  return (
+    <motion.div
+      variants={itemVariants}
+      whileHover={{ y: -8 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div
+        className={`relative w-full ${project.height} rounded-[28px] overflow-hidden group`}
+      >
+        <Image
+          src={project.image}
+          alt="Project"
+          fill
+          className="object-cover transition duration-700 group-hover:scale-105"
+        />
+
+        {/* Optional subtle overlay on hover */}
+        <div className="absolute inset-0 bg-[#2E2BFF]/0 group-hover:bg-[#2E2BFF]/10 transition duration-500" />
+      </div>
+
+      <div className="text-sm text-gray-400 mt-6">
+        {project.year} &nbsp; • &nbsp; {project.author}
+      </div>
+
+      <motion.h3
+        className="text-2xl font-medium leading-snug mt-3 
+        transition-all duration-300 
+        cursor-pointer 
+        hover:text-[#2E2BFF] 
+        hover:drop-shadow-[0_0_10px_rgba(46,43,255,0.5)]"
+        whileHover={{ x: 5 }}
+        transition={{ duration: 0.2 }}
+      >
+        {project.title}
+      </motion.h3>
+    </motion.div>
+  )
+}
+
 export default function RecentWorkSection() {
   return (
     <motion.section
@@ -37,23 +85,21 @@ export default function RecentWorkSection() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex gap-20 items-start">
           {/* LEFT COLUMN */}
-          <motion.div className="w-1/2 space-y-28" variants={containerVariants}>
+          <motion.div className="w-1/2 space-y-20" variants={containerVariants}>
             <motion.div variants={itemVariants}>
               <h2 className="text-[64px] leading-[1.05] font-semibold uppercase tracking-tight">
-                TAKE A LOOK AT <br />
-                OUR RECENT WORK
+                {RECENT_WORK_SECTION_DATA.titleLine1} <br />
+                {RECENT_WORK_SECTION_DATA.titleLine2}
               </h2>
+              <p className="text-gray-400 mt-6 max-w-md">
+                {RECENT_WORK_SECTION_DATA.description}
+              </p>
             </motion.div>
 
-            <ProjectCard
-              image="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e"
-              height="h-[460px]"
-            />
-
-            <ProjectCard
-              image="https://images.unsplash.com/photo-1558655146-9f40138edfeb"
-              height="h-[420px]"
-            />
+            {/* First two projects */}
+            {RECENT_WORK_SECTION_DATA.projects.slice(0, 2).map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
           </motion.div>
 
           {/* RIGHT COLUMN */}
@@ -61,23 +107,13 @@ export default function RecentWorkSection() {
             className="w-1/2 space-y-28 mt-24"
             variants={containerVariants}
           >
-            <ProjectCard
-              image="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6"
-              height="h-[440px]"
-            />
-
-            <ProjectCard
-              image="https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
-              height="h-[420px]"
-            />
+            {/* Next two projects */}
+            {RECENT_WORK_SECTION_DATA.projects.slice(2, 4).map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
 
             {/* CTA BLOCK */}
             <motion.div variants={itemVariants}>
-              <p className="text-gray-400 mb-8 max-w-md">
-                We strive to develop real-world web solutions that are ideal for
-                small to large projects with bespoke project requirements.
-              </p>
-
               <motion.button
                 className="inline-flex items-center gap-3 
                 bg-gradient-to-r from-[#2E2BFF] to-[#1C1AFF] 
@@ -89,55 +125,13 @@ export default function RecentWorkSection() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                More Projects
-                <span className="rounded-full bg-white/20 px-2 py-0.5 text-[11px]">
-                  →
-                </span>
+                {RECENT_WORK_SECTION_DATA.buttonText}
+                <ArrowRight className="w-4 h-4" />
               </motion.button>
             </motion.div>
           </motion.div>
         </div>
       </div>
     </motion.section>
-  )
-}
-
-function ProjectCard({ image, height }: { image: string; height: string }) {
-  return (
-    <motion.div
-      variants={itemVariants}
-      whileHover={{ y: -8 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div
-        className={`relative w-full ${height} rounded-[28px] overflow-hidden group`}
-      >
-        <Image
-          src={image}
-          alt="Project"
-          fill
-          className="object-cover transition duration-700 group-hover:scale-105"
-        />
-
-        {/* Optional subtle overlay on hover */}
-        <div className="absolute inset-0 bg-[#2E2BFF]/0 group-hover:bg-[#2E2BFF]/10 transition duration-500" />
-      </div>
-
-      <div className="text-sm text-gray-400 mt-6">
-        2024 &nbsp; • &nbsp; Cary Neville
-      </div>
-
-      <motion.h3
-        className="text-2xl font-medium leading-snug mt-3 
-        transition-all duration-300 
-        cursor-pointer 
-        hover:text-[#2E2BFF] 
-        hover:drop-shadow-[0_0_10px_rgba(46,43,255,0.5)]"
-        whileHover={{ x: 5 }}
-        transition={{ duration: 0.2 }}
-      >
-        A Workplace Consultancy Creating Inspiring Environments
-      </motion.h3>
-    </motion.div>
   )
 }

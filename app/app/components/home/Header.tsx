@@ -2,9 +2,9 @@
 
 import Image from "next/image"
 import { motion, Easing } from "framer-motion"
+import { ArrowRight } from "lucide-react"
 
-import heroImage from "@/public/assets/images/hero-image.png"
-import eclipseImage from "@/public/assets/images/Ellipse.svg"
+import { HEADER_DATA } from "@/app/constants/landingPageData"
 
 import Navbar from "./Navbar"
 import LogoSection from "./LogoSection"
@@ -76,13 +76,9 @@ export default function Header() {
               className="text-[72px] leading-[1.05] font-extrabold tracking-tight lg:text-[72px]"
               variants={itemVariants}
             >
-              TINGKATKAN TRUST DENGAN WEBSITE{" "}
+              {HEADER_DATA.title}{" "}
               <span className="inline-block bg-[#2E2BFF] px-6 py-2">
-                BERKELAS
-              </span>{" "}
-              &{" "}
-              <span className="inline-block bg-[#2E2BFF] px-6 py-2">
-                CEPAT
+                {HEADER_DATA.highlightedText}
               </span>{" "}
             </motion.h1>
 
@@ -90,8 +86,7 @@ export default function Header() {
               className="mt-8 max-w-[650px] text-lg leading-8 text-white/80"
               variants={itemVariants}
             >
-              Kami membantu bisnis Anda tampil lebih profesional dengan website
-              modern, cepat, dan berkelas untuk meningkatkan trust dan konversi.
+              {HEADER_DATA.description}
             </motion.p>
 
             <motion.button
@@ -100,8 +95,8 @@ export default function Header() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span className="text-2xl">→</span>
-              Konsultasi Gratis Sekarang
+              <ArrowRight className="w-6 h-6" />
+              {HEADER_DATA.buttonText}
             </motion.button>
           </motion.div>
 
@@ -114,8 +109,8 @@ export default function Header() {
           >
             <div className="relative h-[420px] w-[420px] overflow-hidden rounded-[28px] shadow-2xl">
               <Image
-                src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db"
-                alt="Product"
+                src={HEADER_DATA.heroImage}
+                alt={HEADER_DATA.heroAlt}
                 fill
                 className="h-full w-full object-cover"
               />

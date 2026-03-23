@@ -3,9 +3,9 @@
 import Image from "next/image"
 import { useState } from "react"
 import { motion, AnimatePresence, Easing } from "framer-motion"
+import { MessageCircle, ChevronDown } from "lucide-react"
 
-import messagesIcon from "@/public/assets/images/icons/messages.svg"
-import arrowCircleDownIcon from "@/public/assets/images/icons/arrow-circle-down.svg"
+import { FAQ_SECTION_DATA } from "@/app/constants/landingPageData"
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -30,25 +30,9 @@ const itemVariants = {
 }
 
 export default function FAQ() {
-  const [active, setActive] = useState<number | null>(0)
-
-  const faqs = [
-    {
-      question: "How Do I Work Usually?",
-      answer:
-        "As a freelancer, my work process is characterized by flexibility, self-discipline, and strong client communication.",
-    },
-    {
-      question: "How Much Do I Charge Per Project?",
-      answer:
-        "I don't charge hourly. I charge based on the project brief and given timeline to finish that particular project.",
-    },
-    {
-      question: "Can I Work Full-Time?",
-      answer:
-        "I don't work full-time. At this moment, I prefer to work remotely and based on certain projects only.",
-    },
-  ]
+  const [active, setActive] = useState<number | null>(
+    FAQ_SECTION_DATA.defaultActiveIndex,
+  )
 
   return (
     <motion.section
@@ -74,15 +58,15 @@ export default function FAQ() {
               whileHover={{ scale: 1.1, rotate: 5 }}
               transition={{ duration: 0.3 }}
             >
-              <Image src={messagesIcon} alt="icon" />
+              <MessageCircle className="w-10 h-10 text-white" />
             </motion.div>
 
             <motion.div variants={itemVariants}>
               <h2 className="text-[48px] font-semibold uppercase tracking-tight text-gray-900">
-                Frequently Asked Questions
+                {FAQ_SECTION_DATA.title}
               </h2>
               <p className="text-gray-500 mt-4 max-w-md">
-                If you have any questions, feel free to contact us anytime.
+                {FAQ_SECTION_DATA.description}
               </p>
             </motion.div>
 
@@ -98,7 +82,7 @@ export default function FAQ() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Contact Us
+              {FAQ_SECTION_DATA.buttonText}
             </motion.button>
           </motion.div>
 
@@ -107,12 +91,12 @@ export default function FAQ() {
             className="flex flex-col gap-6"
             variants={containerVariants}
           >
-            {faqs.map((faq, index) => {
-              const isOpen = active === index
+            {FAQ_SECTION_DATA.faqs.map((faq) => {
+              const isOpen = active === faq.id - 1 // Adjust for 0-based index
 
               return (
                 <motion.div
-                  key={index}
+                  key={faq.id}
                   className={`rounded-2xl border transition-all duration-300
                   ${
                     isOpen
@@ -122,7 +106,7 @@ export default function FAQ() {
                   variants={itemVariants}
                 >
                   <button
-                    onClick={() => setActive(isOpen ? null : index)}
+                    onClick={() => setActive(isOpen ? null : faq.id - 1)}
                     className="w-full flex justify-between items-center p-6 text-left"
                   >
                     <motion.span
@@ -136,10 +120,8 @@ export default function FAQ() {
                     </motion.span>
 
                     <motion.div transition={{ duration: 0.3 }}>
-                      <Image
-                        src={arrowCircleDownIcon}
-                        alt="arrow"
-                        className={`transition duration-300 ${
+                      <ChevronDown
+                        className={`w-5 h-5 text-[#2E2BFF] transition duration-300 ${
                           isOpen ? "rotate-180 opacity-100" : "opacity-60"
                         }`}
                       />
