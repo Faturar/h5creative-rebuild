@@ -35,13 +35,13 @@ export default function BusinessSection() {
 
   return (
     <motion.section
-      className="w-full bg-white py-24 lg:py-40"
+      className="w-full bg-white py-20 md:py-24 lg:py-40"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
         {/* LEFT CONTENT */}
         <motion.div className="flex flex-col gap-6 items-start">
           <motion.h1
@@ -59,7 +59,7 @@ export default function BusinessSection() {
           <motion.button
             className="inline-flex items-center gap-3 
               bg-gradient-to-r from-[#2E2BFF] to-[#1C1AFF] 
-              px-8 py-4 rounded-lg text-white font-semibold 
+              px-6 py-3 md:px-8 md:py-4 rounded-lg text-white font-semibold 
               shadow-[0_8px_25px_rgba(46,43,255,0.35)] 
               transition-all duration-300 
               hover:shadow-[0_12px_35px_rgba(46,43,255,0.5)]"

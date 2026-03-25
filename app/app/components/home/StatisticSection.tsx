@@ -19,8 +19,8 @@ export default function StatisticSection() {
     <motion.div
       className="stats container max-w-7xl mx-auto 
     bg-gradient-to-r from-[#2E2BFF] to-[#1C1AFF] 
-    flex justify-between items-center 
-    px-20 rounded-[30px] w-full h-45 
+    flex flex-wrap justify-center md:justify-between items-center 
+    px-6 md:px-20 py-6 rounded-[20px] md:rounded-[30px] w-full h-auto md:h-45 
     absolute transform -translate-x-1/2 translate-y-1/2 
     bottom-0 left-1/2"
       initial="hidden"
@@ -28,53 +28,73 @@ export default function StatisticSection() {
       viewport={{ once: true, amount: 0.2 }}
     >
       <motion.div
-        className="text-center"
+        className="text-center px-4 py-2"
         variants={itemVariants}
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.3 }}
       >
-        <p className="font-extrabold text-[40px] text-white">$230M</p>
-        <p className="font-semibold text-lg text-white/70">Valuation</p>
+        <p className="font-extrabold text-[24px] md:text-[40px] text-white">
+          $230M
+        </p>
+        <p className="font-semibold text-sm md:text-lg text-white/70">
+          Valuation
+        </p>
       </motion.div>
 
       <motion.div
-        className="text-center"
+        className="text-center px-4 py-2"
         variants={itemVariants}
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.3 }}
       >
-        <p className="font-extrabold text-[40px] text-white">31,934</p>
-        <p className="font-semibold text-lg text-white/70">Projects</p>
+        <p className="font-extrabold text-[24px] md:text-[40px] text-white">
+          31,934
+        </p>
+        <p className="font-semibold text-sm md:text-lg text-white/70">
+          Projects
+        </p>
       </motion.div>
 
       <motion.div
-        className="text-center"
+        className="text-center px-4 py-2"
         variants={itemVariants}
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.3 }}
       >
-        <p className="font-extrabold text-[40px] text-white">245</p>
-        <p className="font-semibold text-lg text-white/70">Startups IPO</p>
+        <p className="font-extrabold text-[24px] md:text-[40px] text-white">
+          245
+        </p>
+        <p className="font-semibold text-sm md:text-lg text-white/70">
+          Startups IPO
+        </p>
       </motion.div>
 
       <motion.div
-        className="text-center"
+        className="text-center px-4 py-2"
         variants={itemVariants}
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.3 }}
       >
-        <p className="font-extrabold text-[40px] text-white">9/10</p>
-        <p className="font-semibold text-lg text-white/70">Successful</p>
+        <p className="font-extrabold text-[24px] md:text-[40px] text-white">
+          9/10
+        </p>
+        <p className="font-semibold text-sm md:text-lg text-white/70">
+          Successful
+        </p>
       </motion.div>
 
       <motion.div
-        className="text-center"
+        className="text-center px-4 py-2"
         variants={itemVariants}
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.3 }}
       >
-        <p className="font-extrabold text-[40px] text-white">562</p>
-        <p className="font-semibold text-lg text-white/70">Companies</p>
+        <p className="font-extrabold text-[24px] md:text-[40px] text-white">
+          562
+        </p>
+        <p className="font-semibold text-sm md:text-lg text-white/70">
+          Companies
+        </p>
       </motion.div>
     </motion.div>
   )

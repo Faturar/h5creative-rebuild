@@ -41,7 +41,7 @@ function ProjectCard({
       transition={{ duration: 0.3 }}
     >
       <div
-        className={`relative w-full ${project.height} rounded-[28px] overflow-hidden group`}
+        className={`relative w-full ${project.height} rounded-[20px] md:rounded-[28px] overflow-hidden group`}
       >
         <Image
           src={project.image}
@@ -54,12 +54,12 @@ function ProjectCard({
         <div className="absolute inset-0 bg-[#2E2BFF]/0 group-hover:bg-[#2E2BFF]/10 transition duration-500" />
       </div>
 
-      <div className="text-sm text-gray-400 mt-6">
+      <div className="text-xs md:text-sm text-gray-400 mt-4 md:mt-6">
         {project.year} &nbsp; • &nbsp; {project.author}
       </div>
 
       <motion.h3
-        className="text-2xl font-medium leading-snug mt-3 
+        className="text-lg md:text-2xl font-medium leading-snug mt-2 md:mt-3 
         transition-all duration-300 
         cursor-pointer 
         hover:text-[#2E2BFF] 
@@ -76,22 +76,25 @@ function ProjectCard({
 export default function RecentWorkSection() {
   return (
     <motion.section
-      className="w-full bg-[#0B0B0D] text-white py-32"
+      className="w-full bg-[#0B0B0D] text-white py-20 md:py-32"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex gap-20 items-start">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
           {/* LEFT COLUMN */}
-          <motion.div className="w-1/2 space-y-20" variants={containerVariants}>
+          <motion.div
+            className="w-full lg:w-1/2 space-y-12 lg:space-y-20"
+            variants={containerVariants}
+          >
             <motion.div variants={itemVariants}>
-              <h2 className="text-[64px] leading-[1.05] font-semibold uppercase tracking-tight">
+              <h2 className="text-[40px] leading-[1.05] md:text-[64px] font-semibold uppercase tracking-tight">
                 {RECENT_WORK_SECTION_DATA.titleLine1} <br />
                 {RECENT_WORK_SECTION_DATA.titleLine2}
               </h2>
-              <p className="text-gray-400 mt-6 max-w-md">
+              <p className="text-gray-400 mt-4 md:mt-6 max-w-md text-sm md:text-base">
                 {RECENT_WORK_SECTION_DATA.description}
               </p>
             </motion.div>
@@ -104,7 +107,7 @@ export default function RecentWorkSection() {
 
           {/* RIGHT COLUMN */}
           <motion.div
-            className="w-1/2 space-y-28 mt-24"
+            className="w-full lg:w-1/2 space-y-16 lg:space-y-28 mt-8 lg:mt-24"
             variants={containerVariants}
           >
             {/* Next two projects */}
@@ -117,7 +120,7 @@ export default function RecentWorkSection() {
               <motion.button
                 className="inline-flex items-center gap-3 
                 bg-gradient-to-r from-[#2E2BFF] to-[#1C1AFF] 
-                px-8 py-4 rounded-lg text-white font-semibold 
+                px-6 py-3 md:px-8 md:py-4 rounded-lg text-white font-semibold 
                 shadow-[0_8px_25px_rgba(46,43,255,0.35)] 
                 transition-all duration-300 
                 hover:scale-[1.03] 

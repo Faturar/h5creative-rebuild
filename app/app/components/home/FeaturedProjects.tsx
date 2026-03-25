@@ -57,26 +57,26 @@ export default function FeaturedProjects() {
   return (
     <motion.section
       id="Projects"
-      className="w-full flex flex-col overflow-x-hidden pb-[100px] pt-[180px]"
+      className="w-full flex flex-col overflow-x-hidden pb-16 md:pb-[100px] pt-20 md:pt-[180px]"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={sectionVariants}
     >
       <motion.div
-        className="mb-[50px] flex flex-col gap-[10px]"
+        className="mb-8 md:mb-[50px] flex flex-col gap-[10px] px-4 md:px-0"
         variants={itemVariants}
       >
-        <h2 className="font-extrabold text-[50px] leading-[70px] text-center">
+        <h2 className="font-extrabold text-[36px] md:text-[50px] leading-[40px] md:leading-[70px] text-center">
           Our Featured Project
         </h2>
-        <p className="text-lg text-center">
+        <p className="text-base md:text-lg text-center">
           Working with awesome team from around the world
         </p>
       </motion.div>
 
       <motion.div
-        className="projects mb-[30px] flex w-full flex-col gap-6 overflow-hidden"
+        className="projects mb-6 md:mb-[30px] flex w-full flex-col gap-6 overflow-hidden px-4 md:px-0"
         variants={itemVariants}
       >
         <div className="w-full overflow-hidden">
@@ -90,10 +90,12 @@ export default function FeaturedProjects() {
               loop
               breakpoints={{
                 0: { slidesPerView: 1, spaceBetween: 16 },
+                480: { slidesPerView: 1, spaceBetween: 16 },
+                640: { slidesPerView: 1, spaceBetween: 16 },
                 768: { slidesPerView: 2, spaceBetween: 20 },
                 1024: { slidesPerView: 3, spaceBetween: 24 },
                 1280: { slidesPerView: 3, spaceBetween: 24 },
-                1536: { slidesPerView: 4, spaceBetween: 24 },
+                1536: { slidesPerView: 3, spaceBetween: 24 },
               }}
             >
               {featuredProjects.map((project) => (

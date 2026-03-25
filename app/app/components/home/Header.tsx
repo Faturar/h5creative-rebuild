@@ -71,43 +71,43 @@ export default function Header() {
       >
         <div className="relative flex h-[80vh] w-full items-center justify-between bg-[#0B0B1B]">
           {/* LEFT CONTENT */}
-          <motion.div className="text-white" variants={containerVariants}>
+          <motion.div className="text-white z-10" variants={containerVariants}>
             <motion.h1
-              className="text-[72px] leading-[1.05] font-extrabold tracking-tight lg:text-[72px]"
+              className="text-[48px] leading-[1.05] font-extrabold tracking-tight md:text-[56px] lg:text-[72px]"
               variants={itemVariants}
             >
               {HEADER_DATA.title}{" "}
-              <span className="inline-block bg-[#2E2BFF] px-6 py-2">
+              <span className="inline-block bg-[#2E2BFF] px-4 py-1 md:px-6 md:py-2">
                 {HEADER_DATA.highlightedText}
               </span>{" "}
             </motion.h1>
 
             <motion.p
-              className="mt-8 max-w-[650px] text-lg leading-8 text-white/80"
+              className="mt-6 max-w-[650px] text-base leading-7 text-white/80 md:text-lg md:leading-8"
               variants={itemVariants}
             >
               {HEADER_DATA.description}
             </motion.p>
 
             <motion.button
-              className="mt-16 inline-flex items-center gap-4 rounded-lg bg-gradient-to-r from-[#2E2BFF] to-[#1C1AFF] px-8 py-4 text-lg font-semibold text-white shadow-[0_8px_25px_rgba(46,43,255,0.35)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_12px_35px_rgba(46,43,255,0.5)]"
+              className="mt-8 inline-flex items-center gap-3 rounded-lg bg-gradient-to-r from-[#2E2BFF] to-[#1C1AFF] px-6 py-3 text-base font-semibold text-white shadow-[0_8px_25px_rgba(46,43,255,0.35)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_12px_35px_rgba(46,43,255,0.5)] md:mt-12 md:px-8 md:py-4 md:text-lg"
               variants={itemVariants}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <ArrowRight className="w-6 h-6" />
+              <ArrowRight className="w-5 h-5 md:w-6 md:h-6" />
               {HEADER_DATA.buttonText}
             </motion.button>
           </motion.div>
 
           {/* RIGHT SIDE VISUAL */}
           <motion.div
-            className="relative flex items-center justify-center"
+            className="relative flex items-center justify-center hidden lg:block"
             variants={itemVariants}
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="relative h-[420px] w-[420px] overflow-hidden rounded-[28px] shadow-2xl">
+            <div className="relative h-[300px] w-[300px] overflow-hidden rounded-[28px] shadow-2xl md:h-[360px] md:w-[360px] lg:h-[420px] lg:w-[420px]">
               <Image
                 src={HEADER_DATA.heroImage}
                 alt={HEADER_DATA.heroAlt}

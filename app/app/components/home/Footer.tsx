@@ -2,12 +2,9 @@
 
 import Image from "next/image"
 import { motion, Easing } from "framer-motion"
+import { Phone, Dribbble, Mail } from "lucide-react"
 
-import logo from "@/public/assets/images/logos/logo.svg"
-import eclipseImage from "@/public/assets/images/Ellipse.svg"
-import callIcon from "@/public/assets/images/icons/call.svg"
-import dribbbleIcon from "@/public/assets/images/icons/dribbble.svg"
-import smsIcon from "@/public/assets/images/icons/sms.svg"
+import { FOOTER_DATA } from "@/app/constants/landingPageData"
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -34,140 +31,68 @@ const itemVariants = {
 export default function Footer() {
   return (
     <motion.footer
-      className="bg-[#0B0B1B] text-white pb-[50px] border-t-[10px] border-[#4920E5]"
+      className="bg-[#0B0B1B] text-white pb-8 md:pb-[50px] border-t-[10px] border-[#4920E5]"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="container max-w-[1130px] mx-auto flex justify-between pt-[100px] pb-[50px] mb-[50px] relative border-b border-[#585867]">
+      <div className="container max-w-[1130px] mx-auto flex flex-col md:flex-row justify-between pt-16 md:pt-[100px] pb-8 md:pb-[50px] mb-8 md:mb-[50px] relative border-b border-[#585867] px-4 md:px-0">
         <Image
-          src={eclipseImage}
-          className="absolute h-[300px] top-[70px] -left-[20px] z-0"
+          src={FOOTER_DATA.eclipseImage}
+          className="absolute h-[200px] md:h-[300px] top-[40px] md:top-[70px] -left-[10px] md:-left-[20px] z-0"
           alt="icon"
         />
         <motion.div
-          className="flex shrink-0 h-fit z-10"
+          className="flex shrink-0 h-fit z-10 mb-8 md:mb-0"
           variants={itemVariants}
         >
-          <Image src={logo} alt="logo" />
+          <Image src={FOOTER_DATA.logo} alt="logo" />
         </motion.div>
         <motion.div
-          className="flex gap-[100px] z-10"
+          className="flex flex-wrap gap-8 md:gap-[100px] z-10"
           variants={containerVariants}
         >
-          <motion.div className="flex flex-col gap-5" variants={itemVariants}>
-            <p className="font-bold text-lg">Explore</p>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300"
+          {FOOTER_DATA.sections.map((section, index) => (
+            <motion.div
+              key={index}
+              className={`flex flex-col gap-4 ${section.title === "Connect" ? "w-full md:w-auto" : "w-1/2 md:w-auto"}`}
+              variants={itemVariants}
             >
-              Services
-            </a>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300"
-            >
-              Testimonials
-            </a>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300"
-            >
-              Pricing
-            </a>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300"
-            >
-              About
-            </a>
-          </motion.div>
-          <motion.div className="flex flex-col gap-5" variants={itemVariants}>
-            <p className="font-bold text-lg">Services</p>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300"
-            >
-              UI/UX Design
-            </a>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300"
-            >
-              Web Development
-            </a>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300"
-            >
-              Data Science
-            </a>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300"
-            >
-              Digital Marketing
-            </a>
-          </motion.div>
-          <motion.div className="flex flex-col gap-5" variants={itemVariants}>
-            <p className="font-bold text-lg">About</p>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300"
-            >
-              My Profile
-            </a>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300"
-            >
-              How do I work
-            </a>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300"
-            >
-              Achievements
-            </a>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300"
-            >
-              Team A
-            </a>
-          </motion.div>
-          <motion.div className="flex flex-col gap-5" variants={itemVariants}>
-            <p className="font-bold text-lg">Connect</p>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300 flex items-center gap-[6px]"
-            >
-              <Image src={callIcon} alt="icon" />
-              +1 2208 1996
-            </a>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300 flex items-center gap-[6px]"
-            >
-              <Image src={dribbbleIcon} alt="icon" />
-              buildwithangga
-            </a>
-            <a
-              href="#"
-              className="font-medium hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300 flex items-center gap-[6px]"
-            >
-              <Image src={smsIcon} alt="icon" />
-              team@bwa.com
-            </a>
-          </motion.div>
+              <p className="font-bold text-base md:text-lg">{section.title}</p>
+              {section.links.map((link, linkIndex) => (
+                <a
+                  key={linkIndex}
+                  href={link.href}
+                  className={`font-medium text-sm md:text-base hover:font-semibold hover:text-[#FFE7C2] transition-all duration-300 ${
+                    section.title === "Connect"
+                      ? "flex items-center gap-[6px]"
+                      : ""
+                  }`}
+                >
+                  {section.title === "Connect" &&
+                    "icon" in link &&
+                    link.icon === "Phone" && <Phone className="w-4 h-4" />}
+                  {section.title === "Connect" &&
+                    "icon" in link &&
+                    link.icon === "Dribbble" && (
+                      <Dribbble className="w-4 h-4" />
+                    )}
+                  {section.title === "Connect" &&
+                    "icon" in link &&
+                    link.icon === "Mail" && <Mail className="w-4 h-4" />}
+                  {link.text}
+                </a>
+              ))}
+            </motion.div>
+          ))}
         </motion.div>
       </div>
       <motion.p
-        className="text-sm text-[#A0A0AC] text-center"
+        className="text-xs md:text-sm text-[#A0A0AC] text-center px-4 md:px-0"
         variants={itemVariants}
       >
-        All Rights Reserved. Copyright BuildWithAngga 2024.
+        {FOOTER_DATA.copyright}
       </motion.p>
     </motion.footer>
   )

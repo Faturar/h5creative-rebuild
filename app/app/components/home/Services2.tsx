@@ -36,7 +36,7 @@ const itemVariants = {
 const ServiceCard = ({ service }: { service: (typeof SERVICES_DATA)[0] }) => {
   return (
     <motion.div
-      className="p-[50px] pb-0 rounded-[30px] flex flex-col gap-[40px] 
+      className="p-[30px] pb-0 md:p-[40px] md:pb-0 rounded-[20px] md:rounded-[30px] flex flex-col gap-[30px] md:gap-[40px] 
     bg-white border border-gray-200 
     hover:border-[#2E2BFF] transition duration-300"
       variants={itemVariants}
@@ -46,14 +46,16 @@ const ServiceCard = ({ service }: { service: (typeof SERVICES_DATA)[0] }) => {
       }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex flex-col gap-5">
-        <p className="font-semibold text-[28px] leading-[40px] text-gray-900">
+      <div className="flex flex-col gap-4 md:gap-5">
+        <p className="font-semibold text-[20px] leading-[28px] md:text-[28px] md:leading-[40px] text-gray-900">
           {service.title}
         </p>
-        <p className="text-gray-500 leading-[30px]">{service.description}</p>
+        <p className="text-gray-500 text-sm leading-[22px] md:text-base md:leading-[30px]">
+          {service.description}
+        </p>
       </div>
 
-      <div className="w-full h-[320px]">
+      <div className="w-full h-[200px] md:h-[320px]">
         <Image
           src={service.image}
           className="w-full object-contain"
@@ -72,7 +74,7 @@ const FeaturedServiceCard = ({
 }) => {
   return (
     <motion.div
-      className="col-span-3 p-[50px] pb-0 rounded-[30px] flex gap-[50px] 
+      className="col-span-3 p-[30px] pb-0 md:p-[40px] md:pb-0 rounded-[20px] md:rounded-[30px] flex flex-col md:flex-row gap-[30px] md:gap-[50px] 
     bg-white border border-gray-200 
     hover:border-[#2E2BFF] transition duration-300"
       variants={itemVariants}
@@ -82,24 +84,26 @@ const FeaturedServiceCard = ({
       }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex flex-col gap-[40px]">
+      <div className="flex flex-col gap-[30px] md:gap-[40px]">
         <motion.div
-          className="flex items-center justify-center w-20 h-20 rounded-full bg-[#2E2BFF]/10"
+          className="flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#2E2BFF]/10"
           whileHover={{ scale: 1.1, rotate: 5 }}
           transition={{ duration: 0.3 }}
         >
-          <Box className="w-10 h-10 text-[#2E2BFF]" />
+          <Box className="w-8 h-8 md:w-10 md:h-10 text-[#2E2BFF]" />
         </motion.div>
 
-        <div className="flex flex-col gap-5">
-          <p className="font-semibold text-[28px] leading-[40px] text-gray-900">
+        <div className="flex flex-col gap-4 md:gap-5">
+          <p className="font-semibold text-[20px] leading-[28px] md:text-[28px] md:leading-[40px] text-gray-900">
             {service.title}
           </p>
-          <p className="text-gray-500 leading-[30px]">{service.description}</p>
+          <p className="text-gray-500 text-sm leading-[22px] md:text-base md:leading-[30px]">
+            {service.description}
+          </p>
         </div>
       </div>
 
-      <div className="w-[450px] h-[320px] flex shrink-0">
+      <div className="w-full h-[200px] md:w-[300px] md:h-[220px] lg:w-[450px] lg:h-[320px] flex shrink-0">
         <Image
           src={service.image}
           className="w-full object-contain"
@@ -114,19 +118,19 @@ export default function Services2() {
   return (
     <motion.section
       id="Services"
-      className="w-full bg-white py-[150px]"
+      className="w-full bg-white py-[80px] md:py-[100px] lg:py-[150px]"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="container max-w-7xl mx-auto">
+      <div className="container max-w-7xl mx-auto px-4 md:px-6">
         {/* HEADER */}
         <motion.div
-          className="flex justify-between items-center mb-[70px]"
+          className="flex flex-col md:flex-row justify-between items-start md:items-center mb-[50px] md:mb-[70px] gap-6"
           variants={itemVariants}
         >
-          <h2 className="font-bold text-[48px] leading-[1.1] uppercase text-gray-900">
+          <h2 className="font-bold text-[32px] leading-[1.1] md:text-[48px] uppercase text-gray-900">
             {SERVICES_SECTION_DATA.titleLine1} <br />
             {SERVICES_SECTION_DATA.titleLine2}
           </h2>
@@ -135,8 +139,8 @@ export default function Services2() {
             href={SERVICES_SECTION_DATA.buttonLink}
             className="bg-gradient-to-r from-[#2E2BFF] to-[#1C1AFF]
             text-white font-semibold
-            px-8 py-4 rounded-full
-            transition duration-300"
+            px-6 py-3 md:px-8 md:py-4 rounded-full
+            transition duration-300 whitespace-nowrap"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -146,7 +150,7 @@ export default function Services2() {
 
         {/* GRID */}
         <motion.div
-          className="grid grid-cols-3 gap-[30px]"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[20px] md:gap-[30px]"
           variants={containerVariants}
         >
           {/* SERVICES CARDS */}

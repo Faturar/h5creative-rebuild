@@ -36,21 +36,21 @@ export default function FAQ() {
 
   return (
     <motion.section
-      className="w-full bg-white py-32"
+      className="w-full bg-white py-20 md:py-32"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-2 gap-20 items-start">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start">
           {/* LEFT SIDE */}
           <motion.div
             className="flex flex-col gap-8"
             variants={containerVariants}
           >
             <motion.div
-              className="w-20 h-20 flex rounded-full 
+              className="w-16 h-16 md:w-20 md:h-20 flex rounded-full 
             bg-gradient-to-br from-[#2E2BFF] to-[#1C1AFF] 
             items-center justify-center 
             "
@@ -58,14 +58,14 @@ export default function FAQ() {
               whileHover={{ scale: 1.1, rotate: 5 }}
               transition={{ duration: 0.3 }}
             >
-              <MessageCircle className="w-10 h-10 text-white" />
+              <MessageCircle className="w-8 h-8 md:w-10 md:h-10 text-white" />
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <h2 className="text-[48px] font-semibold uppercase tracking-tight text-gray-900">
+              <h2 className="text-[36px] md:text-[48px] font-semibold uppercase tracking-tight text-gray-900">
                 {FAQ_SECTION_DATA.title}
               </h2>
-              <p className="text-gray-500 mt-4 max-w-md">
+              <p className="text-gray-500 mt-4 max-w-md text-sm md:text-base">
                 {FAQ_SECTION_DATA.description}
               </p>
             </motion.div>
@@ -73,7 +73,7 @@ export default function FAQ() {
             <motion.button
               className="inline-flex items-center gap-3 
               bg-gradient-to-r from-[#2E2BFF] to-[#1C1AFF] 
-              px-8 py-4 rounded-lg text-white font-semibold 
+              px-6 py-3 md:px-8 md:py-4 rounded-lg text-white font-semibold 
               
               transition-all duration-300 
               hover:scale-[1.03] 
@@ -88,7 +88,7 @@ export default function FAQ() {
 
           {/* RIGHT SIDE ACCORDION */}
           <motion.div
-            className="flex flex-col gap-6"
+            className="flex flex-col gap-4 md:gap-6"
             variants={containerVariants}
           >
             {FAQ_SECTION_DATA.faqs.map((faq) => {
@@ -97,7 +97,7 @@ export default function FAQ() {
               return (
                 <motion.div
                   key={faq.id}
-                  className={`rounded-2xl border transition-all duration-300
+                  className={`rounded-xl md:rounded-2xl border transition-all duration-300
                   ${
                     isOpen
                       ? "border-[#2E2BFF]"
@@ -107,10 +107,10 @@ export default function FAQ() {
                 >
                   <button
                     onClick={() => setActive(isOpen ? null : faq.id - 1)}
-                    className="w-full flex justify-between items-center p-6 text-left"
+                    className="w-full flex justify-between items-center p-4 md:p-6 text-left"
                   >
                     <motion.span
-                      className={`text-xl font-semibold transition ${
+                      className={`text-lg md:text-xl font-semibold transition ${
                         isOpen ? "text-[#2E2BFF]" : "text-gray-900"
                       }`}
                       whileHover={{ x: 5 }}
@@ -121,7 +121,7 @@ export default function FAQ() {
 
                     <motion.div transition={{ duration: 0.3 }}>
                       <ChevronDown
-                        className={`w-5 h-5 text-[#2E2BFF] transition duration-300 ${
+                        className={`w-4 h-4 md:w-5 md:h-5 text-[#2E2BFF] transition duration-300 ${
                           isOpen ? "rotate-180 opacity-100" : "opacity-60"
                         }`}
                       />
@@ -138,12 +138,12 @@ export default function FAQ() {
                         className="overflow-hidden"
                       >
                         <motion.div
-                          className="px-6 pb-6"
+                          className="px-4 md:px-6 pb-4 md:pb-6"
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.3, delay: 0.1 }}
                         >
-                          <p className="text-gray-500 leading-relaxed">
+                          <p className="text-gray-500 leading-relaxed text-sm md:text-base">
                             {faq.answer}
                           </p>
                         </motion.div>

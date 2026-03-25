@@ -28,16 +28,16 @@ const itemVariants = {
 export default function CorporateSection() {
   return (
     <motion.section
-      className="w-full bg-[#F4ECE4] py-28"
+      className="w-full bg-[#F4ECE4] py-16 md:py-28"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="max-w-[1200px] mx-auto px-6 grid lg:grid-cols-[1fr_1.05fr] items-center gap-16">
+      <div className="max-w-[1200px] mx-auto px-4 md:px-6 grid lg:grid-cols-[1fr_1.05fr] items-center gap-8 md:gap-16">
         {/* LEFT IMAGE */}
         <motion.div
-          className="relative h-[420px] lg:h-[520px] overflow-hidden rounded-[32px] shadow-xl"
+          className="relative h-[320px] md:h-[420px] lg:h-[520px] overflow-hidden rounded-[24px] md:rounded-[32px] shadow-xl"
           variants={itemVariants}
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.3 }}
@@ -52,13 +52,13 @@ export default function CorporateSection() {
 
           {/* Premium Badge */}
           <motion.div
-            className="absolute bottom-6 left-6 rounded-2xl bg-green-500 px-6 py-4 text-white shadow-lg"
+            className="absolute bottom-4 md:bottom-6 left-4 md:left-6 rounded-xl md:rounded-2xl bg-green-500 px-4 md:px-6 py-3 md:py-4 text-white shadow-lg"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <p className="text-2xl font-bold leading-none">28+</p>
+            <p className="text-xl md:text-2xl font-bold leading-none">28+</p>
             <p className="text-xs uppercase tracking-wide opacity-90">
               Years Experience
             </p>
@@ -67,11 +67,11 @@ export default function CorporateSection() {
 
         {/* RIGHT CONTENT */}
         <motion.div
-          className="flex flex-col gap-6"
+          className="flex flex-col gap-4 md:gap-6"
           variants={containerVariants}
         >
           <motion.h2
-            className="text-[44px] leading-[1.05] font-semibold text-[#14131a] lg:text-[60px]"
+            className="text-[32px] md:text-[44px] leading-[1.05] font-semibold text-[#14131a] lg:text-[60px]"
             variants={itemVariants}
           >
             Powerful Agency
@@ -82,7 +82,7 @@ export default function CorporateSection() {
           </motion.h2>
 
           <motion.p
-            className="mt-8 max-w-[560px] text-base leading-8 text-[#6B6872]"
+            className="mt-4 md:mt-8 max-w-[560px] text-sm md:text-base leading-7 md:leading-8 text-[#6B6872]"
             variants={itemVariants}
           >
             We strive to develop real-world web solutions that are ideal for
@@ -92,7 +92,7 @@ export default function CorporateSection() {
           {/* Premium Gradient Button */}
           <motion.button
             type="button"
-            className="mt-10 btn-primary inline-flex items-center gap-2"
+            className="mt-6 md:mt-10 btn-primary inline-flex items-center gap-2"
             variants={itemVariants}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

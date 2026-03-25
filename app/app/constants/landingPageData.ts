@@ -1,6 +1,8 @@
 import services1 from "@/public/assets/images/services1.png"
 import services2 from "@/public/assets/images/services2.png"
 import services3 from "@/public/assets/images/services3.png"
+import logo from "@/public/assets/images/logos/logo.svg"
+import eclipseImage from "@/public/assets/images/Ellipse.svg"
 import {
   Crown,
   Code,
@@ -269,4 +271,60 @@ export const CTA_SECTION_DATA = {
       label: "Penghargaan",
     },
   ],
+}
+
+// Footer Section Data
+export const FOOTER_DATA = {
+  logo: logo,
+  eclipseImage: eclipseImage,
+  sections: [
+    {
+      title: "Explore",
+      links: [
+        { text: "Services", href: "#" },
+        { text: "Testimonials", href: "#" },
+        { text: "Pricing", href: "#" },
+        { text: "About", href: "#" },
+      ],
+    },
+    {
+      title: "Services",
+      links: [
+        { text: "UI/UX Design", href: "#" },
+        { text: "Web Development", href: "#" },
+        { text: "Data Science", href: "#" },
+        { text: "Digital Marketing", href: "#" },
+      ],
+    },
+    {
+      title: "About",
+      links: [
+        { text: "My Profile", href: "#" },
+        { text: "How do I work", href: "#" },
+        { text: "Achievements", href: "#" },
+        { text: "Team A", href: "#" },
+      ],
+    },
+    {
+      title: "Connect",
+      links: [
+        {
+          text: "+1 2208 1996",
+          href: "#",
+          icon: "Phone",
+        },
+        {
+          text: "buildwithangga",
+          href: "#",
+          icon: "Dribbble",
+        },
+        {
+          text: "team@bwa.com",
+          href: "#",
+          icon: "Mail",
+        },
+      ],
+    },
+  ],
+  copyright: "All Rights Reserved. Copyright BuildWithAngga 2024.",
 }

@@ -43,21 +43,24 @@ const itemVariants = {
 export default function ClientsSection() {
   return (
     <motion.section
-      className="w-full bg-[#0B0B0D] py-32"
+      className="w-full bg-[#0B0B0D] py-20 md:py-32"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* HEADER */}
-        <motion.div className="text-center mb-20" variants={itemVariants}>
-          <h2 className="text-[56px] font-semibold uppercase tracking-tight text-white">
+        <motion.div
+          className="text-center mb-12 md:mb-20"
+          variants={itemVariants}
+        >
+          <h2 className="text-[36px] md:text-[56px] font-semibold uppercase tracking-tight text-white">
             OUR CLIENTS
           </h2>
 
           <motion.div
-            className="w-24 h-1 bg-gradient-to-r from-[#2E2BFF] to-[#1C1AFF] mx-auto mt-6 rounded-full"
+            className="w-16 md:w-24 h-1 bg-gradient-to-r from-[#2E2BFF] to-[#1C1AFF] mx-auto mt-4 md:mt-6 rounded-full"
             initial={{ width: 0 }}
             whileInView={{ width: 96 }}
             viewport={{ once: true }}
@@ -67,7 +70,7 @@ export default function ClientsSection() {
 
         {/* LOGO GRID */}
         <motion.div
-          className="grid grid-cols-4 md:grid-cols-6 gap-10"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-10"
           variants={containerVariants}
         >
           {clients.map((logo, index) => (
@@ -76,8 +79,8 @@ export default function ClientsSection() {
               className="flex items-center justify-center 
               bg-white/5 
               border border-white/10 
-              rounded-2xl 
-              h-28 
+              rounded-xl md:rounded-2xl 
+              h-20 md:h-28 
               backdrop-blur-md
               transition-all duration-300
               hover:bg-[#2E2BFF]/10
@@ -91,8 +94,8 @@ export default function ClientsSection() {
               <Image
                 src={logo}
                 alt="Client Logo"
-                width={120}
-                height={60}
+                width={80}
+                height={40}
                 className="object-contain opacity-70 hover:opacity-100 transition"
               />
             </motion.div>
