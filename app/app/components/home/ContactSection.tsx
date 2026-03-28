@@ -31,7 +31,7 @@ const itemVariants = {
 export default function ContactSection() {
   return (
     <motion.section
-      className="w-full bg-white py-32 relative overflow-hidden"
+      className="w-full bg-white pt-16 pb-24 xl:py-32 relative overflow-hidden px-8 lg:px-16"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
@@ -40,16 +40,16 @@ export default function ContactSection() {
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-[#2E2BFF]/5 rounded-full -mr-32 -mt-32"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#2E2BFF]/3 rounded-full -ml-48 -mb-48"></div>
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <motion.h2
-            className="text-[64px] leading-[1.1] font-bold uppercase text-gray-900 mb-6"
+            className="text-[40px] lg:text-[64px] leading-[1.1] font-bold uppercase text-gray-900 mb-6"
             variants={itemVariants}
           >
             {CONTACT_SECTION_DATA.title}
           </motion.h2>
           <motion.p
-            className="text-xl text-gray-600 max-w-2xl mx-auto"
+            className="text-base lg:text-xl text-gray-600 max-w-2xl mx-auto"
             variants={itemVariants}
           >
             {CONTACT_SECTION_DATA.subtitle}

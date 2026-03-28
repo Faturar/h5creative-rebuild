@@ -1,7 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
-import { motion, Easing } from "framer-motion"
+import { motion, Easing, AnimatePresence } from "framer-motion"
 
 import logo from "@/public/assets/images/logos/logo.png"
 
@@ -29,45 +30,87 @@ const itemVariants = {
   },
 }
 
+const mobileMenuVariants = {
+  closed: {
+    opacity: 0,
+    x: "100%",
+    transition: {
+      type: "spring" as const,
+      stiffness: 300,
+      damping: 30,
+    },
+  },
+  open: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 300,
+      damping: 30,
+    },
+  },
+}
+
+const mobileItemVariants = {
+  closed: {
+    opacity: 0,
+    x: 50,
+  },
+  open: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: {
+      delay: i * 0.1,
+      type: "spring" as const,
+      stiffness: 300,
+      damping: 30,
+    },
+  }),
+}
+
 export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const navItems = ["Home", "Services", "Testimonials", "Pricing", "About"]
+
   return (
     <motion.nav
-      className="container max-w-7xl mx-auto flex justify-between items-center py-8 z-10"
+      className="container max-w-7xl mx-auto flex justify-between items-center py-8 px-8 lg:px-16 z-90 top-0 bg-[#0B0B1B]"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
       <motion.a
         href="#"
-        className="flex shrink-0"
+        className={`flex shrink-0 ${isMenuOpen ? "z-[100] relative" : ""}`}
         variants={itemVariants}
         whileHover={{ scale: 1.05 }}
         transition={{ duration: 0.2 }}
       >
         <Image src={logo} alt="logo" className="w-16 h-16 object-contain" />
       </motion.a>
+
+      {/* Desktop Navigation */}
       <motion.div
-        className="flex gap-[50px] items-center"
+        className="hidden lg:flex gap-[50px] items-center"
         variants={containerVariants}
       >
         <motion.ul
           className="flex gap-[50px] items-center text-white"
           variants={containerVariants}
         >
-          {["Home", "Services", "Testimonials", "Pricing", "About"].map(
-            (item) => (
-              <motion.li key={item} variants={itemVariants}>
-                <motion.a
-                  href="#"
-                  className="font-medium text-lg hover:text-[#FFE7C2] transition-all duration-300"
-                  whileHover={{ y: -2 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {item}
-                </motion.a>
-              </motion.li>
-            ),
-          )}
+          {navItems.map((item) => (
+            <motion.li key={item} variants={itemVariants}>
+              <motion.a
+                href="#"
+                className="font-medium text-lg hover:text-[#FFE7C2] transition-all duration-300"
+                whileHover={{ y: -2 }}
+                transition={{ duration: 0.2 }}
+              >
+                {item}
+              </motion.a>
+            </motion.li>
+          ))}
         </motion.ul>
         <motion.button
           className="inline-flex items-center gap-4 rounded-lg 
@@ -84,6 +127,98 @@ export default function Navbar() {
           Konsultasi Sekarang
         </motion.button>
       </motion.div>
+
+      {/* Mobile Burger Button */}
+      <motion.button
+        className={`lg:hidden flex flex-col gap-1.5 ${isMenuOpen ? "z-100 relative" : ""}`}
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        whileTap={{ scale: 0.95 }}
+        aria-label="Toggle menu"
+      >
+        <motion.span
+          className="w-6 h-0.5 bg-white block"
+          animate={{
+            rotate: isMenuOpen ? 45 : 0,
+            y: isMenuOpen ? 6 : 0,
+          }}
+          transition={{ duration: 0.3 }}
+        />
+        <motion.span
+          className="w-6 h-0.5 bg-white block"
+          animate={{
+            opacity: isMenuOpen ? 0 : 1,
+          }}
+          transition={{ duration: 0.3 }}
+        />
+        <motion.span
+          className="w-6 h-0.5 bg-white block"
+          animate={{
+            rotate: isMenuOpen ? -45 : 0,
+            y: isMenuOpen ? -6 : 0,
+          }}
+          transition={{ duration: 0.3 }}
+        />
+      </motion.button>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMenuOpen(false)}
+            />
+
+            {/* Mobile Menu Content */}
+            <motion.div
+              className="fixed top-0 right-0 h-full w-full bg-linear-to-b from-[#1a1a2e] to-[#16213e] z-60 lg:hidden flex flex-col justify-center items-center gap-8 shadow-2xl"
+              variants={mobileMenuVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+            >
+              <motion.ul className="flex flex-col gap-6 items-start w-full px-4 mt-16">
+                {navItems.map((item, index) => (
+                  <motion.li
+                    key={item}
+                    className="w-full"
+                    custom={index}
+                    variants={mobileItemVariants}
+                  >
+                    <motion.a
+                      href="#"
+                      className="font-medium text-xl text-white hover:bg-[#2E2BFF] transition-all duration-300 block py-3 px-4 w-full"
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item}
+                    </motion.a>
+                  </motion.li>
+                ))}
+              </motion.ul>
+
+              <motion.button
+                className="inline-flex items-center justify-center gap-4 
+                bg-gradient-to-r from-[#2E2BFF] to-[#1C1AFF] 
+                px-4 py-4 font-semibold text-white 
+                w-full
+                transition-all duration-300 
+                hover:from-[#1C1AFF] hover:to-[#2E2BFF]"
+                custom={navItems.length}
+                variants={mobileItemVariants}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Konsultasi Sekarang
+              </motion.button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </motion.nav>
   )
 }

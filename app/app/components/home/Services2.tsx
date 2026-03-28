@@ -36,7 +36,7 @@ const itemVariants = {
 const ServiceCard = ({ service }: { service: (typeof SERVICES_DATA)[0] }) => {
   return (
     <motion.div
-      className="p-[30px] pb-0 md:p-[40px] md:pb-0 rounded-[20px] md:rounded-[30px] flex flex-col gap-[30px] md:gap-[40px] 
+      className="col-span-1 p-[30px] pb-0 md:p-[40px] md:pb-0 rounded-[20px] md:rounded-[30px] flex flex-col gap-[30px] md:gap-[40px] 
     bg-white border border-gray-200 
     hover:border-[#2E2BFF] transition duration-300"
       variants={itemVariants}
@@ -55,7 +55,7 @@ const ServiceCard = ({ service }: { service: (typeof SERVICES_DATA)[0] }) => {
         </p>
       </div>
 
-      <div className="w-full h-[200px] md:h-[320px]">
+      <div className="w-full h-[300px] md:h-[320px] lg:h-[240px]">
         <Image
           src={service.image}
           className="w-full object-contain"
@@ -74,7 +74,7 @@ const FeaturedServiceCard = ({
 }) => {
   return (
     <motion.div
-      className="col-span-3 p-[30px] pb-0 md:p-[40px] md:pb-0 rounded-[20px] md:rounded-[30px] flex flex-col md:flex-row gap-[30px] md:gap-[50px] 
+      className="lg:col-span-3 p-[30px] pb-0 md:p-[40px] md:pb-0 rounded-[20px] md:rounded-[30px] flex flex-col md:flex-row gap-[30px] md:gap-[50px] 
     bg-white border border-gray-200 
     hover:border-[#2E2BFF] transition duration-300"
       variants={itemVariants}
@@ -118,19 +118,19 @@ export default function Services2() {
   return (
     <motion.section
       id="Services"
-      className="w-full bg-white py-[80px] md:py-[100px] lg:py-[150px]"
+      className="w-full bg-white py-[80px] md:py-[100px] lg:py-[120px]"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="container max-w-7xl mx-auto px-4 md:px-6">
+      <div className="container max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
         {/* HEADER */}
         <motion.div
           className="flex flex-col md:flex-row justify-between items-start md:items-center mb-[50px] md:mb-[70px] gap-6"
           variants={itemVariants}
         >
-          <h2 className="font-bold text-[32px] leading-[1.1] md:text-[48px] uppercase text-gray-900">
+          <h2 className="font-bold text-[32px] leading-[1.1] md:text-[48px] lg:text-[40px] uppercase text-gray-900">
             {SERVICES_SECTION_DATA.titleLine1} <br />
             {SERVICES_SECTION_DATA.titleLine2}
           </h2>
@@ -150,16 +150,16 @@ export default function Services2() {
 
         {/* GRID */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[20px] md:gap-[30px]"
+          className="flex flex-col gap-[20px] md:gap-[30px]"
           variants={containerVariants}
         >
-          {/* SERVICES CARDS */}
-          {SERVICES_DATA.map((service) => (
-            <ServiceCard key={service.id} service={service} />
-          ))}
-
-          {/* FEATURED SERVICE CARD */}
-          <FeaturedServiceCard service={FEATURED_SERVICE_DATA} />
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-[20px] md:gap-[30px]">
+            {/* SERVICES CARDS */}
+            {SERVICES_DATA.map((service) => (
+              <ServiceCard key={service.id} service={service} />
+            ))}
+            <FeaturedServiceCard service={FEATURED_SERVICE_DATA} />
+          </div>
         </motion.div>
       </div>
     </motion.section>

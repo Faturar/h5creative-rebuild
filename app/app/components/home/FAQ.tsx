@@ -36,13 +36,13 @@ export default function FAQ() {
 
   return (
     <motion.section
-      className="w-full bg-white py-20 md:py-32"
+      className="w-full bg-white py-20 md:py-32 px-8 lg:px-16"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+      <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start">
           {/* LEFT SIDE */}
           <motion.div

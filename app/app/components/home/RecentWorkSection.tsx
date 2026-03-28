@@ -76,13 +76,13 @@ function ProjectCard({
 export default function RecentWorkSection() {
   return (
     <motion.section
-      className="w-full bg-[#0B0B0D] text-white py-20 md:py-32"
+      className="w-full bg-[#0B0B0D] text-white py-20 md:py-32 lg:pt-16 lg:pb-28 xl:py-32 px-8 lg:px-16"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+      <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
           {/* LEFT COLUMN */}
           <motion.div
@@ -107,7 +107,7 @@ export default function RecentWorkSection() {
 
           {/* RIGHT COLUMN */}
           <motion.div
-            className="w-full lg:w-1/2 space-y-16 lg:space-y-28 mt-8 lg:mt-24"
+            className="w-full lg:w-1/2 space-y-16 lg:space-y-28 md:mt-8 lg:mt-24"
             variants={containerVariants}
           >
             {/* Next two projects */}

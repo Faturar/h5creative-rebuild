@@ -47,7 +47,7 @@ const StatCard = ({
 
       <div className="relative z-10">
         <motion.div
-          className="text-6xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70"
+          className="text-4xl lg:text-6xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.1 * index, duration: 0.5 }}
@@ -66,7 +66,7 @@ const StatCard = ({
 export default function CTASection() {
   return (
     <motion.section
-      className="w-full bg-gradient-to-br from-[#2E2BFF] to-[#1C1AFF] py-32 text-white relative overflow-hidden"
+      className="w-full bg-gradient-to-br from-[#2E2BFF] to-[#1C1AFF] py-20 lg:py-32 text-white relative overflow-hidden"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
@@ -81,20 +81,20 @@ export default function CTASection() {
         <div className="absolute bottom-1/4 left-1/4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="text-center mb-20">
+      <div className="max-w-7xl mx-auto relative z-10 px-6 lg:px-16">
+        <div className="text-center mb-12 lg:mb-20">
           <motion.h2
-            className="text-[72px] leading-[1.05] font-bold uppercase mb-6 tracking-tight"
+            className="text-[36px] lg:text-[48px] xl:text-[72px] leading-[1.05] font-bold uppercase mb-6 tracking-tight"
             variants={itemVariants}
           >
             {CTA_SECTION_DATA.title}
           </motion.h2>
-          <motion.p
+          {/* <motion.p
             className="text-2xl text-white/90 max-w-3xl mx-auto mb-6 font-light"
             variants={itemVariants}
           >
             {CTA_SECTION_DATA.subtitle}
-          </motion.p>
+          </motion.p> */}
           <motion.p
             className="text-lg text-white/80 max-w-2xl mx-auto font-light"
             variants={itemVariants}
@@ -103,7 +103,7 @@ export default function CTASection() {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-8 mb-12 lg:mb-20">
           {CTA_SECTION_DATA.stats.map((stat, index) => (
             <StatCard key={stat.id} stat={stat} index={index} />
           ))}
@@ -111,7 +111,7 @@ export default function CTASection() {
 
         <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
           <motion.button
-            className="relative bg-white text-[#2E2BFF] font-bold px-8 py-4 rounded-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 overflow-hidden group"
+            className="relative bg-white text-[#2E2BFF] font-bold px-6 py-3.5 rounded-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 overflow-hidden group"
             variants={itemVariants}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -126,7 +126,7 @@ export default function CTASection() {
           </motion.button>
 
           <motion.button
-            className="relative bg-transparent border-2 border-white text-white font-bold px-8 py-4 rounded-lg transition-all duration-300 hover:bg-white/10 hover:shadow-lg overflow-hidden group"
+            className="relative bg-transparent border-2 border-white text-white font-bold px-6 py-2.5 rounded-lg transition-all duration-300 hover:bg-white/10 hover:shadow-lg overflow-hidden group"
             variants={itemVariants}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -139,21 +139,6 @@ export default function CTASection() {
             </span>
           </motion.button>
         </div>
-
-        {/* Decorative element */}
-        <motion.div
-          className="flex justify-center mt-12"
-          variants={itemVariants}
-        >
-          <div className="w-24 h-1 bg-white/20 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-white"
-              initial={{ width: 0 }}
-              animate={{ width: "100%" }}
-              transition={{ duration: 1.5, delay: 0.5 }}
-            />
-          </div>
-        </motion.div>
       </div>
     </motion.section>
   )

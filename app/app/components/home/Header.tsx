@@ -36,7 +36,7 @@ export default function Header() {
   return (
     <motion.section
       id="Header"
-      className="flex flex-col gap-8 bg-[#0B0B1B] relative h-screen"
+      className="flex flex-col gap-8 bg-[#0B0B1B] relative min-h-screen pb-16"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
@@ -66,18 +66,21 @@ export default function Header() {
         />
       </div> */}
       <motion.div
-        className="hero container max-w-7xl mx-auto flex justify-between items-center relative"
+        className="hero container max-w-7xl mx-auto flex justify-between items-center relative px-8 lg:px-16"
         variants={containerVariants}
       >
-        <div className="relative flex h-[80vh] w-full items-center justify-between bg-[#0B0B1B]">
+        <div className="relative flex flex-col sm:flex-row gap-16 min-h-[80vh] w-full items-center justify-between bg-[#0B0B1B]">
           {/* LEFT CONTENT */}
-          <motion.div className="text-white z-10" variants={containerVariants}>
+          <motion.div
+            className="lg:w-3/5 text-white pr-12"
+            variants={containerVariants}
+          >
             <motion.h1
-              className="text-[48px] leading-[1.05] font-extrabold tracking-tight md:text-[56px] lg:text-[72px]"
+              className="text-[48px] leading-[1.05] font-extrabold tracking-tight md:text-[48px] xl:text-[72px]"
               variants={itemVariants}
             >
               {HEADER_DATA.title}{" "}
-              <span className="inline-block bg-[#2E2BFF] px-4 py-1 md:px-6 md:py-2">
+              <span className="inline-block bg-[#2E2BFF] py-1 md:py-2">
                 {HEADER_DATA.highlightedText}
               </span>{" "}
             </motion.h1>
@@ -102,17 +105,18 @@ export default function Header() {
 
           {/* RIGHT SIDE VISUAL */}
           <motion.div
-            className="relative flex items-center justify-center hidden lg:block"
+            className="lg:w-2/5 relative flex items-center justify-center lg:block"
             variants={itemVariants}
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="relative h-[300px] w-[300px] overflow-hidden rounded-[28px] shadow-2xl md:h-[360px] md:w-[360px] lg:h-[420px] lg:w-[420px]">
+            <div className="relative h-[300px] w-full overflow-hidden rounded-[24px] shadow-2xl md:h-[360px] md:w-[360px] lg:h-[420px] lg:w-[420px]">
               <Image
                 src={HEADER_DATA.heroImage}
                 alt={HEADER_DATA.heroAlt}
-                fill
-                className="h-full w-full object-cover"
+                width={512}
+                height={512}
+                className="w-full h-full object-cover"
               />
             </div>
           </motion.div>

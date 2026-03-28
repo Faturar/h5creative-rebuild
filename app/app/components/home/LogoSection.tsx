@@ -9,7 +9,7 @@ import logo4 from "@/public/assets/images/logos/logoipsum4.png"
 
 export default function LogoSection() {
   return (
-    <section className="w-full bg-[#0B0B0D] py-16 md:py-24 overflow-hidden">
+    <section className="w-full bg-[#0B0B0D] py-16 md:py-24 lg:py-12 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* SLIDER */}
         <div className="relative group/slider">

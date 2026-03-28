@@ -31,7 +31,7 @@ const itemVariants = {
 export default function Footer() {
   return (
     <motion.footer
-      className="bg-[#0B0B1B] text-white pb-8 md:pb-[50px] border-t-[10px] border-[#4920E5]"
+      className="bg-[#0B0B1B] text-white pb-8 md:pb-[50px] border-t-[10px] border-[#4920E5] px-16"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}

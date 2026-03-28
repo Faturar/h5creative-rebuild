@@ -46,7 +46,7 @@ const floatVariants = {
 
 export default function HeroSection() {
   return (
-    <section className="section-wrap pt-8 md:pt-10">
+    <section className="section-wrap pt-8 md:pt-10 px-16">
       <motion.div
         className="grid items-center gap-8 md:gap-14 lg:grid-cols-[1.1fr_0.9fr] max-w-7xl mx-auto px-4 md:px-6"
         variants={containerVariants}

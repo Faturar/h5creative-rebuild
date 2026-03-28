@@ -34,13 +34,13 @@ const itemVariants = {
 export default function Footer() {
   return (
     <motion.footer
-      className="bg-[#0B0B0D] text-white border-t border-white/10"
+      className="bg-[#0B0B0D] text-white border-t border-white/10 px-8 lg:px-16"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
-      <div className="container max-w-7xl mx-auto flex justify-between pt-[100px] pb-[60px] relative border-b border-white/10">
+      <div className="container max-w-7xl mx-auto flex flex-col sm:flex-row justify-between pt-16 lg:pt-25 pb-16 relative border-b border-white/10">
         {/* Optional subtle background element */}
         <Image
           src={eclipseImage}
@@ -50,7 +50,7 @@ export default function Footer() {
 
         {/* LOGO */}
         <motion.div
-          className="flex shrink-0 h-fit z-10"
+          className="flex-1 flex shrink-0 h-fit z-10"
           variants={itemVariants}
         >
           <Image src={logo} alt="logo" className="w-20 h-20 object-contain" />
@@ -58,7 +58,7 @@ export default function Footer() {
 
         {/* LINKS */}
         <motion.div
-          className="flex gap-[90px] z-10"
+          className="flex-4 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 z-10 mt-16 lg:mt-0"
           variants={containerVariants}
         >
           {/* EXPLORE */}
@@ -67,7 +67,7 @@ export default function Footer() {
               Explore
             </p>
 
-            {["Services", "Testimonials", "Pricing", "About"].map((item) => (
+            {["Projects", "Case Studies", "Services", "Contact"].map((item) => (
               <motion.a
                 key={item}
                 href="#"
@@ -87,10 +87,10 @@ export default function Footer() {
             </p>
 
             {[
-              "UI/UX Design",
-              "Web Development",
-              "Data Science",
-              "Digital Marketing",
+              "Branding & Identity",
+              "UI/UX & Product Design",
+              "Web & App Development",
+              "Creative Direction",
             ].map((item) => (
               <motion.a
                 key={item}
@@ -107,10 +107,10 @@ export default function Footer() {
           {/* ABOUT */}
           <motion.div className="flex flex-col gap-5" variants={itemVariants}>
             <p className="font-semibold uppercase text-sm tracking-wide text-white">
-              About
+              H5 Creative
             </p>
 
-            {["My Profile", "How Do I Work", "Achievements", "Team A"].map(
+            {["About Us", "Our Approach", "Selected Clients", "Careers"].map(
               (item) => (
                 <motion.a
                   key={item}
@@ -128,7 +128,7 @@ export default function Footer() {
           {/* CONNECT */}
           <motion.div className="flex flex-col gap-5" variants={itemVariants}>
             <p className="font-semibold uppercase text-sm tracking-wide text-white">
-              Connect
+              Let’s Collaborate
             </p>
 
             <motion.a
@@ -138,7 +138,7 @@ export default function Footer() {
               transition={{ duration: 0.2 }}
             >
               <Image src={callIcon} alt="icon" />
-              +1 2208 1996
+              +62 8XX XXXX XXXX
             </motion.a>
 
             <motion.a
@@ -148,7 +148,7 @@ export default function Footer() {
               transition={{ duration: 0.2 }}
             >
               <Image src={dribbbleIcon} alt="icon" />
-              buildwithangga
+              dribbble.com/h5creative
             </motion.a>
 
             <motion.a
@@ -158,7 +158,7 @@ export default function Footer() {
               transition={{ duration: 0.2 }}
             >
               <Image src={smsIcon} alt="icon" />
-              team@bwa.com
+              hello@h5creative.id
             </motion.a>
           </motion.div>
         </motion.div>
