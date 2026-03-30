@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { motion, Easing } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 
@@ -35,41 +36,43 @@ function ProjectCard({
   project: (typeof RECENT_WORK_SECTION_DATA.projects)[0]
 }) {
   return (
-    <motion.div
-      variants={itemVariants}
-      whileHover={{ y: -8 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div
-        className={`relative w-full ${project.height} rounded-[20px] md:rounded-[28px] overflow-hidden group`}
+    <Link href={`/project/${project.slug}`}>
+      <motion.div
+        variants={itemVariants}
+        whileHover={{ y: -8 }}
+        transition={{ duration: 0.3 }}
+        className="cursor-pointer my-16"
       >
-        <Image
-          src={project.image}
-          alt="Project"
-          fill
-          className="object-cover transition duration-700 group-hover:scale-105"
-        />
+        <div
+          className={`relative w-full ${project.height} rounded-[20px] md:rounded-[28px] overflow-hidden group`}
+        >
+          <Image
+            src={project.image}
+            alt="Project"
+            fill
+            className="object-cover transition duration-700 group-hover:scale-105"
+          />
 
-        {/* Optional subtle overlay on hover */}
-        <div className="absolute inset-0 bg-[#2E2BFF]/0 group-hover:bg-[#2E2BFF]/10 transition duration-500" />
-      </div>
+          {/* Optional subtle overlay on hover */}
+          <div className="absolute inset-0 bg-[#2E2BFF]/0 group-hover:bg-[#2E2BFF]/10 transition duration-500" />
+        </div>
 
-      <div className="text-xs md:text-sm text-gray-400 mt-4 md:mt-6">
-        {project.year} &nbsp; • &nbsp; {project.author}
-      </div>
+        <div className="text-xs md:text-sm text-gray-400 mt-4 md:mt-6">
+          {project.year} &nbsp; • &nbsp; {project.author}
+        </div>
 
-      <motion.h3
-        className="text-lg md:text-2xl font-medium leading-snug mt-2 md:mt-3 
-        transition-all duration-300 
-        cursor-pointer 
-        hover:text-[#2E2BFF] 
-        hover:drop-shadow-[0_0_10px_rgba(46,43,255,0.5)]"
-        whileHover={{ x: 5 }}
-        transition={{ duration: 0.2 }}
-      >
-        {project.title}
-      </motion.h3>
-    </motion.div>
+        <motion.h3
+          className="text-lg md:text-2xl font-medium leading-snug mt-2 md:mt-3 
+          transition-all duration-300 
+          hover:text-[#2E2BFF] 
+          hover:drop-shadow-[0_0_10px_rgba(46,43,255,0.5)]"
+          whileHover={{ x: 5 }}
+          transition={{ duration: 0.2 }}
+        >
+          {project.title}
+        </motion.h3>
+      </motion.div>
+    </Link>
   )
 }
 

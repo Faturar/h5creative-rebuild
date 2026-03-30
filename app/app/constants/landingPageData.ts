@@ -83,6 +83,7 @@ export const RECENT_WORK_SECTION_DATA = {
   projects: [
     {
       id: 1,
+      slug: "social-media-growth-campaign",
       image: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e",
       height: "h-[460px]",
       year: "2024",
@@ -91,6 +92,7 @@ export const RECENT_WORK_SECTION_DATA = {
     },
     {
       id: 2,
+      slug: "ecommerce-platform-redesign",
       image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb",
       height: "h-[420px]",
       year: "2024",
@@ -99,6 +101,7 @@ export const RECENT_WORK_SECTION_DATA = {
     },
     {
       id: 3,
+      slug: "mobile-app-development",
       image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6",
       height: "h-[440px]",
       year: "2024",
@@ -107,6 +110,7 @@ export const RECENT_WORK_SECTION_DATA = {
     },
     {
       id: 4,
+      slug: "multi-power-aditama-brand-campaign",
       image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
       height: "h-[420px]",
       year: "2024",

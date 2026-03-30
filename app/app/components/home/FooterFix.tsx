@@ -169,7 +169,7 @@ export default function Footer() {
         className="py-6 text-center text-sm text-gray-500"
         variants={itemVariants}
       >
-        All Rights Reserved. © 2026 YourBrand.
+        All Rights Reserved. © 2026 H5 Creative.
       </motion.div>
     </motion.footer>
   )

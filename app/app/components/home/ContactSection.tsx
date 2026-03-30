@@ -31,7 +31,7 @@ const itemVariants = {
 export default function ContactSection() {
   return (
     <motion.section
-      className="w-full bg-white pt-16 pb-24 xl:py-32 relative overflow-hidden px-8 lg:px-16"
+      className="w-full bg-white pt-16 pb-24 xl:pt-24 xl:pb-32 relative overflow-hidden px-8 lg:px-16"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
