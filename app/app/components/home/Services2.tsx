@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { motion, Easing } from "framer-motion"
 import { Box } from "lucide-react"
 
@@ -35,34 +36,36 @@ const itemVariants = {
 // Service Card Component
 const ServiceCard = ({ service }: { service: (typeof SERVICES_DATA)[0] }) => {
   return (
-    <motion.div
-      className="col-span-1 p-[30px] pb-0 md:p-[40px] md:pb-0 rounded-[20px] md:rounded-[30px] flex flex-col gap-[30px] md:gap-[40px] 
-    bg-white border border-gray-200 
-    hover:border-[#2E2BFF] transition duration-300"
-      variants={itemVariants}
-      whileHover={{
-        y: -8,
-        boxShadow: "0 20px 40px rgba(46, 43, 255, 0.1)",
-      }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="flex flex-col gap-4 md:gap-5">
-        <p className="font-semibold text-[20px] leading-[28px] md:text-[28px] md:leading-[40px] text-gray-900">
-          {service.title}
-        </p>
-        <p className="text-gray-500 text-sm leading-[22px] md:text-base md:leading-[30px]">
-          {service.description}
-        </p>
-      </div>
+    <Link href={`/service/${service.slug}`}>
+      <motion.div
+        className="col-span-1 p-[30px] pb-0 md:p-[40px] md:pb-0 rounded-[20px] md:rounded-[30px] flex flex-col gap-[30px] md:gap-[40px]
+    bg-white border border-gray-200
+    hover:border-[#2E2BFF] transition duration-300 cursor-pointer"
+        variants={itemVariants}
+        whileHover={{
+          y: -8,
+          boxShadow: "0 20px 40px rgba(46, 43, 255, 0.1)",
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="flex flex-col gap-4 md:gap-5">
+          <p className="font-semibold text-[20px] leading-[28px] md:text-[28px] md:leading-[40px] text-gray-900">
+            {service.title}
+          </p>
+          <p className="text-gray-500 text-sm leading-[22px] md:text-base md:leading-[30px]">
+            {service.description}
+          </p>
+        </div>
 
-      <div className="w-full h-[300px] md:h-[320px] lg:h-[240px]">
-        <Image
-          src={service.image}
-          className="w-full object-contain"
-          alt={service.alt}
-        />
-      </div>
-    </motion.div>
+        <div className="w-full h-[300px] md:h-[320px] lg:h-[240px]">
+          <Image
+            src={service.image}
+            className="w-full object-contain"
+            alt={service.alt}
+          />
+        </div>
+      </motion.div>
+    </Link>
   )
 }
 
@@ -73,44 +76,46 @@ const FeaturedServiceCard = ({
   service: typeof FEATURED_SERVICE_DATA
 }) => {
   return (
-    <motion.div
-      className="lg:col-span-3 p-[30px] pb-0 md:p-[40px] md:pb-0 rounded-[20px] md:rounded-[30px] flex flex-col md:flex-row gap-[30px] md:gap-[50px] 
-    bg-white border border-gray-200 
-    hover:border-[#2E2BFF] transition duration-300"
-      variants={itemVariants}
-      whileHover={{
-        y: -8,
-        boxShadow: "0 20px 40px rgba(46, 43, 255, 0.1)",
-      }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="flex flex-col gap-[30px] md:gap-[40px]">
-        <motion.div
-          className="flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#2E2BFF]/10"
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Box className="w-8 h-8 md:w-10 md:h-10 text-[#2E2BFF]" />
-        </motion.div>
+    <Link href={`/service/${service.slug}`}>
+      <motion.div
+        className="lg:col-span-3! p-[30px] pb-0 md:p-[40px] md:pb-0 rounded-[20px] md:rounded-[30px] flex flex-col md:flex-row gap-[30px] md:gap-[50px]
+    bg-white border border-gray-200
+    hover:border-[#2E2BFF] transition duration-300 cursor-pointer"
+        variants={itemVariants}
+        whileHover={{
+          y: -8,
+          boxShadow: "0 20px 40px rgba(46, 43, 255, 0.1)",
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="flex flex-col gap-[30px] md:gap-[40px]">
+          <motion.div
+            className="flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#2E2BFF]/10"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Box className="w-8 h-8 md:w-10 md:h-10 text-[#2E2BFF]" />
+          </motion.div>
 
-        <div className="flex flex-col gap-4 md:gap-5">
-          <p className="font-semibold text-[20px] leading-[28px] md:text-[28px] md:leading-[40px] text-gray-900">
-            {service.title}
-          </p>
-          <p className="text-gray-500 text-sm leading-[22px] md:text-base md:leading-[30px]">
-            {service.description}
-          </p>
+          <div className="flex flex-col gap-4 md:gap-5">
+            <p className="font-semibold text-[20px] leading-[28px] md:text-[28px] md:leading-[40px] text-gray-900">
+              {service.title}
+            </p>
+            <p className="text-gray-500 text-sm leading-[22px] md:text-base md:leading-[30px]">
+              {service.description}
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div className="w-full h-[200px] md:w-[300px] md:h-[220px] lg:w-[450px] lg:h-[320px] flex shrink-0">
-        <Image
-          src={service.image}
-          className="w-full object-contain"
-          alt={service.alt}
-        />
-      </div>
-    </motion.div>
+        <div className="w-full h-[200px] md:w-[300px] md:h-[220px] lg:w-[450px] lg:h-[320px] flex shrink-0">
+          <Image
+            src={service.image}
+            className="w-full object-contain"
+            alt={service.alt}
+          />
+        </div>
+      </motion.div>
+    </Link>
   )
 }
 
@@ -158,8 +163,8 @@ export default function Services2() {
             {SERVICES_DATA.map((service) => (
               <ServiceCard key={service.id} service={service} />
             ))}
-            <FeaturedServiceCard service={FEATURED_SERVICE_DATA} />
           </div>
+          <FeaturedServiceCard service={FEATURED_SERVICE_DATA} />
         </motion.div>
       </div>
     </motion.section>
