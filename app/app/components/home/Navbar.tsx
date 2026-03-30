@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import { motion, Easing, AnimatePresence } from "framer-motion"
 
@@ -68,14 +68,40 @@ const mobileItemVariants = {
   }),
 }
 
-export default function Navbar() {
+interface NavbarProps {
+  transparent?: boolean
+  scrollTransparent?: boolean
+}
+
+export default function Navbar({
+  transparent = false,
+  scrollTransparent = false,
+}: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  // Handle scroll detection for automatic transparency
+  useEffect(() => {
+    if (!scrollTransparent) return
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [scrollTransparent])
+
+  // Determine if navbar should be transparent
+  const isTransparent = scrollTransparent ? !isScrolled : transparent
 
   const navItems = ["Home", "Services", "Testimonials", "Pricing", "About"]
 
   return (
     <motion.nav
-      className="container max-w-7xl mx-auto flex justify-between items-center py-8 px-8 lg:px-16 z-90 top-0 bg-[#0B0B1B]"
+      className={`container max-w-7xl mx-auto flex justify-between items-center py-8 px-8 lg:px-16 z-90 top-0 transition-all duration-300 ${
+        isTransparent ? "bg-transparent" : "bg-[#0B0B1B]"
+      }`}
       initial="hidden"
       animate="visible"
       variants={containerVariants}

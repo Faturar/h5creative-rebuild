@@ -2,7 +2,7 @@ import { type StaticImageData } from "next/image"
 import services1 from "@/public/assets/images/services1.png"
 import services2 from "@/public/assets/images/services2.png"
 import services3 from "@/public/assets/images/services3.png"
-import { Box } from "lucide-react"
+import { Box, Video, Users, Smartphone, Monitor } from "lucide-react"
 
 export interface Service {
   slug: string
@@ -112,6 +112,37 @@ export const services: Service[] = [
       "UI Design & Prototyping - Desain visual dan prototyping",
       "Development - Implementasi teknis dengan best practices",
       "Testing & Launch - Testing, optimization, dan peluncuran",
+    ],
+  },
+  {
+    slug: "live-streaming",
+    title: "Live Streaming & Live Shopping",
+    description:
+      "Optimasikan produk bisnis kamu lewat live shopping dengan host profesional dan setup studio lengkap.",
+    image: services2,
+    alt: "Live Streaming Service",
+    icon: Video,
+    detailedDescription:
+      "Buat Live Streaming yang Proper gak MURAH! Kami sediakan host profesional dengan gaji 6 jutaan per bulan, device iPhone 5 jutaan, dan studio serta perlengkapan live 3 jutaan. Semua kebutuhan bisa kamu dapat mulai 2 jutaan untuk Live 2 Jam per Bulan di H5 Creative!",
+    features: [
+      "Host Profesional - Gaji 6 Jutaan per Bulan",
+      "Device iPhone - Kualitas Kamera Super Jernih",
+      "Studio & Perlengkapan Lengkap - 3 Jutaan",
+      "Lighting, Audio & Background Profesional",
+      "Setup & Management Full Service",
+    ],
+    benefits: [
+      "Interaksi langsung & real-time dengan calon pembeli",
+      "Tingkatkan kepercayaan dan keinginan beli secara instan",
+      "Penjualan naik berkat atmosfer 'beli sekarang' saat live",
+      "Semua ribetnya kami yang urus, kamu fokus closing & kirim produk",
+    ],
+    process: [
+      "Konsultasi - Diskusi tentang produk dan target penjualan",
+      "Planning - Menentukan konsep live dan rundown",
+      "Setup - Persiapan studio, device, dan host",
+      "Live Streaming - Eksekusi live dengan interaksi real-time",
+      "Follow-up - Analisis hasil dan optimasi untuk live berikutnya",
     ],
   },
 ]

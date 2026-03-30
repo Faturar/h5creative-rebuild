@@ -41,7 +41,7 @@ export default function Header() {
       animate="visible"
       variants={containerVariants}
     >
-      <Navbar />
+      <Navbar scrollTransparent />
       {/* <div className="hero container max-w-7xl mx-auto flex justify-between items-center relative">
         <div className="flex flex-col gap-12.5 h-fit w-fit text-white z-10">
           <p className="font-semibold text-2xl">I'm Shayna 👋</p>
