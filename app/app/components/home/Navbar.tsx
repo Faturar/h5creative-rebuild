@@ -81,7 +81,7 @@ export default function Navbar() {
       variants={containerVariants}
     >
       <motion.a
-        href="#"
+        href="/"
         className={`flex shrink-0 ${isMenuOpen ? "z-[100] relative" : ""}`}
         variants={itemVariants}
         whileHover={{ scale: 1.05 }}

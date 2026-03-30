@@ -88,15 +88,7 @@ export default function DetailPage() {
         id="Header"
         className="flex flex-col gap-[100px] bg-[#0B0B1B] relative max-h-[665px] mb-[493px]"
       >
-        <Navbar
-          logo={logo}
-          logoClassName=""
-          ctaLabel="Hire Us"
-          ctaHref="/book"
-          rightSectionClassName="hidden lg:flex gap-[50px] items-center"
-          hoverColorClassName="hover:text-portto-light-gold"
-          ctaClassName="bg-portto-light-gold font-bold text-lg p-[14px_30px] rounded-full transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
-        />
+        <Navbar logo={logo} ctaLabel="Hire Us" ctaHref="/book" />
 
         <div className="hero container max-w-[1130px] mx-auto flex flex-col justify-center items-center relative">
           <h1 className="font-extrabold text-[50px] leading-[70px] text-white text-center z-10">
