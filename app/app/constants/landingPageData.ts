@@ -17,6 +17,7 @@ import {
 export const SERVICES_DATA = [
   {
     id: 1,
+    slug: "brand-identity-visual-design",
     title: "Brand Identity & Visual Design",
     description:
       "Membangun identitas visual yang kuat, konsisten, dan mudah diingat untuk memperkuat positioning brand Anda.",
@@ -25,6 +26,7 @@ export const SERVICES_DATA = [
   },
   {
     id: 2,
+    slug: "creative-content-campaign",
     title: "Creative Content & Campaign",
     description:
       "Menciptakan konten dan campaign kreatif yang menarik perhatian dan meningkatkan engagement.",
@@ -33,6 +35,7 @@ export const SERVICES_DATA = [
   },
   {
     id: 3,
+    slug: "website-digital-experience",
     title: "Website & Digital Experience",
     description:
       "Menghadirkan pengalaman digital yang modern, cepat, dan berorientasi pada konversi.",
@@ -44,6 +47,7 @@ export const SERVICES_DATA = [
 // Featured Service Data
 export const FEATURED_SERVICE_DATA = {
   id: 4,
+  slug: "strategi-eksekusi-kreatif-terintegrasi",
   title: "Strategi & Eksekusi Kreatif yang Terintegrasi",
   description:
     "Dari ide hingga implementasi, kami membantu brand Anda berkembang dengan pendekatan kreatif yang terarah dan terukur.",
