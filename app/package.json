@@ -3,16 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "node ./node_modules/next/dist/bin/next dev",
+    "build": "node ./node_modules/next/dist/bin/next build",
+    "start": "node ./node_modules/next/dist/bin/next start",
+    "lint": "node ./node_modules/eslint/bin/eslint.js ."
   },
   "dependencies": {
+    "framer-motion": "^12.34.3",
+    "lucide-react": "^0.577.0",
     "next": "16.1.6",
     "postcss": "^8.5.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "swiper": "^12.1.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.1",

@@ -3,7 +3,7 @@ import Link from "next/link"
 
 import Navbar from "@/app/components/Navbar"
 import FAQ from "@/app/components/home/FAQ"
-import Footer from "@/app/components/home/Footer"
+import FooterFix from "@/app/components/home/FooterFix"
 
 import logo from "@/public/assets/images/logos/logo.svg"
 import ellipse from "@/public/assets/images/Ellipse.svg"
@@ -11,17 +11,10 @@ import detailsThumbnail from "@/public/assets/images/thumbnails/details-thumbnai
 import crownBlackIcon from "@/public/assets/images/icons/crown-black.svg"
 import codeBlackIcon from "@/public/assets/images/icons/code-black.svg"
 import chartBlackIcon from "@/public/assets/images/icons/chart-2-black.svg"
-import reactLogo from "@/public/assets/images/logos/react.svg"
-import blenderLogo from "@/public/assets/images/logos/blender.svg"
-import figmaLogo from "@/public/assets/images/logos/figma.svg"
 import thumbnail1 from "@/public/assets/images/thumbnails/thumbnail1.png"
 import thumbnail2 from "@/public/assets/images/thumbnails/thumbnail2.png"
 import thumbnail3 from "@/public/assets/images/thumbnails/thumbnail3.png"
 import eyeIcon from "@/public/assets/images/icons/eye.svg"
-import personPhoto from "@/public/assets/images/photo/photo5.png"
-import quoteIcon from "@/public/assets/images/icons/quote.svg"
-import logoTesti5 from "@/public/assets/images/logos/logo-testi5.svg"
-import starIcon from "@/public/assets/images/icons/Star.svg"
 
 function ProjectStrip({
   animationClass,
@@ -90,19 +83,21 @@ function ToolCard({
 export default function DetailPage() {
   return (
     <>
+      {/* HEADER */}
       <section
         id="Header"
         className="flex flex-col gap-[100px] bg-[#0B0B1B] relative max-h-[665px] mb-[493px]"
       >
-        <Navbar logo={logo} logoAlt="Logo" ctaLabel="Hire Me" ctaHref="/book" />
+        <Navbar logo={logo} ctaLabel="Hire Us" ctaHref="/book" />
 
         <div className="hero container max-w-[1130px] mx-auto flex flex-col justify-center items-center relative">
           <h1 className="font-extrabold text-[50px] leading-[70px] text-white text-center z-10">
-            AI Finance Insurance
+            Social Media Growth Campaign
           </h1>
           <p className="text-xl leading-[30px] text-white z-10">
-            Website Development
+            Social Media Management & Digital Marketing
           </p>
+
           <div className="flex shrink-0 w-full h-[800px] rounded-[50px] overflow-hidden bg-white mt-[70px] z-10">
             <Image
               src={detailsThumbnail}
@@ -110,6 +105,7 @@ export default function DetailPage() {
               alt="thumbnail"
             />
           </div>
+
           <Image
             src={ellipse}
             className="absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-[135px] w-[35%]"
@@ -118,65 +114,43 @@ export default function DetailPage() {
         </div>
       </section>
 
-      <section
-        id="Details"
-        className="container max-w-[1130px] mx-auto pt-[50px]"
-      >
-        <div className="flex gap-[50px] justify-between flex-col lg:flex-row">
-          <div className="flex flex-col gap-5">
-            <h2 className="font-extrabold text-2xl">The First Purpose</h2>
-            <div className="description flex flex-col gap-4 font-medium text-lg leading-[38px]">
-              <p>
-                FinanceAI is a cutting-edge mobile application revolutionizing
-                personal finance management through artificial intelligence.
-                This intuitive app is engineered to empower users with real-time
-                financial insights and personalized.
-              </p>
-              <p>
-                At the heart of FinanceAI lies a sophisticated AI engine that
-                analyzes spending patterns, investment choices, and saving
-                habits to offer tailored recommendations. Whether it&apos;s
-                optimizing budgets, identifying investment opportunities, or
-                potential savings, FinanceAI ensures users are always a step
-                ahead in their financial.
-              </p>
+      {/* DETAILS */}
+      <section id="Details" className="container max-w-[1130px] mx-auto pt-24">
+        <div className="flex gap-20 justify-between flex-col lg:flex-row">
+          <div className="flex gap-24">
+            <div className="flex-1">
+              <h2 className="font-light text-5xl">The Challenge</h2>
             </div>
-            <div className="flex gap-4 flex-wrap">
-              <FeatureTag icon={crownBlackIcon} label="Startup" />
-              <FeatureTag icon={codeBlackIcon} label="Future AI" />
-              <FeatureTag icon={chartBlackIcon} label="Finance" />
-            </div>
-          </div>
-          <div className="flex flex-col gap-5">
-            <h2 className="font-extrabold text-2xl">Software Used</h2>
-            <div className="software-container flex flex-col shrink-0 gap-5 w-full lg:w-[325px]">
-              <ToolCard
-                logo={reactLogo}
-                title="React JS"
-                subtitle="Web Framework"
-              />
-              <ToolCard
-                logo={blenderLogo}
-                title="Blender 3D"
-                subtitle="Product Modeling"
-              />
-              <ToolCard
-                logo={figmaLogo}
-                title="Figma"
-                subtitle="UI/UX Design"
-              />
+            <div className="description flex-2 flex flex-col gap-4 font-medium text-lg leading-[38px]">
+              <p>
+                Klien kami menghadapi stagnasi pertumbuhan di social media,
+                dengan engagement yang rendah dan konten yang belum memiliki
+                arah strategi yang jelas. Tujuan utama campaign ini adalah
+                membangun brand presence yang kuat, meningkatkan interaksi
+                audience, serta mengkonversi traffic menjadi leads melalui
+                pendekatan digital marketing yang terstruktur.
+              </p>
+
+              <div className="flex gap-4 flex-wrap">
+                <FeatureTag icon={crownBlackIcon} label="Brand Growth" />
+                <FeatureTag icon={codeBlackIcon} label="Content Strategy" />
+                <FeatureTag
+                  icon={chartBlackIcon}
+                  label="Performance Marketing"
+                />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* SCREENSHOTS */}
       <section
         id="Screenshots"
         className="container max-w-[1130px] mx-auto pt-[50px]"
       >
         <div className="flex flex-col gap-5">
-          <h2 className="font-extrabold text-2xl">Screenshots</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">
             {[thumbnail1, thumbnail2, thumbnail3, thumbnail1].map(
               (thumbnail, index) => (
                 <a
@@ -184,7 +158,7 @@ export default function DetailPage() {
                   href={thumbnail.src}
                   target="_blank"
                   rel="noreferrer"
-                  className="group w-full h-[190px] flex overflow-hidden rounded-[30px] ring-1 ring-[#E4E5E8] transition-all duration-300 hover:ring-[3px] hover:ring-portto-purple relative"
+                  className="group w-full max-h-92 flex overflow-hidden rounded-[30px] ring-1 ring-[#E4E5E8] transition-all duration-300 hover:ring-[3px] hover:ring-portto-purple relative"
                 >
                   <Image
                     src={thumbnail}
@@ -193,7 +167,31 @@ export default function DetailPage() {
                   />
                   <Image
                     src={eyeIcon}
-                    className="absolute transition-all duration-300 opacity-0 group-hover:opacity-100 transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 z-10"
+                    className="absolute opacity-0 group-hover:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    alt="icon eye"
+                  />
+                </a>
+              ),
+            )}
+          </div>
+          <div className="grid grid-cols-1 gap-5">
+            {[thumbnail1, thumbnail2, thumbnail3, thumbnail1].map(
+              (thumbnail, index) => (
+                <a
+                  key={index}
+                  href={thumbnail.src}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group w-full h-full flex overflow-hidden rounded-[30px] ring-1 ring-[#E4E5E8] transition-all duration-300 hover:ring-[3px] hover:ring-portto-purple relative"
+                >
+                  <Image
+                    src={thumbnail}
+                    className="w-full h-full object-cover"
+                    alt="thumbnail"
+                  />
+                  <Image
+                    src={eyeIcon}
+                    className="absolute opacity-0 group-hover:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     alt="icon eye"
                   />
                 </a>
@@ -203,70 +201,33 @@ export default function DetailPage() {
         </div>
       </section>
 
-      <section
-        id="Featured-testimonial"
-        className="container max-w-[1130px] mx-auto"
-      >
-        <div className="flex gap-[100px] items-center px-[65px] pt-[100px] flex-col lg:flex-row">
-          <div className="flex flex-col gap-5 relative">
-            <div className="flex w-[200px] h-[250px] rounded-[30px] shrink-0 overflow-hidden z-10">
-              <Image src={personPhoto} alt="photo" />
-            </div>
-            <div className="flex flex-col gap-[6px] text-center">
-              <p className="font-bold text-2xl">Shirley Pop</p>
-              <p className="text-xl text-[#878C9C]">Founder Bwalajar</p>
-            </div>
-            <Image
-              src={quoteIcon}
-              className="absolute transform -translate-x-1/2 -translate-y-1/2 left-[21px] top-[14px]"
-              alt="icon"
-            />
-          </div>
-          <div className="flex flex-col gap-[50px]">
-            <div className="flex shrink-0">
-              <Image src={logoTesti5} alt="logo" />
-            </div>
-            <p className="font-semibold text-[32px] leading-[60px]">
-              She helped us to build our first prototype to win our investor and
-              early users heart that generate huge attraction. Will hire her
-              back again anytime soon.
-            </p>
-            <div className="flex h-8 w-fit shrink-0">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <Image
-                  key={index}
-                  src={starIcon}
-                  className="w-full h-full"
-                  alt="star"
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
+      {/* CTA */}
       <section id="Book" className="container max-w-[1130px] mx-auto">
         <div className="bg-[#0B0B1B] justify-between px-[50px] rounded-[50px] h-[476px] mt-[100px] bg-[url('/assets/images/Ellipse.svg')] bg-center bg-no-repeat bg-contain bg-[length:400px_400px] relative hidden lg:flex">
           <div className="group/projects w-[220px] overflow-hidden">
             <ProjectStrip animationClass="animate-[slideToT_30s_linear_infinite]" />
             <ProjectStrip animationClass="animate-[slideToT_30s_linear_infinite]" />
           </div>
+
           <div className="flex flex-col gap-5 items-center justify-center text-center w-fit">
             <h2 className="font-extrabold text-[40px] leading-[60px] text-white">
-              Let Me Help You <br />
-              Grow Business Today
+              Let’s Grow Your Brand <br />
+              Through Digital Campaign
             </h2>
+
             <p className="font-semibold text-lg leading-[32px] text-white">
-              I will dedicate my entire career to focus <br />
-              on finishing your future dreams
+              We help you scale with strategic content <br />
+              and performance-driven marketing
             </p>
+
             <Link
               href="/book"
               className="bg-portto-light-gold font-bold text-lg p-[14px_30px] rounded-full transition-all duration-300 hover:shadow-[0_10px_20px_0_#FFE7C280]"
             >
-              Book a Meeting
+              Consultaion
             </Link>
           </div>
+
           <div className="group/projects w-[220px] overflow-hidden">
             <ProjectStrip animationClass="animate-[slideToB_30s_linear_infinite]" />
             <ProjectStrip animationClass="animate-[slideToB_30s_linear_infinite]" />
@@ -275,7 +236,7 @@ export default function DetailPage() {
       </section>
 
       <FAQ />
-      <Footer />
+      <FooterFix />
     </>
   )
 }

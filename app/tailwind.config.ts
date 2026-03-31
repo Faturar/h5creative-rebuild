@@ -16,8 +16,8 @@ const config: Config = {
         "portto-red": "#E64D56",
       },
       fontFamily: {
-        poppins: ["var(--font-poppins)", "Poppins", "sans-serif"],
-        sans: ["var(--font-poppins)", "Poppins", "sans-serif"],
+        poppins: ["var(--font-hanken)", "Hanken Grotesk", "sans-serif"],
+        sans: ["var(--font-hanken)", "Hanken Grotesk", "sans-serif"],
       },
       keyframes: {
         slide: {
