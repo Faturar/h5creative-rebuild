@@ -181,10 +181,10 @@ export default function BookingPage() {
   }
 
   return (
-    <section className="bg-[#0B0B1B] flex min-h-screen">
+    <section className="bg-[#0B0B1B] flex flex-col lg:flex-row min-h-screen">
       {/* Left Sidebar - Testimonial Card */}
-      <div className="hidden lg:flex w-[660px] min-h-screen flex-col p-[30px_40px] justify-end overflow-hidden bg-[url('/assets/images/background/side-image.png')] bg-cover bg-center bg-no-repeat">
-        <div className="flex flex-col bg-white p-[30px] gap-5 rounded-[30px] w-[580px]">
+      <div className="hidden lg:flex flex-1 flex-col p-[30px_40px] justify-end overflow-hidden bg-[url('/assets/images/background/side-image.png')] bg-cover bg-center bg-no-repeat sticky top-0 h-screen">
+        <div className="flex flex-col bg-white p-[30px] gap-5 rounded-[30px] sticky bottom-[30px]">
           <div className="flex h-10 items-start overflow-hidden">
             <Image
               src={logoTesti5}
@@ -209,11 +209,37 @@ export default function BookingPage() {
         </div>
       </div>
 
+      {/* Mobile Testimonial Banner */}
+      <div className="lg:hidden bg-gradient-to-r from-[#4920E5] to-[#6B21A8] p-4">
+        <div className="flex flex-col items-center text-white text-center">
+          <div className="flex h-8 items-center mb-2">
+            <Image
+              src={logoTesti5}
+              className="h-full object-contain"
+              alt="logo"
+            />
+          </div>
+          <p className="font-semibold text-sm md:text-base leading-tight mb-2">
+            Platform live streaming profesional untuk bisnis Anda
+          </p>
+          <div className="flex gap-1">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <Image
+                key={index}
+                src={starIcon}
+                className="w-5 h-5"
+                alt="star"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Right Main Content */}
-      <div className="flex flex-col flex-1 items-center justify-center mx-auto py-4 bg-[url('/assets/images/Ellipse.svg')] bg-center bg-no-repeat bg-contain bg-[length:540px]">
+      <div className="flex flex-col flex-3 items-center justify-center mx-auto py-4 md:py-6 lg:py-8 px-4 bg-[url('/assets/images/Ellipse.svg')] bg-center bg-no-repeat bg-contain bg-[length:540px]">
         {/* Progress Steps */}
-        <div className="w-full max-w-4xl mb-8 px-4">
-          <div className="flex items-center justify-between">
+        <div className="w-full max-w-4xl mb-6 md:mb-8">
+          <div className="flex items-center justify-between overflow-x-auto pb-2 scrollbar-hide">
             {steps.map((step, index) => {
               const isActive = step.id === currentStep
               const isCompleted = index < stepIndex
@@ -222,7 +248,7 @@ export default function BookingPage() {
               return (
                 <div
                   key={step.id}
-                  className={`flex items-center ${index < steps.length - 1 ? "flex-1" : ""}`}
+                  className={`flex items-center flex-shrink-0 ${index < steps.length - 1 ? "flex-1 min-w-[80px] md:min-w-[100px]" : "min-w-[60px] md:min-w-[80px]"}`}
                 >
                   <div
                     className={`flex flex-col items-center cursor-pointer ${
@@ -233,7 +259,7 @@ export default function BookingPage() {
                     }
                   >
                     <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                      className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all ${
                         isActive
                           ? "bg-[#4920E5] text-white shadow-lg scale-110"
                           : isCompleted
@@ -242,13 +268,13 @@ export default function BookingPage() {
                       }`}
                     >
                       {isCompleted ? (
-                        <CheckCircle className="w-6 h-6" />
+                        <CheckCircle className="w-5 h-5 md:w-6 md:h-6" />
                       ) : (
-                        <step.icon className="w-6 h-6" />
+                        <step.icon className="w-5 h-5 md:w-6 md:h-6" />
                       )}
                     </div>
                     <span
-                      className={`mt-2 text-sm font-medium ${
+                      className={`mt-1 md:mt-2 text-xs md:text-sm font-medium ${
                         isActive
                           ? "text-[#4920E5]"
                           : isCompleted
@@ -261,7 +287,7 @@ export default function BookingPage() {
                   </div>
                   {index < steps.length - 1 && (
                     <div
-                      className={`flex-1 h-1 mx-4 rounded ${
+                      className={`flex-1 h-0.5 md:h-1 mx-2 md:mx-4 rounded ${
                         isCompleted ? "bg-[#12BB74]" : "bg-gray-700"
                       }`}
                     />
@@ -277,17 +303,17 @@ export default function BookingPage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-2xl flex items-center gap-3 max-w-4xl w-full mx-auto"
+            className="mb-4 md:mb-6 p-3 md:p-4 bg-red-500/10 border border-red-500/30 rounded-xl md:rounded-2xl flex items-center gap-2 md:gap-3 max-w-4xl w-full mx-auto"
           >
-            <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-            <p className="text-red-400">{error}</p>
+            <XCircle className="w-4 h-4 md:w-5 md:h-5 text-red-500 flex-shrink-0" />
+            <p className="text-red-400 text-sm md:text-base">{error}</p>
           </motion.div>
         )}
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full max-w-6xl px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 w-full max-w-6xl">
           {/* Step Content */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 w-full">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
@@ -295,7 +321,7 @@ export default function BookingPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white/5 backdrop-blur-sm rounded-[30px] p-8 border border-white/10"
+                className="bg-white/5 backdrop-blur-sm rounded-2xl md:rounded-[30px] p-4 md:p-6 lg:p-8 border border-white/10"
               >
                 {currentStep === "package" && (
                   <PackageSelection
@@ -367,10 +393,10 @@ export default function BookingPage() {
             </AnimatePresence>
           </div>
 
-          {/* Booking Summary - Sticky on Desktop */}
+          {/* Booking Summary - Sticky on Desktop, Bottom on Mobile */}
           {currentStep !== "success" && (
-            <div className="lg:col-span-1">
-              <div className="sticky top-8">
+            <div className="lg:col-span-1 order-first lg:order-last mb-4 lg:mb-0">
+              <div className="lg:sticky lg:top-8">
                 <BookingSummary bookingData={bookingData} />
               </div>
             </div>

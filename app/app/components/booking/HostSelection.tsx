@@ -85,61 +85,68 @@ export default function HostSelection({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               onClick={() => onSelect(host.id)}
-              className={`relative p-6 rounded-[30px] border-2 cursor-pointer transition-all ${
+              className={`relative overflow-hidden rounded-[30px] border-2 cursor-pointer transition-all h-[400px] md:h-[450px] ${
                 isSelected
-                  ? "border-[#4920E5] bg-[#4920E5]/20 shadow-lg scale-105"
-                  : "border-white/10 bg-white/5 hover:border-[#4920E5]/50 hover:shadow-md hover:bg-white/10"
+                  ? "border-[#4920E5] shadow-lg scale-105"
+                  : "border-white/10 hover:border-[#4920E5]/50 hover:shadow-md"
               }`}
             >
+              {/* Background Photo */}
+              <div className="absolute inset-0">
+                {host.photoUrl ? (
+                  <img
+                    src={host.photoUrl}
+                    alt={host.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-[#4920E5] to-pink-500 flex items-center justify-center">
+                    <span className="text-6xl font-bold text-white">
+                      {host.name.charAt(0)}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
               {isSelected && (
-                <div className="absolute top-4 right-4 w-8 h-8 bg-[#4920E5] rounded-full flex items-center justify-center">
-                  <Check className="w-5 h-5 text-white" />
+                <div className="absolute top-4 right-4 w-10 h-10 bg-[#4920E5] rounded-full flex items-center justify-center shadow-lg z-10">
+                  <Check className="w-6 h-6 text-white" />
                 </div>
               )}
 
-              <div className="flex items-start gap-4 mb-4">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#4920E5] to-pink-500 flex items-center justify-center flex-shrink-0">
-                  {host.photoUrl ? (
-                    <img
-                      src={host.photoUrl}
-                      alt={host.name}
-                      className="w-full h-full rounded-full object-cover"
-                    />
-                  ) : (
-                    <span className="text-2xl font-bold text-white">
-                      {host.name.charAt(0)}
-                    </span>
-                  )}
+              {/* Content Overlay */}
+              <div className="relative z-10 flex flex-col h-full p-6 justify-end">
+                <div className="mb-3">
+                  <span className="inline-block px-3 py-1 bg-[#4920E5] text-white rounded-full text-sm font-medium shadow-lg">
+                    {host.expertise}
+                  </span>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-white truncate">
-                    {host.name}
-                  </h3>
-                  <div className="flex items-center gap-1 mt-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-sm font-semibold text-gray-300">
-                      {host.rating}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      ({host.totalStreams} streams)
-                    </span>
-                  </div>
+
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                  {host.name}
+                </h3>
+
+                <div className="flex items-center gap-2 mb-3">
+                  <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                  <span className="text-lg font-semibold text-white">
+                    {host.rating}
+                  </span>
+                  <span className="text-base text-gray-300">
+                    ({host.totalStreams} streams)
+                  </span>
                 </div>
-              </div>
 
-              <div className="mb-3">
-                <span className="inline-block px-3 py-1 bg-[#4920E5]/20 text-[#4920E5] rounded-full text-sm font-medium border border-[#4920E5]/30">
-                  {host.expertise}
-                </span>
-              </div>
+                <p className="text-gray-200 text-sm md:text-base mb-4 line-clamp-2">
+                  {host.bio}
+                </p>
 
-              <p className="text-gray-300 text-sm mb-4 line-clamp-3">
-                {host.bio}
-              </p>
-
-              <div className="flex items-center gap-2 text-sm text-gray-300">
-                <Video className="w-4 h-4 text-[#4920E5]" />
-                <span>{host.languages}</span>
+                <div className="flex items-center gap-2 text-base text-white">
+                  <Video className="w-5 h-5" />
+                  <span>{host.languages}</span>
+                </div>
               </div>
             </motion.div>
           )

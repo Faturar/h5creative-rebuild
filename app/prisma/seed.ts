@@ -144,7 +144,8 @@ async function main() {
           data: {
             name: "Sarah Wijaya",
             bio: "Host berpengalaman dengan 5+ tahun di industri live shopping. Spesialisasi di fashion dan beauty.",
-            photoUrl: null,
+            photoUrl:
+              "https://images.unsplash.com/photo-1494790108377-be1c2998cad8?w=800&h=800&fit=crop",
             portfolioUrl: "https://example.com/sarah",
             expertise: "Fashion",
             rating: toDecimal(4.8),
@@ -161,7 +162,8 @@ async function main() {
           data: {
             name: "Budi Santoso",
             bio: "Host energik dengan pengalaman di F&B dan electronics. Sangat interaktif dengan audiens.",
-            photoUrl: null,
+            photoUrl:
+              "https://images.unsplash.com/photo-1507003211169-0a8ddc6bbf8?w=800&h=800&fit=crop",
             portfolioUrl: "https://example.com/budi",
             expertise: "Food & Beverage",
             rating: toDecimal(4.7),
@@ -178,7 +180,8 @@ async function main() {
           data: {
             name: "Dewi Lestari",
             bio: "Host profesional dengan background di beauty dan skincare. Sangat detail dalam menjelaskan produk.",
-            photoUrl: null,
+            photoUrl:
+              "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&h=800&fit=crop",
             portfolioUrl: "https://example.com/dewi",
             expertise: "Beauty",
             rating: toDecimal(4.9),
@@ -195,7 +198,8 @@ async function main() {
           data: {
             name: "Rizky Pratama",
             bio: "Host tech-savvy yang jago menjelaskan produk elektronik dan gadget. Sangat informatif.",
-            photoUrl: null,
+            photoUrl:
+              "https://images.unsplash.com/photo-1472099645785-5a8a0fa6a65?w=800&h=800&fit=crop",
             portfolioUrl: "https://example.com/rizky",
             expertise: "Electronics",
             rating: toDecimal(4.6),
@@ -212,7 +216,8 @@ async function main() {
           data: {
             name: "Anita Sari",
             bio: "Host versatile yang bisa handle berbagai kategori produk. Sangat adaptif dan profesional.",
-            photoUrl: null,
+            photoUrl:
+              "https://images.unsplash.com/photo-1438761681033-6461ffad8dfe?w=800&h=800&fit=crop",
             portfolioUrl: "https://example.com/anita",
             expertise: "Fashion",
             rating: toDecimal(4.7),

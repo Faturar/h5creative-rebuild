@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { User, Phone, Mail, Building, Tag, FileText } from "lucide-react"
+import { User, Phone, Mail, Building, Tag, FileText, Info } from "lucide-react"
 
 interface BookingData {
   customerName: string
@@ -43,31 +43,31 @@ export default function CustomerForm({
   return (
     <div>
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
           Informasi Pelanggan
         </h2>
-        <p className="text-gray-600">
+        <p className="text-gray-400 text-base md:text-lg">
           Lengkapi data diri dan informasi bisnis Anda
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div>
             <label
               htmlFor="customerName"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-gray-300 mb-2"
             >
               Nama Lengkap
             </label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <div className="relative group">
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-[#4920E5] transition-colors" />
               <input
                 type="text"
                 id="customerName"
                 value={bookingData.customerName}
                 onChange={(e) => onChange({ customerName: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500"
                 placeholder="Masukkan nama lengkap"
                 required
               />
@@ -77,18 +77,18 @@ export default function CustomerForm({
           <div>
             <label
               htmlFor="customerPhone"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-gray-300 mb-2"
             >
               Nomor Telepon
             </label>
-            <div className="relative">
-              <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <div className="relative group">
+              <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-[#4920E5] transition-colors" />
               <input
                 type="tel"
                 id="customerPhone"
                 value={bookingData.customerPhone}
                 onChange={(e) => onChange({ customerPhone: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500"
                 placeholder="Contoh: 08123456789"
                 required
               />
@@ -98,18 +98,18 @@ export default function CustomerForm({
           <div>
             <label
               htmlFor="customerEmail"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-gray-300 mb-2"
             >
               Email
             </label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <div className="relative group">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-[#4920E5] transition-colors" />
               <input
                 type="email"
                 id="customerEmail"
                 value={bookingData.customerEmail}
                 onChange={(e) => onChange({ customerEmail: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500"
                 placeholder="email@contoh.com"
                 required
               />
@@ -119,91 +119,92 @@ export default function CustomerForm({
           <div>
             <label
               htmlFor="businessName"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-gray-300 mb-2"
             >
               Nama Bisnis
             </label>
-            <div className="relative">
-              <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <div className="relative group">
+              <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-[#4920E5] transition-colors" />
               <input
                 type="text"
                 id="businessName"
                 value={bookingData.businessName}
                 onChange={(e) => onChange({ businessName: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500"
                 placeholder="Nama bisnis Anda"
                 required
               />
             </div>
           </div>
-        </div>
 
-        <div>
-          <label
-            htmlFor="productCategory"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Kategori Produk
-          </label>
-          <div className="relative">
-            <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <select
-              id="productCategory"
-              value={bookingData.productCategory}
-              onChange={(e) => onChange({ productCategory: e.target.value })}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all appearance-none bg-white"
-              required
+          <div>
+            <label
+              htmlFor="productCategory"
+              className="block text-sm font-medium text-gray-300 mb-2"
             >
-              <option value="">Pilih kategori produk</option>
-              <option value="Fashion">Fashion</option>
-              <option value="Beauty">Beauty</option>
-              <option value="Food & Beverage">Food & Beverage</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Home & Living">Home & Living</option>
-              <option value="Health & Wellness">Health & Wellness</option>
-              <option value="Sports">Sports</option>
-              <option value="Baby & Kids">Baby & Kids</option>
-              <option value="Automotive">Automotive</option>
-              <option value="Other">Lainnya</option>
-            </select>
+              Kategori Produk
+            </label>
+            <div className="relative group">
+              <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-[#4920E5] transition-colors" />
+              <select
+                id="productCategory"
+                value={bookingData.productCategory}
+                onChange={(e) => onChange({ productCategory: e.target.value })}
+                className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all appearance-none text-white"
+                required
+              >
+                <option value="">Pilih kategori produk</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Beauty">Beauty</option>
+                <option value="Food & Beverage">Food & Beverage</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Home & Living">Home & Living</option>
+                <option value="Health & Wellness">Health & Wellness</option>
+                <option value="Sports">Sports</option>
+                <option value="Baby & Kids">Baby & Kids</option>
+                <option value="Automotive">Automotive</option>
+                <option value="Other">Lainnya</option>
+              </select>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label
-            htmlFor="notes"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Catatan Tambahan (Opsional)
-          </label>
-          <div className="relative">
-            <FileText className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-            <textarea
-              id="notes"
-              value={bookingData.notes}
-              onChange={(e) => onChange({ notes: e.target.value })}
-              rows={4}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all resize-none"
-              placeholder="Tambahkan catatan atau permintaan khusus..."
-            />
+          <div className="md:col-span-2">
+            <label
+              htmlFor="notes"
+              className="block text-sm font-medium text-gray-300 mb-2"
+            >
+              Catatan Tambahan{" "}
+              <span className="text-gray-500 text-xs">(Opsional)</span>
+            </label>
+            <div className="relative group">
+              <FileText className="absolute left-3 top-3 w-5 h-5 text-gray-500 group-focus-within:text-[#4920E5] transition-colors" />
+              <textarea
+                id="notes"
+                value={bookingData.notes}
+                onChange={(e) => onChange({ notes: e.target.value })}
+                rows={4}
+                className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all resize-none text-white placeholder:text-gray-500"
+                placeholder="Tambahkan catatan atau permintaan khusus..."
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="flex justify-between pt-6 border-t border-gray-200">
-          <button
-            type="button"
-            onClick={onBack}
-            className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-all"
-          >
-            Kembali
-          </button>
-          <button
-            type="submit"
-            disabled={!isValid()}
-            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
-          >
-            Lanjutkan ke Pembayaran
-          </button>
+          <div className="flex flex-col md:flex-row justify-between pt-6 md:pt-8 gap-4 border-t border-white/10">
+            <button
+              type="button"
+              onClick={onBack}
+              className="px-6 md:px-8 py-3 border-2 border-white/20 text-gray-300 rounded-xl font-semibold hover:bg-white/10 transition-all"
+            >
+              Kembali
+            </button>
+            <button
+              type="submit"
+              disabled={!isValid()}
+              className="flex-1 px-6 md:px-8 py-3 bg-gradient-to-r from-[#4920E5] to-pink-600 text-white rounded-xl font-semibold hover:from-[#5B2CE8] hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
+            >
+              Lanjutkan ke Pembayaran
+            </button>
+          </div>
         </div>
       </form>
     </div>
