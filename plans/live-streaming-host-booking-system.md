@@ -1,8 +1,17 @@
-# Podcast Booking System - Implementation Plan
+# Live Streaming Host Booking System - Implementation Plan
 
 ## Project Overview
 
-A standalone podcast booking system built with Next.js 16, MySQL, Prisma, and Midtrans payment integration. The system allows users to book podcast recording sessions by selecting packages, hosts, studios, and time slots without requiring user authentication.
+A standalone Live Shopping / Live Streaming Host Booking system built with Next.js 16, MySQL, Prisma, and Midtrans payment integration. The system allows businesses to book professional live streaming hosts, studios, and equipment for their live shopping events without requiring user authentication.
+
+## Business Context
+
+Based on the existing live streaming service page, H5 Creative offers:
+
+- **Professional Live Streaming Hosts** - Skilled streamers for live shopping events
+- **Studio Rental** - Professional recording studios with complete equipment
+- **Device Rental** - High-quality cameras, lighting, and audio equipment
+- **Complete Packages** - Bundled services for different business needs
 
 ## Technology Stack
 
@@ -21,12 +30,12 @@ A standalone podcast booking system built with Next.js 16, MySQL, Prisma, and Mi
 
 ```mermaid
 flowchart TD
-    A[Landing Page] --> B[Pilih Paket]
+    A[Landing Page] --> B[Pilih Paket Live Streaming]
     B --> C[Pilih Host]
     C --> D[Pilih Studio]
-    D --> E[Pilih Jam]
+    D --> E[Pilih Jam Slot]
     E --> F[Checkout]
-    F --> G[Payment]
+    F --> G[Payment Midtrans]
     G --> H{Payment Status}
     H -->|Success| I[Booking Confirmed]
     H -->|Failed| J[Payment Failed]
@@ -53,6 +62,7 @@ erDiagram
         decimal price
         decimal promo_price
         int duration_minutes
+        string platform
         boolean is_active
         datetime created_at
         datetime updated_at
@@ -64,6 +74,9 @@ erDiagram
         text bio
         string photo_url
         string portfolio_url
+        string expertise
+        decimal rating
+        int total_streams
         boolean is_active
         datetime created_at
         datetime updated_at
@@ -82,6 +95,7 @@ erDiagram
         text description
         string photo_url
         int capacity
+        string[] equipment
         boolean is_active
         datetime created_at
         datetime updated_at
@@ -110,8 +124,11 @@ erDiagram
         string customer_name
         string customer_phone
         string customer_email
+        string business_name
+        string product_category
         decimal price
         enum status
+        text notes
         datetime created_at
         datetime updated_at
     }
@@ -124,6 +141,7 @@ erDiagram
         decimal amount
         enum status
         datetime paid_at
+        text raw_response
         datetime created_at
     }
 ```
@@ -161,33 +179,43 @@ datasource db {
 }
 
 model Package {
-  id            String        @id @default(uuid())
-  name          String
-  description   String        @db.Text
-  price         Decimal       @db.Decimal(10, 2)
-  promoPrice    Decimal?      @db.Decimal(10, 2)
-  durationMinutes Int         @default(60)
-  isActive      Boolean       @default(true)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  packageHosts  PackageHost[]
-  bookings      Booking[]
+  id               String        @id @default(uuid())
+  name             String
+  description      String        @db.Text
+  price            Decimal       @db.Decimal(10, 2)
+  promoPrice       Decimal?      @db.Decimal(10, 2)
+  durationMinutes  Int           @default(120)
+  platform         String        @default("TikTok") // TikTok, Shopee, Instagram, Tokopedia
+  includesHost     Boolean       @default(true)
+  includesStudio   Boolean       @default(true)
+  includesDevice   Boolean       @default(true)
+  isActive         Boolean       @default(true)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  packageHosts     PackageHost[]
+  bookings         Booking[]
 
   @@map("packages")
 }
 
 model Host {
-  id            String        @id @default(uuid())
-  name          String
-  bio           String        @db.Text
-  photoUrl      String?
-  portfolioUrl  String?
-  isActive      Boolean       @default(true)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  packageHosts  PackageHost[]
-  bookings      Booking[]
+  id              String        @id @default(uuid())
+  name            String
+  bio             String        @db.Text
+  photoUrl        String?
+  portfolioUrl    String?
+  expertise       String        // Fashion, Beauty, F&B, Tech, etc.
+  rating          Decimal       @db.Decimal(2, 1) @default(4.5)
+  totalStreams    Int           @default(0)
+  languages       String        @default("Indonesian")
+  socialMediaLinks String?      @db.Text // JSON string
+  isActive        Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  packageHosts    PackageHost[]
+  bookings        Booking[]
 
+  @@index([expertise, isActive])
   @@map("hosts")
 }
 
@@ -203,17 +231,19 @@ model PackageHost {
 }
 
 model Studio {
-  id            String        @id @default(uuid())
-  name          String
-  location      String
-  description   String        @db.Text
-  photoUrl      String?
-  capacity      Int           @default(4)
-  isActive      Boolean       @default(true)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  studioSlots   StudioSlot[]
-  bookings      Booking[]
+  id          String        @id @default(uuid())
+  name        String
+  location    String
+  description String        @db.Text
+  photoUrl    String?
+  capacity    Int           @default(4)
+  equipment   String        @db.Text // JSON array: ["Camera", "Lighting", "Audio"]
+  amenities   String?       @db.Text // JSON array: ["WiFi", "AC", "Makeup Room"]
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  studioSlots StudioSlot[]
+  bookings    Booking[]
 
   @@map("studios")
 }
@@ -235,28 +265,30 @@ model StudioSlot {
 }
 
 model Booking {
-  id             String      @id @default(uuid())
-  bookingCode    String      @unique
-  packageId      String
-  hostId         String
-  studioId       String
-  studioSlotId   String      @unique
-  date           DateTime
-  startTime      String
-  endTime        String
-  customerName   String
-  customerPhone  String
-  customerEmail  String
-  price          Decimal     @db.Decimal(10, 2)
-  status         BookingStatus @default(PENDING)
-  notes          String?     @db.Text
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  package        Package     @relation(fields: [packageId], references: [id])
-  host           Host        @relation(fields: [hostId], references: [id])
-  studio         Studio      @relation(fields: [studioId], references: [id])
-  studioSlot     StudioSlot  @relation(fields: [studioSlotId], references: [id])
-  payments       Payment[]
+  id              String      @id @default(uuid())
+  bookingCode     String      @unique
+  packageId       String
+  hostId          String
+  studioId        String
+  studioSlotId    String      @unique
+  date            DateTime
+  startTime       String
+  endTime         String
+  customerName    String
+  customerPhone   String
+  customerEmail   String
+  businessName    String
+  productCategory String
+  price           Decimal     @db.Decimal(10, 2)
+  status          BookingStatus @default(PENDING)
+  notes           String?     @db.Text
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  package         Package     @relation(fields: [packageId], references: [id])
+  host            Host        @relation(fields: [hostId], references: [id])
+  studio          Studio      @relation(fields: [studioId], references: [id])
+  studioSlot      StudioSlot  @relation(fields: [studioSlotId], references: [id])
+  payments        Payment[]
 
   @@index([status, date])
   @@map("bookings")
@@ -283,6 +315,8 @@ enum BookingStatus {
   PAID
   CANCELLED
   COMPLETED
+  IN_PROGRESS
+  FINISHED
 }
 
 enum PaymentStatus {
@@ -299,7 +333,7 @@ Create `.env` file:
 
 ```env
 # Database
-DATABASE_URL="mysql://user:password@localhost:3306/podcast_booking"
+DATABASE_URL="mysql://user:password@localhost:3306/live_streaming_booking"
 
 # Midtrans (Sandbox)
 MIDTRANS_SERVER_KEY="SB-Mid-server-xxxxx"
@@ -358,21 +392,63 @@ app/api/
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url)
+    const platform = searchParams.get("platform")
+
     const packages = await prisma.package.findMany({
-      where: { isActive: true },
+      where: {
+        isActive: true,
+        ...(platform && { platform }),
+      },
       include: {
         hosts: {
           include: { host: true },
         },
       },
+      orderBy: { price: "asc" },
     })
 
     return NextResponse.json({ success: true, data: packages })
   } catch (error) {
     return NextResponse.json(
       { success: false, error: "Failed to fetch packages" },
+      { status: 500 },
+    )
+  }
+}
+```
+
+#### Hosts API (`app/api/hosts/route.ts`)
+
+```typescript
+import { NextResponse } from "next/server"
+import { prisma } from "@/lib/prisma"
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const expertise = searchParams.get("expertise")
+    const packageId = searchParams.get("packageId")
+
+    const hosts = await prisma.host.findMany({
+      where: {
+        isActive: true,
+        ...(expertise && { expertise }),
+        ...(packageId && {
+          packageHosts: {
+            some: { packageId },
+          },
+        }),
+      },
+      orderBy: { rating: "desc" },
+    })
+
+    return NextResponse.json({ success: true, data: hosts })
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: "Failed to fetch hosts" },
       { status: 500 },
     )
   }
@@ -425,6 +501,8 @@ const bookingSchema = z.object({
   customerName: z.string().min(2),
   customerPhone: z.string().min(10),
   customerEmail: z.string().email(),
+  businessName: z.string().min(2),
+  productCategory: z.string().min(2),
   notes: z.string().optional(),
 })
 
@@ -457,7 +535,7 @@ export async function POST(request: Request) {
     }
 
     // Generate booking code
-    const bookingCode = `BKG-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`
+    const bookingCode = `LIV-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`
 
     // Create booking
     const booking = await prisma.booking.create({
@@ -473,6 +551,8 @@ export async function POST(request: Request) {
         customerName: validatedData.customerName,
         customerPhone: validatedData.customerPhone,
         customerEmail: validatedData.customerEmail,
+        businessName: validatedData.businessName,
+        productCategory: validatedData.productCategory,
         price: packageData.promoPrice || packageData.price,
         notes: validatedData.notes,
       },
@@ -532,13 +612,13 @@ export const createPaymentTransaction = async (booking: any) => {
         id: booking.packageId,
         price: grossAmount,
         quantity: 1,
-        name: booking.package.name,
+        name: `${booking.package.name} - ${booking.host.name}`,
       },
     ],
     callbacks: {
-      finish: `${process.env.NEXT_PUBLIC_APP_URL}/podcast/payment-success?order_id=${orderId}`,
-      error: `${process.env.NEXT_PUBLIC_APP_URL}/podcast/payment-failed?order_id=${orderId}`,
-      pending: `${process.env.NEXT_PUBLIC_APP_URL}/podcast/payment-pending?order_id=${orderId}`,
+      finish: `${process.env.NEXT_PUBLIC_APP_URL}/live-streaming-booking/payment-success?order_id=${orderId}`,
+      error: `${process.env.NEXT_PUBLIC_APP_URL}/live-streaming-booking/payment-failed?order_id=${orderId}`,
+      pending: `${process.env.NEXT_PUBLIC_APP_URL}/live-streaming-booking/payment-pending?order_id=${orderId}`,
     },
   }
 
@@ -560,7 +640,7 @@ export async function POST(request: Request) {
 
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
-      include: { package: true },
+      include: { package: true, host: true },
     })
 
     if (!booking) {
@@ -699,7 +779,7 @@ export async function POST(request: Request) {
 ### 4.1 Folder Structure
 
 ```
-app/podcast/
+app/live-streaming-booking/
 ├── page.tsx                          # Landing page
 ├── packages/
 │   ├── page.tsx                      # Packages listing
@@ -736,48 +816,62 @@ app/podcast/
 #### Hero Section
 
 ```typescript
-// app/podcast/components/HeroSection.tsx
+// app/live-streaming-booking/components/HeroSection.tsx
 'use client';
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Video, Sparkles } from 'lucide-react';
 
 export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900">
       <div className="container mx-auto px-4 text-center">
-        <motion.h1
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white border border-white/20 px-4 py-2 rounded-full text-sm font-semibold mb-6"
+        >
+          <Video className="w-4 h-4 text-red-500" />
+          <span>#GAKPERLUMAHAL BUAT OPTIMASI PENJUALAN ONLINE</span>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
           className="text-5xl md:text-7xl font-bold text-white mb-6"
         >
-          Professional Podcast
-          <span className="block text-purple-400">Recording Studio</span>
+          Optimasikan Produk Bisnis Kamu Lewat
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+            Live Shopping!
+          </span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
           className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto"
         >
-          Book professional podcast sessions with expert hosts and state-of-the-art studios
+          Buat Live Streaming yang Proper gak MURAH! Kami sediakan host profesional, device berkualitas, dan studio lengkap untuk meningkatkan penjualanmu.
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <Link href="/podcast/booking">
+          <Link href="/live-streaming-booking/booking">
             <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-6 text-lg">
-              Book Now
+              <Sparkles className="w-5 h-5 mr-2" />
+              Book Live Streaming
             </Button>
           </Link>
-          <Link href="/podcast/packages">
+          <Link href="/live-streaming-booking/packages">
             <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-900 px-8 py-6 text-lg">
               View Packages
             </Button>
@@ -792,18 +886,18 @@ export function HeroSection() {
 #### Package Card
 
 ```typescript
-// app/podcast/components/PackageCard.tsx
+// app/live-streaming-booking/components/PackageCard.tsx
 'use client';
 
 import { Package } from '@prisma/client';
 import { motion } from 'framer-motion';
-import { Check, Star } from 'lucide-react';
+import { Check, Video, Mic, Camera, Clock, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 interface PackageCardProps {
   package: Package & {
-    hosts: Array<{ host: { id: string; name: string } }>;
+    hosts: Array<{ host: { id: string; name: string; rating: number } }>;
   };
 }
 
@@ -823,6 +917,11 @@ export function PackageCard({ package: pkg }: PackageCardProps) {
       )}
 
       <div className="p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Video className="w-5 h-5 text-purple-600" />
+          <span className="text-sm font-semibold text-purple-600 uppercase">{pkg.platform}</span>
+        </div>
+
         <h3 className="text-2xl font-bold text-gray-900 mb-2">{pkg.name}</h3>
         <p className="text-gray-600 mb-4">{pkg.description}</p>
 
@@ -837,9 +936,10 @@ export function PackageCard({ package: pkg }: PackageCardProps) {
               </span>
             )}
           </div>
-          <p className="text-sm text-gray-500 mt-1">
-            {pkg.durationMinutes} minutes session
-          </p>
+          <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
+            <Clock className="w-4 h-4" />
+            <span>{pkg.durationMinutes / 60} hours session</span>
+          </div>
         </div>
 
         <div className="space-y-3 mb-6">
@@ -849,15 +949,15 @@ export function PackageCard({ package: pkg }: PackageCardProps) {
           </div>
           <div className="flex items-center gap-2 text-gray-700">
             <Check className="w-5 h-5 text-green-500" />
-            <span>High-Quality Recording Equipment</span>
+            <span>Professional Studio</span>
           </div>
           <div className="flex items-center gap-2 text-gray-700">
             <Check className="w-5 h-5 text-green-500" />
-            <span>Professional Studio Environment</span>
+            <span>High-Quality Equipment</span>
           </div>
         </div>
 
-        <Link href={`/podcast/booking?packageId=${pkg.id}`}>
+        <Link href={`/live-streaming-booking/booking?packageId=${pkg.id}`}>
           <Button className="w-full bg-purple-600 hover:bg-purple-700">
             Select Package
           </Button>
@@ -868,10 +968,82 @@ export function PackageCard({ package: pkg }: PackageCardProps) {
 }
 ```
 
-### 4.3 Booking Wizard
+### 4.3 Host Card Component
 
 ```typescript
-// app/podcast/components/BookingWizard.tsx
+// app/live-streaming-booking/components/HostCard.tsx
+'use client';
+
+import { Host } from '@prisma/client';
+import { motion } from 'framer-motion';
+import { Star, Users, Video } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import Image from 'next/image';
+
+interface HostCardProps {
+  host: Host;
+}
+
+export function HostCard({ host }: HostCardProps) {
+  return (
+    <motion.div
+      whileHover={{ y: -8 }}
+      className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200"
+    >
+      <div className="relative h-64 bg-gradient-to-br from-purple-100 to-blue-100">
+        {host.photoUrl ? (
+          <Image
+            src={host.photoUrl}
+            alt={host.name}
+            fill
+            className="object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <Users className="w-24 h-24 text-purple-300" />
+          </div>
+        )}
+        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
+          <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+          <span className="font-semibold">{host.rating}</span>
+        </div>
+      </div>
+
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-2">{host.name}</h3>
+        <div className="flex items-center gap-2 text-sm text-purple-600 mb-3">
+          <Video className="w-4 h-4" />
+          <span className="font-semibold">{host.expertise}</span>
+        </div>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{host.bio}</p>
+
+        <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+          <div className="flex items-center gap-1">
+            <Users className="w-4 h-4" />
+            <span>{host.totalStreams} streams</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Star className="w-4 h-4 text-yellow-500" />
+            <span>{host.rating} rating</span>
+          </div>
+        </div>
+
+        <Link href={`/live-streaming-booking/hosts/${host.id}`}>
+          <Button className="w-full bg-purple-600 hover:bg-purple-700">
+            View Profile
+          </Button>
+        </Link>
+      </div>
+    </motion.div>
+  );
+}
+```
+
+### 4.4 Booking Wizard
+
+```typescript
+// app/live-streaming-booking/components/BookingWizard.tsx
 'use client';
 
 import { useState } from 'react';
@@ -956,10 +1128,10 @@ export function BookingWizard() {
 }
 ```
 
-### 4.4 Slot Selector with Calendar
+### 4.5 Slot Selector with Calendar
 
 ```typescript
-// app/podcast/components/SlotSelector.tsx
+// app/live-streaming-booking/components/SlotSelector.tsx
 'use client';
 
 import { useState } from 'react';
@@ -979,7 +1151,7 @@ export function SlotSelector({ studioId, onSlotSelect }: SlotSelectorProps) {
   const dates = Array.from({ length: 7 }, (_, i) => addDays(new Date(), i));
 
   const timeSlots = [
-    '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00'
+    '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'
   ];
 
   return (
@@ -1058,13 +1230,13 @@ app/admin/
 // app/admin/page.tsx
 import { prisma } from '@/lib/prisma';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Calendar, DollarSign, TrendingUp } from 'lucide-react';
+import { Users, Calendar, DollarSign, TrendingUp, Video, Clock } from 'lucide-react';
 
 export default async function AdminDashboard() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const [totalBookings, todayBookings, totalRevenue, activeHosts] = await Promise.all([
+  const [totalBookings, todayBookings, totalRevenue, activeHosts, activeStudios] = await Promise.all([
     prisma.booking.count(),
     prisma.booking.count({
       where: {
@@ -1077,7 +1249,8 @@ export default async function AdminDashboard() {
       where: { status: 'PAID' },
       _sum: { price: true }
     }),
-    prisma.host.count({ where: { isActive: true } })
+    prisma.host.count({ where: { isActive: true } }),
+    prisma.studio.count({ where: { isActive: true } })
   ]);
 
   const recentBookings = await prisma.booking.findMany({
@@ -1092,7 +1265,7 @@ export default async function AdminDashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
+      <h1 className="text-3xl font-bold">Live Streaming Dashboard</h1>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -1131,7 +1304,7 @@ export default async function AdminDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Active Hosts</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <Video className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{activeHosts}</div>
@@ -1149,8 +1322,9 @@ export default async function AdminDashboard() {
             {recentBookings.map((booking) => (
               <div key={booking.id} className="flex items-center justify-between p-4 border rounded-lg">
                 <div>
-                  <div className="font-semibold">{booking.customerName}</div>
-                  <div className="text-sm text-gray-500">{booking.package.name}</div>
+                  <div className="font-semibold">{booking.businessName}</div>
+                  <div className="text-sm text-gray-500">{booking.package.name} - {booking.host.name}</div>
+                  <div className="text-sm text-gray-500">{booking.productCategory}</div>
                 </div>
                 <div className="text-right">
                   <div className="font-semibold">Rp {booking.price.toLocaleString('id-ID')}</div>
@@ -1183,7 +1357,7 @@ export default async function AdminDashboard() {
 - [ ] User can view and select available hosts
 - [ ] User can view and select studios
 - [ ] User can select date and time slots
-- [ ] User can fill customer information form
+- [ ] User can fill customer and business information form
 - [ ] User can review booking details before payment
 - [ ] Payment redirect to Midtrans works correctly
 - [ ] Payment success page displays correctly
@@ -1222,7 +1396,7 @@ export default async function AdminDashboard() {
 
 ```env
 # Database (PlanetScale)
-DATABASE_URL="mysql://xxx:pscale_pw_xxx@aws.connect.psdb.cloud/podcast_booking?sslaccept=strict"
+DATABASE_URL="mysql://xxx:pscale_pw_xxx@aws.connect.psdb.cloud/live_streaming_booking?sslaccept=strict"
 
 # Midtrans (Production)
 MIDTRANS_SERVER_KEY="Mid-server-xxxxx"
@@ -1282,16 +1456,19 @@ NEXT_PUBLIC_APP_URL="https://your-domain.com"
    - User registration and login
    - User profile management
    - Booking history
+   - Business dashboard
 
 2. **Advanced Calendar**
    - Visual calendar view
    - Recurring bookings
    - Bulk booking
+   - Host availability calendar
 
 3. **Host Schedule Management**
    - Host availability calendar
    - Host-specific time slots
-   - Host rating system
+   - Host rating system with reviews
+   - Host performance analytics
 
 4. **Coupon System**
    - Create and manage discount codes
@@ -1302,23 +1479,38 @@ NEXT_PUBLIC_APP_URL="https://your-domain.com"
    - WebSocket for live slot availability
    - Real-time booking updates
    - Push notifications
+   - Live chat support
 
 6. **Analytics Dashboard**
    - Revenue analytics
    - Booking trends
    - Host performance metrics
    - Customer insights
+   - Platform performance (TikTok, Shopee, etc.)
 
 7. **Email Notifications**
    - Booking confirmation emails
    - Payment reminders
    - Booking reminders
    - Promotional emails
+   - Post-streaming feedback
 
 8. **Mobile App**
    - React Native or Flutter mobile app
    - Push notifications
    - Offline booking capability
+
+9. **Integration with E-commerce Platforms**
+   - TikTok Shop integration
+   - Shopee integration
+   - Tokopedia integration
+   - Instagram Shopping integration
+
+10. **AI-Powered Features**
+    - Host recommendation system
+    - Best time to stream suggestions
+    - Product category analysis
+    - Performance prediction
 
 ---
 
@@ -1383,7 +1575,7 @@ Create OpenAPI/Swagger documentation for all API endpoints.
 
 ## Conclusion
 
-This implementation plan provides a comprehensive roadmap for building a podcast booking system with the following key features:
+This implementation plan provides a comprehensive roadmap for building a Live Shopping / Live Streaming Host Booking system with the following key features:
 
 ✅ **MVP Features** (Phase 1)
 
@@ -1400,6 +1592,7 @@ This implementation plan provides a comprehensive roadmap for building a podcast
 - Host scheduling
 - Coupon system
 - Analytics dashboard
+- E-commerce platform integrations
 
 The system is designed to be:
 
