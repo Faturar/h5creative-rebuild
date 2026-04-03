@@ -104,6 +104,19 @@ export default function Navbar({
     "About",
   ]
 
+  const getNavLink = (item: string) => {
+    switch (item) {
+      case "Services":
+        return "/service"
+      case "About":
+        return "/about"
+      case "Booking":
+        return "/booking"
+      default:
+        return "#"
+    }
+  }
+
   return (
     <motion.nav
       className={`container max-w-7xl mx-auto flex justify-between items-center py-8 px-8 lg:px-16 z-90 top-0 transition-all duration-300 ${
@@ -135,7 +148,7 @@ export default function Navbar({
           {navItems.map((item) => (
             <motion.li key={item} variants={itemVariants}>
               <motion.a
-                href={item === "Booking" ? "/booking" : "#"}
+                href={getNavLink(item)}
                 className="font-medium text-lg hover:text-[#FFE7C2] transition-all duration-300"
                 whileHover={{ y: -2 }}
                 transition={{ duration: 0.2 }}
@@ -223,7 +236,7 @@ export default function Navbar({
                     variants={mobileItemVariants}
                   >
                     <motion.a
-                      href={item === "Booking" ? "/booking" : "#"}
+                      href={getNavLink(item)}
                       className="font-medium text-xl text-white hover:bg-[#2E2BFF] transition-all duration-300 block py-3 px-4 w-full"
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setIsMenuOpen(false)}

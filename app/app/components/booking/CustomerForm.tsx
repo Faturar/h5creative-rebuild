@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion"
 import { User, Phone, Mail, Building, Tag, FileText, Info } from "lucide-react"
+import { useTheme } from "@/contexts/ThemeContext"
 
 interface BookingData {
   customerName: string
@@ -25,6 +26,9 @@ export default function CustomerForm({
   onNext,
   onBack,
 }: CustomerFormProps) {
+  const { actualTheme } = useTheme()
+  const isDark = actualTheme === "dark"
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onNext()
@@ -137,7 +141,7 @@ export default function CustomerForm({
             </div>
           </div>
 
-          <div>
+          <div className="md:col-span-2">
             <label
               htmlFor="productCategory"
               className="block text-sm font-medium text-gray-300 mb-2"
@@ -150,20 +154,79 @@ export default function CustomerForm({
                 id="productCategory"
                 value={bookingData.productCategory}
                 onChange={(e) => onChange({ productCategory: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all appearance-none text-white"
+                className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all appearance-none text-white ${
+                  isDark
+                    ? "bg-white/5 border-white/10"
+                    : "bg-white/5 border-white/10"
+                }`}
                 required
               >
-                <option value="">Pilih kategori produk</option>
-                <option value="Fashion">Fashion</option>
-                <option value="Beauty">Beauty</option>
-                <option value="Food & Beverage">Food & Beverage</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Home & Living">Home & Living</option>
-                <option value="Health & Wellness">Health & Wellness</option>
-                <option value="Sports">Sports</option>
-                <option value="Baby & Kids">Baby & Kids</option>
-                <option value="Automotive">Automotive</option>
-                <option value="Other">Lainnya</option>
+                <option
+                  value=""
+                  className={isDark ? "text-gray-400" : "text-gray-900"}
+                >
+                  Pilih kategori produk
+                </option>
+                <option
+                  value="Fashion"
+                  className={isDark ? "text-gray-900" : "text-gray-900"}
+                >
+                  Fashion
+                </option>
+                <option
+                  value="Beauty"
+                  className={isDark ? "text-gray-900" : "text-gray-900"}
+                >
+                  Beauty
+                </option>
+                <option
+                  value="Food & Beverage"
+                  className={isDark ? "text-gray-900" : "text-gray-900"}
+                >
+                  Food & Beverage
+                </option>
+                <option
+                  value="Electronics"
+                  className={isDark ? "text-gray-900" : "text-gray-900"}
+                >
+                  Electronics
+                </option>
+                <option
+                  value="Home & Living"
+                  className={isDark ? "text-gray-900" : "text-gray-900"}
+                >
+                  Home & Living
+                </option>
+                <option
+                  value="Health & Wellness"
+                  className={isDark ? "text-gray-900" : "text-gray-900"}
+                >
+                  Health & Wellness
+                </option>
+                <option
+                  value="Sports"
+                  className={isDark ? "text-gray-900" : "text-gray-900"}
+                >
+                  Sports
+                </option>
+                <option
+                  value="Baby & Kids"
+                  className={isDark ? "text-gray-900" : "text-gray-900"}
+                >
+                  Baby & Kids
+                </option>
+                <option
+                  value="Automotive"
+                  className={isDark ? "text-gray-900" : "text-gray-900"}
+                >
+                  Automotive
+                </option>
+                <option
+                  value="Other"
+                  className={isDark ? "text-gray-900" : "text-gray-900"}
+                >
+                  Lainnya
+                </option>
               </select>
             </div>
           </div>
@@ -189,18 +252,22 @@ export default function CustomerForm({
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row justify-between pt-6 md:pt-8 gap-4 border-t border-white/10">
+          <div className="md:col-span-2 flex flex-col md:flex-row justify-between pt-6 md:pt-8 gap-4 border-t border-white/10">
             <button
               type="button"
               onClick={onBack}
-              className="px-6 md:px-8 py-3 border-2 border-white/20 text-gray-300 rounded-xl font-semibold hover:bg-white/10 transition-all"
+              className={`px-6 md:px-8 py-3 border-2 rounded-xl font-semibold hover:bg-white/10 transition-all ${
+                isDark
+                  ? "border-white/20 text-white"
+                  : "border-white/20 text-gray-300"
+              }`}
             >
               Kembali
             </button>
             <button
               type="submit"
               disabled={!isValid()}
-              className="flex-1 px-6 md:px-8 py-3 bg-gradient-to-r from-[#4920E5] to-pink-600 text-white rounded-xl font-semibold hover:from-[#5B2CE8] hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
+              className="px-6 md:px-8 py-3 bg-linear-to-r from-[#4920E5] to-pink-600 text-white rounded-xl font-semibold hover:from-[#5B2CE8] hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
             >
               Lanjutkan ke Pembayaran
             </button>

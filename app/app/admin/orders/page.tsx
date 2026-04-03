@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react"
 import {
-  Calendar,
-  Users,
-  DollarSign,
-  TrendingUp,
-  RefreshCw,
-  Download,
   Eye,
+  Download,
+  RefreshCw,
+  ClipboardList,
+  DollarSign,
+  Clock,
+  CheckCircle,
 } from "lucide-react"
 import {
   AdminLayout,
@@ -19,7 +19,7 @@ import {
   Card,
 } from "@/components/admin"
 
-interface Booking {
+interface Order {
   id: string
   bookingCode: string
   status: string
@@ -53,55 +53,28 @@ interface Booking {
   }>
 }
 
-interface Stats {
-  totalBookings: number
-  totalRevenue: number
-  paidBookings: number
-  pendingBookings: number
-}
-
-export default function AdminDashboard() {
-  const [bookings, setBookings] = useState<Booking[]>([])
-  const [stats, setStats] = useState<Stats>({
-    totalBookings: 0,
-    totalRevenue: 0,
-    paidBookings: 0,
-    pendingBookings: 0,
-  })
+export default function AdminOrdersPage() {
+  const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
 
   useEffect(() => {
-    fetchBookings()
+    fetchOrders()
   }, [])
 
-  const fetchBookings = async () => {
+  const fetchOrders = async () => {
     try {
       const response = await fetch("/api/bookings")
       const result = await response.json()
 
       if (result.success) {
-        setBookings(result.data)
-        calculateStats(result.data)
+        setOrders(result.data)
       }
     } catch (error) {
-      console.error("Failed to fetch bookings:", error)
+      console.error("Failed to fetch orders:", error)
     } finally {
       setLoading(false)
     }
-  }
-
-  const calculateStats = (data: Booking[]) => {
-    const totalBookings = data.length
-    const totalRevenue = data
-      .filter((b) => b.payments.some((p) => p.status === "SUCCESS"))
-      .reduce((sum, b) => sum + Number(b.price), 0)
-    const paidBookings = data.filter((b) =>
-      b.payments.some((p) => p.status === "SUCCESS"),
-    ).length
-    const pendingBookings = data.filter((b) => b.status === "PENDING").length
-
-    setStats({ totalBookings, totalRevenue, paidBookings, pendingBookings })
   }
 
   const formatPrice = (price: number) => {
@@ -181,7 +154,7 @@ export default function AdminDashboard() {
     {
       key: "customerName",
       header: "Customer",
-      render: (_: string, row: Booking) => (
+      render: (_: string, row: Order) => (
         <div>
           <p className="font-medium text-white">{row.customerName}</p>
           <p className="text-sm text-gray-400">{row.businessName}</p>
@@ -191,7 +164,7 @@ export default function AdminDashboard() {
     {
       key: "package",
       header: "Package",
-      render: (_: string, row: Booking) => (
+      render: (_: string, row: Order) => (
         <div>
           <p className="font-medium text-white">{row.package.name}</p>
           <p className="text-sm text-gray-400">{row.host.name}</p>
@@ -201,7 +174,7 @@ export default function AdminDashboard() {
     {
       key: "date",
       header: "Schedule",
-      render: (_: Date, row: Booking) => (
+      render: (_: Date, row: Order) => (
         <div>
           <p className="text-sm text-white">{formatDate(row.date)}</p>
           <p className="text-xs text-gray-400">
@@ -230,12 +203,12 @@ export default function AdminDashboard() {
     {
       key: "actions",
       header: "Actions",
-      render: (_: unknown, row: Booking) => (
+      render: (_: unknown, row: Order) => (
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setSelectedBooking(row)}
+            onClick={() => setSelectedOrder(row)}
             className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-            aria-label="View booking"
+            aria-label="View order"
           >
             <Eye className="w-4 h-4 text-gray-400" />
           </button>
@@ -244,21 +217,27 @@ export default function AdminDashboard() {
     },
   ]
 
+  const stats = {
+    total: orders.length,
+    paid: orders.filter((o) => o.payments.some((p) => p.status === "SUCCESS"))
+      .length,
+    pending: orders.filter((o) => o.status === "PENDING").length,
+    completed: orders.filter((o) => o.status === "COMPLETED").length,
+  }
+
   return (
     <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-            <p className="text-gray-400 mt-1">
-              Overview of your booking system
-            </p>
+            <h1 className="text-2xl font-bold text-white">Orders</h1>
+            <p className="text-gray-400 mt-1">Manage booking orders</p>
           </div>
           <div className="flex gap-2">
             <Button
               variant="secondary"
-              onClick={fetchBookings}
+              onClick={fetchOrders}
               icon={<RefreshCw className="w-5 h-5" />}
             >
               Refresh
@@ -275,26 +254,23 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400">
-                  Total Bookings
+                  Total Orders
                 </p>
                 <p className="text-3xl font-bold text-white mt-1">
-                  {stats.totalBookings}
+                  {stats.total}
                 </p>
               </div>
               <div className="w-12 h-12 bg-[#4920E5]/20 rounded-lg flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-[#4920E5]" />
+                <ClipboardList className="w-6 h-6 text-[#4920E5]" />
               </div>
             </div>
           </Card>
-
           <Card>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400">
-                  Total Revenue
-                </p>
+                <p className="text-sm font-medium text-gray-400">Paid Orders</p>
                 <p className="text-3xl font-bold text-white mt-1">
-                  {formatPrice(stats.totalRevenue)}
+                  {stats.paid}
                 </p>
               </div>
               <div className="w-12 h-12 bg-[#12BB74]/20 rounded-lg flex items-center justify-center">
@@ -302,70 +278,63 @@ export default function AdminDashboard() {
               </div>
             </div>
           </Card>
-
-          <Card>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-400">
-                  Paid Bookings
-                </p>
-                <p className="text-3xl font-bold text-white mt-1">
-                  {stats.paidBookings}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-400" />
-              </div>
-            </div>
-          </Card>
-
           <Card>
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-400">Pending</p>
                 <p className="text-3xl font-bold text-white mt-1">
-                  {stats.pendingBookings}
+                  {stats.pending}
                 </p>
               </div>
               <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-yellow-400" />
+                <Clock className="w-6 h-6 text-yellow-400" />
+              </div>
+            </div>
+          </Card>
+          <Card>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-400">Completed</p>
+                <p className="text-3xl font-bold text-white mt-1">
+                  {stats.completed}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                <CheckCircle className="w-6 h-6 text-blue-400" />
               </div>
             </div>
           </Card>
         </div>
 
-        {/* Recent Bookings */}
-        <Card title="Recent Bookings" subtitle="Latest booking activities">
-          <DataTable
-            data={bookings}
-            columns={columns}
-            loading={loading}
-            emptyMessage="No bookings found"
-            pagination={false}
-          />
-        </Card>
+        {/* Data Table */}
+        <DataTable
+          data={orders}
+          columns={columns}
+          loading={loading}
+          emptyMessage="No orders found"
+        />
 
-        {/* Booking Detail Modal */}
+        {/* Order Detail Modal */}
         <Modal
-          isOpen={!!selectedBooking}
-          onClose={() => setSelectedBooking(null)}
-          title="Booking Details"
+          isOpen={!!selectedOrder}
+          onClose={() => setSelectedOrder(null)}
+          title="Order Details"
           size="lg"
         >
-          {selectedBooking && (
+          {selectedOrder && (
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-400">Booking Code</p>
                   <p className="font-semibold text-[#4920E5]">
-                    {selectedBooking.bookingCode}
+                    {selectedOrder.bookingCode}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-400">Status</p>
                   <StatusBadge
-                    status={getStatusLabel(selectedBooking.status)}
-                    type={getStatusType(selectedBooking.status)}
+                    status={getStatusLabel(selectedOrder.status)}
+                    type={getStatusType(selectedOrder.status)}
                   />
                 </div>
               </div>
@@ -378,25 +347,25 @@ export default function AdminDashboard() {
                   <div>
                     <p className="text-sm text-gray-400">Name</p>
                     <p className="font-medium text-white">
-                      {selectedBooking.customerName}
+                      {selectedOrder.customerName}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Email</p>
                     <p className="font-medium text-white">
-                      {selectedBooking.customerEmail}
+                      {selectedOrder.customerEmail}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Phone</p>
                     <p className="font-medium text-white">
-                      {selectedBooking.customerPhone}
+                      {selectedOrder.customerPhone}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Business Name</p>
                     <p className="font-medium text-white">
-                      {selectedBooking.businessName}
+                      {selectedOrder.businessName}
                     </p>
                   </div>
                 </div>
@@ -410,37 +379,37 @@ export default function AdminDashboard() {
                   <div>
                     <p className="text-sm text-gray-400">Package</p>
                     <p className="font-medium text-white">
-                      {selectedBooking.package.name}
+                      {selectedOrder.package.name}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Platform</p>
                     <p className="font-medium text-white">
-                      {selectedBooking.package.platform}
+                      {selectedOrder.package.platform}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Host</p>
                     <p className="font-medium text-white">
-                      {selectedBooking.host.name}
+                      {selectedOrder.host.name}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Studio</p>
                     <p className="font-medium text-white">
-                      {selectedBooking.studio.name}
+                      {selectedOrder.studio.name}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Date</p>
                     <p className="font-medium text-white">
-                      {formatDate(selectedBooking.date)}
+                      {formatDate(selectedOrder.date)}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Time</p>
                     <p className="font-medium text-white">
-                      {selectedBooking.startTime} - {selectedBooking.endTime}
+                      {selectedOrder.startTime} - {selectedOrder.endTime}
                     </p>
                   </div>
                 </div>
@@ -451,7 +420,7 @@ export default function AdminDashboard() {
                   Payment Information
                 </h3>
                 <div className="space-y-2">
-                  {selectedBooking.payments.map((payment) => (
+                  {selectedOrder.payments.map((payment) => (
                     <div
                       key={payment.id}
                       className="flex items-center justify-between p-3 bg-white/5 rounded-lg"
@@ -475,17 +444,17 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {selectedBooking.notes && (
+              {selectedOrder.notes && (
                 <div className="border-t border-white/10 pt-4">
                   <h3 className="font-semibold text-white mb-3">Notes</h3>
-                  <p className="text-gray-400">{selectedBooking.notes}</p>
+                  <p className="text-gray-400">{selectedOrder.notes}</p>
                 </div>
               )}
 
               <div className="border-t border-white/10 pt-4">
                 <p className="text-sm text-gray-400">Created At</p>
                 <p className="font-medium text-white">
-                  {formatDateTime(selectedBooking.createdAt)}
+                  {formatDateTime(selectedOrder.createdAt)}
                 </p>
               </div>
             </div>

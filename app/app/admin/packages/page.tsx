@@ -1,8 +1,23 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Plus, Pencil, Trash2, Save, X } from "lucide-react"
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Save,
+  Package as PackageIcon,
+  CheckCircle,
+  Layers,
+} from "lucide-react"
+import {
+  AdminLayout,
+  DataTable,
+  Modal,
+  Button,
+  StatusBadge,
+  Card,
+} from "@/components/admin"
 
 interface Package {
   id: string
@@ -148,323 +163,320 @@ export default function AdminPackagesPage() {
     setShowModal(true)
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Manage Packages
-            </h1>
-            <p className="text-gray-600 mt-1">
-              Create and manage live streaming packages
+  const columns = [
+    {
+      key: "name",
+      header: "Package Name",
+      render: (value: string, row: Package) => (
+        <div>
+          <p className="font-medium text-white">{value}</p>
+          <p className="text-sm text-gray-400">{row.platform}</p>
+        </div>
+      ),
+    },
+    {
+      key: "description",
+      header: "Description",
+      render: (value: string) => (
+        <p className="text-sm text-gray-400 line-clamp-2 max-w-xs">{value}</p>
+      ),
+    },
+    {
+      key: "price",
+      header: "Price",
+      render: (value: number, row: Package) => (
+        <div>
+          <p className="font-semibold text-[#4920E5]">{formatPrice(value)}</p>
+          {row.promoPrice && (
+            <p className="text-sm text-[#12BB74]">
+              {formatPrice(row.promoPrice)}
             </p>
-          </div>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: "durationMinutes",
+      header: "Duration",
+      render: (value: number) => (
+        <span className="text-sm text-white">{value} min</span>
+      ),
+    },
+    {
+      key: "isActive",
+      header: "Status",
+      render: (value: boolean) => (
+        <StatusBadge
+          status={value ? "Active" : "Inactive"}
+          type={value ? "success" : "error"}
+        />
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      render: (_: unknown, row: Package) => (
+        <div className="flex items-center gap-2">
           <button
-            onClick={openModal}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl"
+            onClick={() => handleEdit(row)}
+            className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+            aria-label="Edit package"
           >
-            <Plus className="w-5 h-5" />
-            Add Package
+            <Pencil className="w-4 h-4 text-gray-400" />
+          </button>
+          <button
+            onClick={() => handleDelete(row.id)}
+            className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
+            aria-label="Delete package"
+          >
+            <Trash2 className="w-4 h-4 text-red-400" />
           </button>
         </div>
-      </div>
+      ),
+    },
+  ]
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Packages Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {packages.map((pkg) => (
-            <motion.div
-              key={pkg.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl shadow-sm p-6"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-xl font-bold text-gray-900">{pkg.name}</h3>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleEdit(pkg)}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                  >
-                    <Pencil className="w-4 h-4 text-gray-600" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(pkg.id)}
-                    className="p-2 hover:bg-red-100 rounded-lg transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4 text-red-600" />
-                  </button>
-                </div>
-              </div>
-
-              <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                {pkg.description}
-              </p>
-
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Platform</span>
-                  <span className="font-medium text-gray-900">
-                    {pkg.platform}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Duration</span>
-                  <span className="font-medium text-gray-900">
-                    {pkg.durationMinutes} min
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Price</span>
-                  <span className="font-bold text-purple-600">
-                    {formatPrice(pkg.price)}
-                  </span>
-                </div>
-                {pkg.promoPrice && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Promo Price</span>
-                    <span className="font-bold text-green-600">
-                      {formatPrice(pkg.promoPrice)}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {pkg.includesHost && (
-                  <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">
-                    Host Included
-                  </span>
-                )}
-                {pkg.includesStudio && (
-                  <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
-                    Studio Included
-                  </span>
-                )}
-                {pkg.includesDevice && (
-                  <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs font-medium">
-                    Device Included
-                  </span>
-                )}
-                <span
-                  className={`px-2 py-1 rounded text-xs font-medium ${
-                    pkg.isActive
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
-                  }`}
-                >
-                  {pkg.isActive ? "Active" : "Inactive"}
-                </span>
-              </div>
-            </motion.div>
-          ))}
+  return (
+    <AdminLayout>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-white">Packages</h1>
+            <p className="text-gray-400 mt-1">Manage live streaming packages</p>
+          </div>
+          <Button onClick={openModal} icon={<Plus className="w-5 h-5" />}>
+            Add Package
+          </Button>
         </div>
-      </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-          >
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {editingPackage ? "Edit Package" : "Add New Package"}
-                </h2>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-400">
+                  Total Packages
+                </p>
+                <p className="text-3xl font-bold text-white mt-1">
+                  {packages.length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-[#4920E5]/20 rounded-lg flex items-center justify-center">
+                <PackageIcon className="w-6 h-6 text-[#4920E5]" />
               </div>
             </div>
-            <div className="p-6 space-y-4">
+          </Card>
+          <Card>
+            <div className="flex items-center justify-between">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Package Name
+                <p className="text-sm font-medium text-gray-400">
+                  Active Packages
+                </p>
+                <p className="text-3xl font-bold text-white mt-1">
+                  {packages.filter((p) => p.isActive).length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-[#12BB74]/20 rounded-lg flex items-center justify-center">
+                <CheckCircle className="w-6 h-6 text-[#12BB74]" />
+              </div>
+            </div>
+          </Card>
+          <Card>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-400">Platforms</p>
+                <p className="text-3xl font-bold text-white mt-1">
+                  {new Set(packages.map((p) => p.platform)).size}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                <Layers className="w-6 h-6 text-blue-400" />
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Data Table */}
+        <DataTable
+          data={packages}
+          columns={columns}
+          loading={loading}
+          emptyMessage="No packages found"
+        />
+
+        {/* Modal */}
+        <Modal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          title={editingPackage ? "Edit Package" : "Add New Package"}
+          size="lg"
+        >
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Package Name
+              </label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:ring-2 focus:ring-[#4920E5] focus:border-transparent focus:outline-none"
+                placeholder="e.g., Starter Package"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Description
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                rows={4}
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:ring-2 focus:ring-[#4920E5] focus:border-transparent focus:outline-none resize-none"
+                placeholder="Describe the package..."
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Price (IDR)
                 </label>
                 <input
-                  type="text"
-                  value={formData.name}
+                  type="number"
+                  value={formData.price}
                   onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
+                    setFormData({ ...formData, price: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="e.g., Starter Package"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:ring-2 focus:ring-[#4920E5] focus:border-transparent focus:outline-none"
+                  placeholder="0"
                 />
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Promo Price (IDR)
                 </label>
-                <textarea
-                  value={formData.description}
+                <input
+                  type="number"
+                  value={formData.promoPrice}
                   onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
+                    setFormData({ ...formData, promoPrice: e.target.value })
                   }
-                  rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
-                  placeholder="Describe the package..."
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:ring-2 focus:ring-[#4920E5] focus:border-transparent focus:outline-none"
+                  placeholder="Optional"
                 />
               </div>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Price (IDR)
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.price}
-                    onChange={(e) =>
-                      setFormData({ ...formData, price: e.target.value })
-                    }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    placeholder="0"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Promo Price (IDR)
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.promoPrice}
-                    onChange={(e) =>
-                      setFormData({ ...formData, promoPrice: e.target.value })
-                    }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    placeholder="Optional"
-                  />
-                </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Duration (minutes)
+                </label>
+                <input
+                  type="number"
+                  value={formData.durationMinutes}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      durationMinutes: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:ring-2 focus:ring-[#4920E5] focus:border-transparent focus:outline-none"
+                  placeholder="120"
+                />
               </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Duration (minutes)
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.durationMinutes}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        durationMinutes: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    placeholder="120"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Platform
-                  </label>
-                  <select
-                    value={formData.platform}
-                    onChange={(e) =>
-                      setFormData({ ...formData, platform: e.target.value })
-                    }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  >
-                    <option value="TikTok">TikTok</option>
-                    <option value="Shopee">Shopee</option>
-                    <option value="Instagram">Instagram</option>
-                    <option value="Tokopedia">Tokopedia</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.includesHost}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        includesHost: e.target.checked,
-                      })
-                    }
-                    className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
-                  />
-                  <span className="text-sm text-gray-700">Includes Host</span>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Platform
                 </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.includesStudio}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        includesStudio: e.target.checked,
-                      })
-                    }
-                    className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
-                  />
-                  <span className="text-sm text-gray-700">Includes Studio</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.includesDevice}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        includesDevice: e.target.checked,
-                      })
-                    }
-                    className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
-                  />
-                  <span className="text-sm text-gray-700">Includes Device</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isActive}
-                    onChange={(e) =>
-                      setFormData({ ...formData, isActive: e.target.checked })
-                    }
-                    className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500"
-                  />
-                  <span className="text-sm text-gray-700">Active</span>
-                </label>
+                <select
+                  value={formData.platform}
+                  onChange={(e) =>
+                    setFormData({ ...formData, platform: e.target.value })
+                  }
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-[#4920E5] focus:border-transparent focus:outline-none"
+                >
+                  <option value="TikTok">TikTok</option>
+                  <option value="Shopee">Shopee</option>
+                  <option value="Instagram">Instagram</option>
+                  <option value="Tokopedia">Tokopedia</option>
+                </select>
               </div>
             </div>
-            <div className="p-6 border-t border-gray-200 flex justify-end gap-4">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl"
-              >
-                <Save className="w-5 h-5" />
-                Save Package
-              </button>
+
+            <div className="flex flex-wrap gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.includesHost}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      includesHost: e.target.checked,
+                    })
+                  }
+                  className="w-4 h-4 text-[#4920E5] rounded focus:ring-[#4920E5]"
+                />
+                <span className="text-sm text-gray-300">Includes Host</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.includesStudio}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      includesStudio: e.target.checked,
+                    })
+                  }
+                  className="w-4 h-4 text-[#4920E5] rounded focus:ring-[#4920E5]"
+                />
+                <span className="text-sm text-gray-300">Includes Studio</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.includesDevice}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      includesDevice: e.target.checked,
+                    })
+                  }
+                  className="w-4 h-4 text-[#4920E5] rounded focus:ring-[#4920E5]"
+                />
+                <span className="text-sm text-gray-300">Includes Device</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.isActive}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isActive: e.target.checked })
+                  }
+                  className="w-4 h-4 text-[#4920E5] rounded focus:ring-[#4920E5]"
+                />
+                <span className="text-sm text-gray-300">Active</span>
+              </label>
             </div>
-          </motion.div>
-        </div>
-      )}
-    </div>
+          </div>
+          <div className="flex justify-end gap-4 pt-4">
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSave} icon={<Save className="w-5 h-5" />}>
+              Save Package
+            </Button>
+          </div>
+        </Modal>
+      </div>
+    </AdminLayout>
   )
 }

@@ -183,29 +183,13 @@ export default function BookingPage() {
   return (
     <section className="bg-[#0B0B1B] flex flex-col lg:flex-row min-h-screen">
       {/* Left Sidebar - Testimonial Card */}
-      <div className="hidden lg:flex flex-1 flex-col p-[30px_40px] justify-end overflow-hidden bg-[url('/assets/images/background/side-image.png')] bg-cover bg-center bg-no-repeat sticky top-0 h-screen">
-        <div className="flex flex-col bg-white p-[30px] gap-5 rounded-[30px] sticky bottom-[30px]">
-          <div className="flex h-10 items-start overflow-hidden">
-            <Image
-              src={logoTesti5}
-              className="h-full object-contain"
-              alt="logo"
-            />
-          </div>
-          <p className="font-semibold text-[22px] leading-[40px] text-gray-800">
+      <div className="hidden lg:flex flex-1 flex-col p-[30px_40px] justify-end overflow-hidden bg-[url('/assets/images/background/livestream.png')] bg-cover bg-center bg-no-repeat sticky top-0 h-screen">
+        <div className="flex flex-col bg-white p-[30px] gap-4 rounded-[30px] sticky bottom-[30px]">
+          <h1 className="text-3xl font-bold">Livestream Service</h1>
+          <p className="text-xl leading-8 text-gray-800">
             Platform live streaming profesional untuk bisnis Anda. Tingkatkan
             penjualan dengan host berpengalaman dan studio modern.
           </p>
-          <div className="flex h-8 w-fit shrink-0">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <Image
-                key={index}
-                src={starIcon}
-                className="w-full h-full"
-                alt="star"
-              />
-            ))}
-          </div>
         </div>
       </div>
 
@@ -248,7 +232,7 @@ export default function BookingPage() {
               return (
                 <div
                   key={step.id}
-                  className={`flex items-center flex-shrink-0 ${index < steps.length - 1 ? "flex-1 min-w-[80px] md:min-w-[100px]" : "min-w-[60px] md:min-w-[80px]"}`}
+                  className={`h-24 flex items-center shrink-0 ${index < steps.length - 1 ? "flex-1 min-w-[80px] md:min-w-[100px]" : "min-w-[60px] md:min-w-[80px]"}`}
                 >
                   <div
                     className={`flex flex-col items-center cursor-pointer ${
@@ -259,7 +243,7 @@ export default function BookingPage() {
                     }
                   >
                     <div
-                      className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all ${
+                      className={`w-10 min-h-10 md:w-12 md:min-h-12 rounded-full flex items-center justify-center transition-all ${
                         isActive
                           ? "bg-[#4920E5] text-white shadow-lg scale-110"
                           : isCompleted

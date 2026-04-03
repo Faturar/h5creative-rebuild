@@ -9,6 +9,7 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react"
+import { useTheme } from "@/contexts/ThemeContext"
 
 interface BookingData {
   packageId: string | null
@@ -48,6 +49,9 @@ export default function PaymentSection({
   isSubmitting,
   canProceed,
 }: PaymentSectionProps) {
+  const { actualTheme } = useTheme()
+  const isDark = actualTheme === "dark"
+
   const [packageData, setPackageData] = useState<Package | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -93,56 +97,98 @@ export default function PaymentSection({
   return (
     <div>
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">
+        <h2
+          className={`text-3xl font-bold mb-2 ${isDark ? "text-white" : "text-gray-900"}`}
+        >
           Konfirmasi & Pembayaran
         </h2>
-        <p className="text-gray-600">
+        <p className={isDark ? "text-gray-400" : "text-gray-600"}>
           Review detail booking dan lakukan pembayaran
         </p>
       </div>
 
       <div className="space-y-6">
         {/* Booking Summary */}
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div
+          className={`${isDark ? "bg-white/5 border border-white/10" : "bg-gradient-to-br from-purple-50 to-pink-50"} rounded-xl p-6`}
+        >
+          <h3
+            className={`text-lg font-semibold mb-4 ${isDark ? "text-white" : "text-gray-900"}`}
+          >
             Ringkasan Booking
           </h3>
 
           <div className="space-y-3">
-            <div className="flex justify-between items-center py-2 border-b border-purple-200">
-              <span className="text-gray-600">Nama Pelanggan</span>
-              <span className="font-medium text-gray-900">
+            <div
+              className={`flex justify-between items-center py-2 border-b ${isDark ? "border-white/10" : "border-purple-200"}`}
+            >
+              <span className={isDark ? "text-gray-400" : "text-gray-600"}>
+                Nama Pelanggan
+              </span>
+              <span
+                className={`font-medium ${isDark ? "text-gray-200" : "text-gray-900"}`}
+              >
                 {bookingData.customerName}
               </span>
             </div>
-            <div className="flex justify-between items-center py-2 border-b border-purple-200">
-              <span className="text-gray-600">Email</span>
-              <span className="font-medium text-gray-900">
+            <div
+              className={`flex justify-between items-center py-2 border-b ${isDark ? "border-white/10" : "border-purple-200"}`}
+            >
+              <span className={isDark ? "text-gray-400" : "text-gray-600"}>
+                Email
+              </span>
+              <span
+                className={`font-medium ${isDark ? "text-gray-200" : "text-gray-900"}`}
+              >
                 {bookingData.customerEmail}
               </span>
             </div>
-            <div className="flex justify-between items-center py-2 border-b border-purple-200">
-              <span className="text-gray-600">No. Telepon</span>
-              <span className="font-medium text-gray-900">
+            <div
+              className={`flex justify-between items-center py-2 border-b ${isDark ? "border-white/10" : "border-purple-200"}`}
+            >
+              <span className={isDark ? "text-gray-400" : "text-gray-600"}>
+                No. Telepon
+              </span>
+              <span
+                className={`font-medium ${isDark ? "text-gray-200" : "text-gray-900"}`}
+              >
                 {bookingData.customerPhone}
               </span>
             </div>
-            <div className="flex justify-between items-center py-2 border-b border-purple-200">
-              <span className="text-gray-600">Bisnis</span>
-              <span className="font-medium text-gray-900">
+            <div
+              className={`flex justify-between items-center py-2 border-b ${isDark ? "border-white/10" : "border-purple-200"}`}
+            >
+              <span className={isDark ? "text-gray-400" : "text-gray-600"}>
+                Bisnis
+              </span>
+              <span
+                className={`font-medium ${isDark ? "text-gray-200" : "text-gray-900"}`}
+              >
                 {bookingData.businessName}
               </span>
             </div>
-            <div className="flex justify-between items-center py-2 border-b border-purple-200">
-              <span className="text-gray-600">Kategori Produk</span>
-              <span className="font-medium text-gray-900">
+            <div
+              className={`flex justify-between items-center py-2 border-b ${isDark ? "border-white/10" : "border-purple-200"}`}
+            >
+              <span className={isDark ? "text-gray-400" : "text-gray-600"}>
+                Kategori Produk
+              </span>
+              <span
+                className={`font-medium ${isDark ? "text-gray-200" : "text-gray-900"}`}
+              >
                 {bookingData.productCategory}
               </span>
             </div>
             {bookingData.notes && (
-              <div className="flex justify-between items-start py-2 border-b border-purple-200">
-                <span className="text-gray-600">Catatan</span>
-                <span className="font-medium text-gray-900 text-right max-w-xs">
+              <div
+                className={`flex justify-between items-start py-2 border-b ${isDark ? "border-white/10" : "border-purple-200"}`}
+              >
+                <span className={isDark ? "text-gray-400" : "text-gray-600"}>
+                  Catatan
+                </span>
+                <span
+                  className={`font-medium text-right max-w-xs ${isDark ? "text-gray-200" : "text-gray-900"}`}
+                >
                   {bookingData.notes}
                 </span>
               </div>
@@ -150,9 +196,15 @@ export default function PaymentSection({
             {bookingData.date &&
               bookingData.startTime &&
               bookingData.endTime && (
-                <div className="flex justify-between items-center py-2 border-b border-purple-200">
-                  <span className="text-gray-600">Jadwal</span>
-                  <span className="font-medium text-gray-900 text-right">
+                <div
+                  className={`flex justify-between items-center py-2 border-b ${isDark ? "border-white/10" : "border-purple-200"}`}
+                >
+                  <span className={isDark ? "text-gray-400" : "text-gray-600"}>
+                    Jadwal
+                  </span>
+                  <span
+                    className={`font-medium text-right ${isDark ? "text-gray-200" : "text-gray-900"}`}
+                  >
                     {new Date(bookingData.date).toLocaleDateString("id-ID", {
                       weekday: "long",
                       year: "numeric",
@@ -168,10 +220,14 @@ export default function PaymentSection({
         </div>
 
         {/* Payment Information */}
-        <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
+        <div
+          className={`${isDark ? "bg-white/5 border border-white/10" : "bg-white border-2 border-gray-200"} rounded-xl p-6`}
+        >
           <div className="flex items-center gap-3 mb-4">
             <CreditCard className="w-6 h-6 text-purple-600" />
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3
+              className={`text-lg font-semibold ${isDark ? "text-white" : "text-gray-900"}`}
+            >
               Metode Pembayaran
             </h3>
           </div>
@@ -180,10 +236,14 @@ export default function PaymentSection({
             <div className="flex items-start gap-3">
               <Shield className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p
+                  className={`text-sm font-medium ${isDark ? "text-gray-200" : "text-gray-900"}`}
+                >
                   Pembayaran Aman
                 </p>
-                <p className="text-sm text-gray-600">
+                <p
+                  className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}
+                >
                   Transaksi Anda dilindungi dengan enkripsi SSL dan sistem
                   pembayaran terpercaya
                 </p>
@@ -193,10 +253,14 @@ export default function PaymentSection({
             <div className="flex items-start gap-3">
               <Clock className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p
+                  className={`text-sm font-medium ${isDark ? "text-gray-200" : "text-gray-900"}`}
+                >
                   Proses Cepat
                 </p>
-                <p className="text-sm text-gray-600">
+                <p
+                  className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}
+                >
                   Pembayaran diproses secara instan dan Anda akan menerima
                   konfirmasi segera
                 </p>
@@ -235,11 +299,17 @@ export default function PaymentSection({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-between pt-6 border-t border-gray-200">
+        <div
+          className={`flex justify-between pt-6 border-t ${isDark ? "border-white/10" : "border-gray-200"}`}
+        >
           <button
             onClick={onBack}
             disabled={isSubmitting}
-            className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`px-8 py-3 border-2 rounded-lg font-semibold hover:bg-white/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+              isDark
+                ? "border-white/20 text-white"
+                : "border-gray-300 text-gray-700"
+            }`}
           >
             Kembali
           </button>

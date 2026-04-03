@@ -2,7 +2,21 @@ import { type StaticImageData } from "next/image"
 import services1 from "@/public/assets/images/services1.png"
 import services2 from "@/public/assets/images/services2.png"
 import services3 from "@/public/assets/images/services3.png"
-import { Box, Video, Users, Smartphone, Monitor } from "lucide-react"
+import {
+  Box,
+  Video,
+  Users,
+  Smartphone,
+  Monitor,
+  Target,
+  Camera,
+  Megaphone,
+  Palette,
+  ShoppingCart,
+  TrendingUp,
+  Zap,
+  Star,
+} from "lucide-react"
 
 export interface Service {
   slug: string
@@ -15,83 +29,437 @@ export interface Service {
   features?: string[]
   benefits?: string[]
   process?: string[]
+  pricing?: {
+    packages?: Array<{
+      name: string
+      price: string
+      features: string[]
+    }>
+    startingFrom?: string
+  }
 }
 
 export const services: Service[] = [
   {
-    slug: "brand-identity-visual-design",
-    title: "Brand Identity & Visual Design",
+    slug: "brand-activation",
+    title: "Brand Activation",
     description:
-      "Membangun identitas visual yang kuat, konsisten, dan mudah diingat untuk memperkuat positioning brand Anda.",
+      "Comprehensive brand transformation services including rename, reposition, rebrand, and relaunch strategies.",
     image: services1,
-    alt: "Brand Identity Design",
-    icon: Box,
+    alt: "Brand Activation Service",
+    icon: Target,
     detailedDescription:
-      "Kami membantu Anda menciptakan identitas brand yang unik dan berkesan. Melalui pendekatan strategis, kami mengembangkan sistem visual yang mencakup logo, palet warna, tipografi, dan panduan penggunaan yang konsisten di semua touchpoint brand Anda.",
+      "We help brands undergo complete transformations - rename, reposition, rebrand, or relaunch - to stay relevant and competitive in the digital age. Our strategic approach ensures your brand resonates with your target audience and achieves sustainable growth.",
     features: [
-      "Logo Design & Identity System",
-      "Color Palette & Typography",
-      "Brand Guidelines & Style Guide",
-      "Visual Assets & Templates",
-      "Brand Voice & Messaging",
+      "Brand strategy development",
+      "Market positioning analysis",
+      "Brand identity refresh",
+      "Launch campaign planning",
+      "Brand messaging framework",
     ],
     benefits: [
-      "Meningkatkan brand recognition dan recall",
-      "Menciptakan kesan profesional dan terpercaya",
-      "Membedakan brand dari kompetitor",
-      "Konsistensi visual di semua channel",
-      "Memudahkan scaling brand ke berbagai media",
+      "Stronger brand recognition",
+      "Improved market positioning",
+      "Increased customer engagement",
+      "Competitive differentiation",
+      "Long-term brand equity",
     ],
     process: [
-      "Discovery & Research - Memahami bisnis, target audience, dan kompetitor",
-      "Strategy Development - Mendefinisikan positioning dan personality brand",
-      "Concept Creation - Mengembangkan konsep visual dan eksplorasi desain",
-      "Design Refinement - Menyempurnakan desain berdasarkan feedback",
-      "Final Delivery - Menyerahkan semua aset dan panduan penggunaan",
+      "Discovery & Research - Understanding your business, audience, and market",
+      "Strategy Development - Defining brand positioning and personality",
+      "Creative Concept - Developing visual and messaging concepts",
+      "Implementation Planning - Creating launch roadmap and timeline",
+      "Launch & Monitoring - Executing launch and tracking performance",
     ],
   },
   {
-    slug: "creative-content-campaign",
-    title: "Creative Content & Campaign",
+    slug: "social-media-management",
+    title: "Social Media Management",
     description:
-      "Menciptakan konten dan campaign kreatif yang menarik perhatian dan meningkatkan engagement.",
+      "Full-service social media management to build and grow your brand presence across all platforms.",
     image: services2,
-    alt: "Creative Content & Campaign",
-    icon: Box,
+    alt: "Social Media Management Service",
+    icon: Users,
     detailedDescription:
-      "Kami menciptakan konten dan campaign yang tidak hanya menarik perhatian tetapi juga memberikan dampak nyata. Dari strategi konten hingga eksekusi kreatif, kami memastikan setiap konten yang kami buat relevan dengan audience dan sesuai dengan tujuan bisnis Anda.",
+      "We manage your social media presence across all major platforms, creating engaging content that builds community and drives results. From strategy to execution, we handle everything so you can focus on running your business.",
     features: [
-      "Content Strategy & Planning",
-      "Social Media Content",
-      "Campaign Concept & Creative",
-      "Copywriting & Storytelling",
-      "Content Calendar Management",
+      "Content strategy & planning",
+      "Content creation & posting",
+      "Community management",
+      "Analytics & reporting",
+      "Paid social advertising",
     ],
     benefits: [
-      "Meningkatkan engagement dan interaksi audience",
-      "Membangun brand awareness yang kuat",
-      "Meningkatkan traffic dan reach organik",
-      "Menciptakan komunitas yang loyal",
-      "Mendukung conversion dan sales goals",
+      "Consistent brand presence",
+      "Increased engagement",
+      "Growing follower base",
+      "Improved brand awareness",
+      "Data-driven decisions",
     ],
     process: [
-      "Audience Research - Memahami siapa target audience dan apa yang mereka cari",
-      "Content Strategy - Merencanakan jenis konten dan channel yang tepat",
-      "Creative Development - Menciptakan konten yang engaging dan relevan",
-      "Distribution & Promotion - Mendistribusikan konten di channel yang tepat",
-      "Analytics & Optimization - Mengukur performa dan mengoptimalkan strategi",
+      "Platform Audit - Analyzing current presence and performance",
+      "Strategy Development - Creating platform-specific strategies",
+      "Content Calendar - Planning and scheduling content",
+      "Daily Management - Posting, engaging, and monitoring",
+      "Performance Analysis - Reviewing metrics and optimizing",
     ],
+  },
+  {
+    slug: "tiktok-management",
+    title: "TikTok Management",
+    description:
+      "Specialized TikTok content creation and growth strategies to reach younger audiences.",
+    image: services2,
+    alt: "TikTok Management Service",
+    icon: Smartphone,
+    detailedDescription:
+      "Tap into the power of TikTok with our specialized management services. We create engaging short-form content that resonates with Gen Z and drives viral growth for your brand.",
+    features: [
+      "Trend analysis & adaptation",
+      "Short-form video production",
+      "Influencer collaboration",
+      "Hashtag strategy",
+      "Engagement optimization",
+    ],
+    benefits: [
+      "Viral potential",
+      "Reach Gen Z audience",
+      "High engagement rates",
+      "Brand authenticity",
+      "Trend participation",
+    ],
+    process: [
+      "Account Setup & Audit - Optimizing profile and analyzing competitors",
+      "Content Strategy - Planning content themes and trends",
+      "Video Production - Creating engaging TikTok videos",
+      "Posting & Engagement - Publishing and interacting with audience",
+      "Analytics & Optimization - Tracking performance and improving",
+    ],
+  },
+  {
+    slug: "live-streaming",
+    title: "Live Streaming & Live Shopping",
+    description:
+      "Professional live streaming services with hosts, equipment, and studio setup for engaging live commerce.",
+    image: services2,
+    alt: "Live Streaming Service",
+    icon: Video,
+    detailedDescription:
+      "Elevate your live streaming experience with our professional setup. We provide hosts with 6M+ salary, iPhone devices for quality, and complete studio equipment worth 3M+. Starting from 2M for 2 hours of live streaming per month.",
+    features: [
+      "Professional hosts (6M+ salary)",
+      "iPhone devices for quality",
+      "Complete studio setup (3M+ value)",
+      "Professional lighting & audio",
+      "Full service management",
+    ],
+    benefits: [
+      "Real-time engagement",
+      "Instant trust building",
+      "Increased sales conversion",
+      "Professional presentation",
+      "Stress-free execution",
+    ],
+    process: [
+      "Consultation - Discuss products and sales targets",
+      "Planning - Define live concept and rundown",
+      "Setup - Prepare studio, devices, and host",
+      "Live Execution - Run live with real-time interaction",
+      "Follow-up - Analyze results and optimize for next live",
+    ],
+  },
+  {
+    slug: "content-production",
+    title: "Content Production (Photo & Video)",
+    description:
+      "Professional photo and video production services for all your content needs.",
+    image: services3,
+    alt: "Content Production Service",
+    icon: Camera,
+    detailedDescription:
+      "From product photography to promotional videos, we deliver high-quality content that showcases your brand in the best light. Our professional team and equipment ensure stunning results every time.",
+    features: [
+      "Professional photography",
+      "Video production",
+      "Post-production editing",
+      "Studio or on-location",
+      "Equipment & crew",
+    ],
+    benefits: [
+      "High-quality visuals",
+      "Professional presentation",
+      "Brand consistency",
+      "Versatile content",
+      "Multiple formats",
+    ],
+    process: [
+      "Concept Development - Define creative direction and style",
+      "Pre-production - Plan shots, locations, and logistics",
+      "Production - Execute photography or video shoot",
+      "Post-production - Edit, color grade, and finalize",
+      "Delivery - Provide final assets in required formats",
+    ],
+  },
+  {
+    slug: "digital-marketing",
+    title: "Digital Marketing",
+    description:
+      "Comprehensive digital marketing solutions to grow your online presence and drive conversions.",
+    image: services1,
+    alt: "Digital Marketing Service",
+    icon: TrendingUp,
+    detailedDescription:
+      "We provide end-to-end digital marketing services that drive real business results. From SEO to paid advertising, we create strategies that increase visibility, engagement, and conversions.",
+    features: [
+      "SEO optimization",
+      "PPC advertising",
+      "Email marketing",
+      "Marketing automation",
+      "Analytics & reporting",
+    ],
+    benefits: [
+      "Increased online visibility",
+      "Higher conversion rates",
+      "Targeted reach",
+      "Measurable results",
+      "ROI optimization",
+    ],
+    process: [
+      "Goal Setting - Define KPIs and objectives",
+      "Strategy Development - Create comprehensive marketing plan",
+      "Campaign Setup - Implement tracking and launch campaigns",
+      "Execution & Monitoring - Manage campaigns daily",
+      "Optimization & Reporting - Analyze data and improve performance",
+    ],
+  },
+  {
+    slug: "logo-print-packaging-design",
+    title: "Logo, Print & Packaging Design",
+    description:
+      "Complete visual design services including logo creation, print materials, and packaging design.",
+    image: services3,
+    alt: "Logo Print Packaging Design Service",
+    icon: Palette,
+    detailedDescription:
+      "We create stunning visual designs that make your brand stand out. From logos to packaging, we ensure every touchpoint reflects your brand identity and appeals to your target audience.",
+    features: [
+      "Logo design",
+      "Brand identity system",
+      "Print design (brochures, flyers)",
+      "Packaging design",
+      "Brand guidelines",
+    ],
+    benefits: [
+      "Professional brand image",
+      "Consistent visual identity",
+      "Standout packaging",
+      "Professional materials",
+      "Brand recognition",
+    ],
+    process: [
+      "Brief & Research - Understand brand and requirements",
+      "Concept Development - Create initial design concepts",
+      "Design Creation - Develop and refine designs",
+      "Refinement - Polish based on feedback",
+      "Final Delivery - Provide all final assets and files",
+    ],
+  },
+  {
+    slug: "product-photography",
+    title: "Product Photography",
+    description:
+      "Professional product photography services to showcase your products in the best light.",
+    image: services1,
+    alt: "Product Photography Service",
+    icon: Camera,
+    detailedDescription:
+      "Showcase your products with professional photography that highlights their best features. Our expert photographers use professional lighting and equipment to create stunning images that drive sales.",
+    features: [
+      "Professional lighting",
+      "High-resolution images",
+      "Multiple angles",
+      "White background or lifestyle",
+      "Quick turnaround",
+    ],
+    benefits: [
+      "Professional product presentation",
+      "Increased sales conversion",
+      "Better customer trust",
+      "Versatile usage",
+      "E-commerce ready",
+    ],
+    process: [
+      "Product consultation - Discuss requirements and style",
+      "Setup & styling - Prepare products and lighting",
+      "Photography session - Capture all required shots",
+      "Post-production - Edit and retouch images",
+      "Delivery - Provide final images in various formats",
+    ],
+    pricing: {
+      packages: [
+        {
+          name: "Package A",
+          price: "~IDR 2,000,000",
+          features: [
+            "Up to 5 products",
+            "3 angles per product",
+            "Basic editing",
+            "Web-ready images",
+          ],
+        },
+        {
+          name: "Package B",
+          price: "~IDR 3,700,000",
+          features: [
+            "Up to 10 products",
+            "5 angles per product",
+            "Advanced editing",
+            "Web + print ready",
+            "Lifestyle shots",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    slug: "meta-ads-optimization",
+    title: "Meta Ads Optimization",
+    description:
+      "Expert Facebook and Instagram advertising management and optimization.",
+    image: services2,
+    alt: "Meta Ads Optimization Service",
+    icon: Target,
+    detailedDescription:
+      "Maximize your advertising ROI with our expert Meta Ads management. We create, optimize, and scale campaigns that reach your target audience and drive conversions on Facebook and Instagram.",
+    features: [
+      "Campaign strategy",
+      "Ad creation & testing",
+      "Audience targeting",
+      "Budget management",
+      "Performance optimization",
+    ],
+    benefits: [
+      "Targeted reach",
+      "Cost-effective advertising",
+      "Higher conversion rates",
+      "Detailed analytics",
+      "Continuous optimization",
+    ],
+    process: [
+      "Account Audit - Analyze current campaigns and performance",
+      "Strategy Development - Create comprehensive advertising strategy",
+      "Campaign Setup - Build campaigns with proper tracking",
+      "Ongoing Management - Monitor and optimize daily",
+      "Reporting & Optimization - Provide insights and improve results",
+    ],
+    pricing: {
+      packages: [
+        {
+          name: "Monthly Service",
+          price: "~IDR 6,000,000 / month",
+          features: [
+            "Campaign management",
+            "Ad creation (up to 10 ads/month)",
+            "A/B testing",
+            "Weekly reporting",
+            "Optimization",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    slug: "ecommerce-handling",
+    title: "E-commerce Handling",
+    description:
+      "Complete e-commerce management services to run your online store efficiently.",
+    image: services3,
+    alt: "E-commerce Handling Service",
+    icon: ShoppingCart,
+    detailedDescription:
+      "Let us handle the day-to-day operations of your e-commerce store. From product listings to order processing, we manage everything so you can focus on growing your business.",
+    features: [
+      "Product listing",
+      "Inventory management",
+      "Order processing",
+      "Customer service",
+      "Platform management",
+    ],
+    benefits: [
+      "Hands-off operation",
+      "Professional management",
+      "Increased sales",
+      "Better customer experience",
+      "Time savings",
+    ],
+    process: [
+      "Onboarding & Setup - Integrate with your platform",
+      "Product Integration - Upload and optimize products",
+      "Daily Operations - Manage listings and orders",
+      "Order Management - Process and track orders",
+      "Monthly Review - Analyze performance and improve",
+    ],
+    pricing: {
+      packages: [
+        {
+          name: "Monthly Service",
+          price: "~IDR 2,500,000 / month",
+          features: [
+            "Product uploads (up to 20/month)",
+            "Order processing",
+            "Customer inquiries",
+            "Basic inventory tracking",
+            "Monthly reporting",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    slug: "logo-identity-design",
+    title: "Logo & Identity Design",
+    description:
+      "Professional logo and brand identity design services to establish your brand.",
+    image: services1,
+    alt: "Logo Identity Design Service",
+    icon: Star,
+    detailedDescription:
+      "Create a memorable brand identity with our professional logo and identity design services. We craft unique logos and comprehensive brand systems that set you apart from competitors.",
+    features: [
+      "Logo design concepts",
+      "Color palette",
+      "Typography selection",
+      "Brand guidelines",
+      "Multiple file formats",
+    ],
+    benefits: [
+      "Unique brand identity",
+      "Professional appearance",
+      "Brand recognition",
+      "Versatile usage",
+      "Scalable assets",
+    ],
+    process: [
+      "Discovery & Brief - Understand brand and requirements",
+      "Research & Concept - Research market and develop concepts",
+      "Design Development - Create and refine logo designs",
+      "Refinement - Polish based on feedback",
+      "Final Delivery - Provide all files and guidelines",
+    ],
+    pricing: {
+      startingFrom: "IDR 2,000,000",
+    },
   },
   {
     slug: "website-digital-experience",
     title: "Website & Digital Experience",
     description:
-      "Menghadirkan pengalaman digital yang modern, cepat, dan berorientasi pada konversi.",
+      "Modern, fast, and conversion-oriented website development and digital experiences.",
     image: services3,
     alt: "Website & Digital Experience",
-    icon: Box,
+    icon: Monitor,
     detailedDescription:
-      "Kami merancang dan mengembangkan website yang tidak hanya indah secara visual tetapi juga fungsional dan berorientasi pada hasil. Dengan pendekatan user-centered design dan teknologi terkini, kami menciptakan pengalaman digital yang meningkatkan konversi dan memuaskan pengguna.",
+      "We design and develop websites that are not only visually stunning but also highly functional and conversion-focused. Using user-centered design and cutting-edge technology, we create digital experiences that drive results.",
     features: [
       "UI/UX Design & Prototyping",
       "Frontend Development",
@@ -100,49 +468,82 @@ export const services: Service[] = [
       "Performance Optimization",
     ],
     benefits: [
-      "Meningkatkan conversion rate dan sales",
-      "Memperbaiki user experience dan satisfaction",
-      "Meningkatkan SEO dan organic traffic",
-      "Mempercepat loading time dan performance",
-      "Memudahkan management konten dan update",
+      "Higher conversion rates",
+      "Improved user experience",
+      "Better SEO and organic traffic",
+      "Faster loading times",
+      "Easy content management",
     ],
     process: [
-      "Discovery & Requirements - Memahami kebutuhan bisnis dan user",
-      "UX Research & Design - Riset user dan desain user experience",
-      "UI Design & Prototyping - Desain visual dan prototyping",
-      "Development - Implementasi teknis dengan best practices",
-      "Testing & Launch - Testing, optimization, dan peluncuran",
+      "Discovery & Requirements - Understand business needs and users",
+      "UX Research & Design - Research users and design experience",
+      "UI Design & Prototyping - Design visuals and create prototypes",
+      "Development - Implement with best practices",
+      "Testing & Launch - Test, optimize, and launch",
     ],
   },
   {
-    slug: "live-streaming",
-    title: "Live Streaming & Live Shopping",
+    slug: "creative-content-campaign",
+    title: "Creative Content & Campaign",
     description:
-      "Optimasikan produk bisnis kamu lewat live shopping dengan host profesional dan setup studio lengkap.",
+      "Engaging creative content and campaign development to boost brand engagement.",
     image: services2,
-    alt: "Live Streaming Service",
-    icon: Video,
+    alt: "Creative Content & Campaign",
+    icon: Zap,
     detailedDescription:
-      "Buat Live Streaming yang Proper gak MURAH! Kami sediakan host profesional dengan gaji 6 jutaan per bulan, device iPhone 5 jutaan, dan studio serta perlengkapan live 3 jutaan. Semua kebutuhan bisa kamu dapat mulai 2 jutaan untuk Live 2 Jam per Bulan di H5 Creative!",
+      "We create content and campaigns that not only capture attention but also deliver real impact. From content strategy to creative execution, we ensure every piece of content is relevant to your audience and aligned with your business goals.",
     features: [
-      "Host Profesional - Gaji 6 Jutaan per Bulan",
-      "Device iPhone - Kualitas Kamera Super Jernih",
-      "Studio & Perlengkapan Lengkap - 3 Jutaan",
-      "Lighting, Audio & Background Profesional",
-      "Setup & Management Full Service",
+      "Content Strategy & Planning",
+      "Social Media Content",
+      "Campaign Concept & Creative",
+      "Copywriting & Storytelling",
+      "Content Calendar Management",
     ],
     benefits: [
-      "Interaksi langsung & real-time dengan calon pembeli",
-      "Tingkatkan kepercayaan dan keinginan beli secara instan",
-      "Penjualan naik berkat atmosfer 'beli sekarang' saat live",
-      "Semua ribetnya kami yang urus, kamu fokus closing & kirim produk",
+      "Increased engagement and interaction",
+      "Stronger brand awareness",
+      "Higher organic traffic and reach",
+      "Loyal community building",
+      "Support for conversion and sales goals",
     ],
     process: [
-      "Konsultasi - Diskusi tentang produk dan target penjualan",
-      "Planning - Menentukan konsep live dan rundown",
-      "Setup - Persiapan studio, device, dan host",
-      "Live Streaming - Eksekusi live dengan interaksi real-time",
-      "Follow-up - Analisis hasil dan optimasi untuk live berikutnya",
+      "Audience Research - Understand target audience and their needs",
+      "Content Strategy - Plan content types and appropriate channels",
+      "Creative Development - Create engaging and relevant content",
+      "Distribution & Promotion - Distribute content on right channels",
+      "Analytics & Optimization - Measure performance and optimize strategy",
+    ],
+  },
+  {
+    slug: "brand-identity-visual-design",
+    title: "Brand Identity & Visual Design",
+    description:
+      "Building strong, consistent, and memorable visual identity for brand positioning.",
+    image: services1,
+    alt: "Brand Identity Design",
+    icon: Box,
+    detailedDescription:
+      "We help you create a unique and memorable brand identity. Through a strategic approach, we develop visual systems that include logos, color palettes, typography, and usage guidelines consistent across all your brand touchpoints.",
+    features: [
+      "Logo Design & Identity System",
+      "Color Palette & Typography",
+      "Brand Guidelines & Style Guide",
+      "Visual Assets & Templates",
+      "Brand Voice & Messaging",
+    ],
+    benefits: [
+      "Increased brand recognition and recall",
+      "Professional and trustworthy impression",
+      "Differentiation from competitors",
+      "Visual consistency across all channels",
+      "Easy brand scaling to various media",
+    ],
+    process: [
+      "Discovery & Research - Understand business, target audience, and competitors",
+      "Strategy Development - Define positioning and brand personality",
+      "Concept Creation - Develop visual concepts and design exploration",
+      "Design Refinement - Perfect designs based on feedback",
+      "Final Delivery - Deliver all assets and usage guidelines",
     ],
   },
 ]
