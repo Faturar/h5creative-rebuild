@@ -3,15 +3,7 @@ import services2 from "@/public/assets/images/services2.png"
 import services3 from "@/public/assets/images/services3.png"
 import logo from "@/public/assets/images/logos/logo.svg"
 import eclipseImage from "@/public/assets/images/Ellipse.svg"
-import {
-  Crown,
-  Code,
-  Box,
-  MessageCircle,
-  ChevronDown,
-  Phone,
-  Mail,
-} from "lucide-react"
+import { Box, MessageCircle, ChevronDown, Phone, Mail } from "lucide-react"
 
 // Services Data
 export const SERVICES_DATA = [
@@ -58,8 +50,8 @@ export const FEATURED_SERVICE_DATA = {
 
 // Header Data
 export const HEADER_DATA = {
-  title: "H5Creative - Digital Advertising Agency",
-  highlightedText: "BERKEMBANG",
+  title: "DIGITAL ADVERTISING AGENCY FOR",
+  highlightedText: "BRAND GROWTH",
   description:
     "We focus on artistic + innovative digital ideas for brand and business growth. Comprehensive 360° campaign solutions to help your brand succeed.",
   buttonText: "Get Started Now",

@@ -95,14 +95,7 @@ export default function Navbar({
   // Determine if navbar should be transparent
   const isTransparent = scrollTransparent ? !isScrolled : transparent
 
-  const navItems = [
-    "Home",
-    "Services",
-    "Booking",
-    "Testimonials",
-    "Pricing",
-    "About",
-  ]
+  const navItems = ["Home", "Services", "Booking", "Pricing", "About"]
 
   const getNavLink = (item: string) => {
     switch (item) {

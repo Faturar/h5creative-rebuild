@@ -42,29 +42,6 @@ export default function Header() {
       variants={containerVariants}
     >
       <Navbar scrollTransparent />
-      {/* <div className="hero container max-w-7xl mx-auto flex justify-between items-center relative">
-        <div className="flex flex-col gap-12.5 h-fit w-fit text-white z-10">
-          <p className="font-semibold text-2xl">I'm Shayna 👋</p>
-          <h1 className="font-extrabold text-[80px] leading-22.5">
-            Professional Designer & Dev
-          </h1>
-          <button className="font-bold text-[26px] leading-9.75 rounded-[30px] p-[30px_40px] bg-[#4920E5] w-fit transition-all duration-300 hover:shadow-[0_10px_20px_0_#4920E5]">
-            Explore Now
-          </button>
-        </div>
-        <div className="flex max-w-117.75 max-h-141.75 z-10">
-          <Image
-            src={heroImage}
-            className="w-full h-full object-contain"
-            alt="hero image"
-          />
-        </div>
-        <Image
-          src={eclipseImage}
-          className="absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
-          alt="background icon"
-        />
-      </div> */}
       <motion.div
         className="hero container max-w-7xl mx-auto flex justify-between items-center relative px-8 lg:px-16"
         variants={containerVariants}
