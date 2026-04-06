@@ -1,11 +1,11 @@
 -- Initialize database for Live Booking System
 -- This file will be automatically executed when the MySQL container starts for the first time
+-- Note: This file runs before Prisma migrations
 
--- Create database if not exists (this is also handled by MYSQL_DATABASE in docker-compose)
-CREATE DATABASE IF NOT EXISTS live_booking;
+-- The database is created by MYSQL_DATABASE environment variable in docker-compose.yml (h5cr_main)
+-- This script is mainly for any initial setup needed before schema migration
 
--- Use the database
-USE live_booking;
-
--- Grant privileges (handled by MySQL environment variables, but explicit is good for clarity)
 FLUSH PRIVILEGES;
+
+-- Note: The actual schema will be created by Prisma migrations
+-- Run: npm run prisma:migrate

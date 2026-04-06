@@ -50,6 +50,43 @@ npm run prisma:generate
 # Run database migrations
 npm run prisma:migrate
 
+# (Optional) Seed the database with sample data
+npm run prisma:seed
+```
+
+### 5. Sample Data
+
+The Docker setup includes sample data that will be automatically imported when you first start the database:
+
+- **Packages:** 4 different streaming packages (TikTok, Shopee, Instagram, Tokopedia)
+- **Hosts:** 4 professional hosts with different expertise areas
+- **Studios:** 3 studio locations with different capacities and equipment
+- **Studio Slots:** Available time slots for studio bookings
+- **Bookings:** 5 sample bookings with various statuses
+- **Payments:** 5 sample payment transactions
+
+To manually import the sample data:
+
+```bash
+# Import sample data using docker-compose
+docker-compose exec -T db mysql -uroot -proot live_booking < import-data.sql
+```
+
+Or use phpMyAdmin:
+1. Open http://localhost:8080
+2. Login to phpMyAdmin
+3. Select the `live_booking` database
+4. Click "Import" and choose `import-data.sql`
+
+After starting the database, run the Prisma migrations:
+
+```bash
+# Generate Prisma client
+npm run prisma:generate
+
+# Run database migrations
+npm run prisma:migrate
+
 # (Optional) Seed the database
 npm run prisma:seed
 ```
