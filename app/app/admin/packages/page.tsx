@@ -240,7 +240,7 @@ export default function AdminPackagesPage() {
     <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white">Packages</h1>
             <p className="text-gray-400 mt-1">Manage live streaming packages</p>
@@ -251,7 +251,7 @@ export default function AdminPackagesPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <Card>
             <div className="flex items-center justify-between">
               <div>
@@ -339,11 +339,11 @@ export default function AdminPackagesPage() {
                 }
                 rows={4}
                 className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-gray-500 focus:ring-2 focus:ring-[#4920E5] focus:border-transparent focus:outline-none resize-none"
-                placeholder="Describe the package..."
+                placeholder="Describe package..."
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Price (IDR)
@@ -374,7 +374,7 @@ export default function AdminPackagesPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Duration (minutes)
@@ -467,7 +467,7 @@ export default function AdminPackagesPage() {
               </label>
             </div>
           </div>
-          <div className="flex justify-end gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-4 pt-4">
             <Button variant="secondary" onClick={() => setShowModal(false)}>
               Cancel
             </Button>

@@ -9,9 +9,11 @@ import {
   Calendar,
   Clock,
   CreditCard,
+  Video,
 } from "lucide-react"
 
 interface BookingData {
+  deviceType: string | null
   packageId: string | null
   hostId: string | null
   studioId: string | null
@@ -124,7 +126,12 @@ export default function BookingSummary({
     ? packageData.promoPrice || packageData.price
     : 0
 
-  const hasData = packageData || hostData || studioData || bookingData.date
+  const hasData =
+    bookingData.deviceType ||
+    packageData ||
+    hostData ||
+    studioData ||
+    bookingData.date
 
   if (!hasData) {
     return null
@@ -134,52 +141,74 @@ export default function BookingSummary({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/5 backdrop-blur-sm rounded-[30px] p-6 border border-white/10"
+      className="bg-white/5 backdrop-blur-sm rounded-[30px] p-4 md:p-6 border border-white/10"
     >
-      <h3 className="text-xl font-bold text-white mb-6">Ringkasan Booking</h3>
+      <h3 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-6">
+        Ringkasan
+      </h3>
 
-      <div className="space-y-4">
-        {packageData && (
-          <div className="flex items-start gap-3 p-4 bg-[#4920E5]/20 rounded-2xl border border-[#4920E5]/30">
-            <Package className="w-5 h-5 text-[#4920E5] flex-shrink-0 mt-0.5" />
+      <div className="space-y-3 md:space-y-4">
+        {bookingData.deviceType && (
+          <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-purple-500/20 rounded-2xl border border-purple-500/30">
+            <Video className="w-4 h-4 md:w-5 md:h-5 text-purple-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white">
+              <p className="text-xs md:text-sm font-medium text-white">
+                Perangkat
+              </p>
+              <p className="text-xs md:text-sm text-gray-300">
+                {bookingData.deviceType === "Camera+OBS"
+                  ? "Camera + OBS"
+                  : bookingData.deviceType}
+              </p>
+            </div>
+          </div>
+        )}
+        {packageData && (
+          <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-[#4920E5]/20 rounded-2xl border border-[#4920E5]/30">
+            <Package className="w-4 h-4 md:w-5 md:h-5 text-[#4920E5] flex-shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs md:text-sm font-medium text-white">
                 {packageData.name}
               </p>
-              <p className="text-sm text-[#4920E5] font-semibold">
+              <p className="text-xs md:text-sm text-[#4920E5] font-semibold">
                 {formatPrice(totalPrice)}
               </p>
             </div>
           </div>
         )}
-
         {hostData && (
-          <div className="flex items-start gap-3 p-4 bg-blue-500/20 rounded-2xl border border-blue-500/30">
-            <User className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+          <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-blue-500/20 rounded-2xl border border-blue-500/30">
+            <User className="w-4 h-4 md:w-5 md:h-5 text-blue-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white">Host</p>
-              <p className="text-sm text-gray-300">{hostData.name}</p>
+              <p className="text-xs md:text-sm font-medium text-white">Host</p>
+              <p className="text-xs md:text-sm text-gray-300">
+                {hostData.name}
+              </p>
             </div>
           </div>
         )}
-
         {studioData && (
-          <div className="flex items-start gap-3 p-4 bg-[#12BB74]/20 rounded-2xl border border-[#12BB74]/30">
-            <MapPin className="w-5 h-5 text-[#12BB74] flex-shrink-0 mt-0.5" />
+          <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-[#12BB74]/20 rounded-2xl border border-[#12BB74]/30">
+            <MapPin className="w-4 h-4 md:w-5 md:h-5 text-[#12BB74] flex-shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white">Studio</p>
-              <p className="text-sm text-gray-300">{studioData.name}</p>
+              <p className="text-xs md:text-sm font-medium text-white">
+                Studio
+              </p>
+              <p className="text-xs md:text-sm text-gray-300">
+                {studioData.name}
+              </p>
               <p className="text-xs text-gray-400">{studioData.location}</p>
             </div>
           </div>
         )}
-
         {bookingData.date && bookingData.startTime && bookingData.endTime && (
-          <div className="flex items-start gap-3 p-4 bg-orange-500/20 rounded-2xl border border-orange-500/30">
-            <Calendar className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
+          <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-orange-500/20 rounded-2xl border border-orange-500/30">
+            <Calendar className="w-4 h-4 md:w-5 md:h-5 text-orange-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white">Jadwal</p>
-              <p className="text-sm text-gray-300">
+              <p className="text-xs md:text-sm font-medium text-white">
+                Jadwal
+              </p>
+              <p className="text-xs md:text-sm text-gray-300">
                 {new Date(bookingData.date).toLocaleDateString("id-ID", {
                   weekday: "short",
                   day: "numeric",
@@ -187,24 +216,23 @@ export default function BookingSummary({
                   year: "numeric",
                 })}
               </p>
-              <div className="flex items-center gap-1 mt-1">
-                <Clock className="w-3 h-3 text-orange-400" />
-                <p className="text-xs text-gray-300">
+              <div className="flex items-center gap-0.5 md:gap-1 mt-0.5 md:mt-1">
+                <Clock className="w-2.5 h-2.5 md:w-3 md:h-3 text-orange-400" />
+                <p className="text-xs md:text-sm text-gray-300">
                   {bookingData.startTime} - {bookingData.endTime}
                 </p>
               </div>
             </div>
           </div>
         )}
-
         {totalPrice > 0 && (
-          <div className="pt-4 border-t border-white/10">
+          <div className="pt-3 md:pt-4 border-t border-white/10">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-[#4920E5]" />
+              <div className="flex items-center gap-1.5 md:gap-2">
+                <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-[#4920E5]" />
                 <span className="font-semibold text-white">Total</span>
               </div>
-              <span className="text-2xl font-bold text-[#4920E5]">
+              <span className="text-xl md:text-2xl font-bold text-[#4920E5]">
                 {formatPrice(totalPrice)}
               </span>
             </div>

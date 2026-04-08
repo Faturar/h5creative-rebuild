@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { ChevronLeft, ChevronRight, Search } from "lucide-react"
 import { useTheme } from "@/contexts/ThemeContext"
 
@@ -9,6 +9,7 @@ interface Column<T> {
   header: string
   render?: (value: any, row: T) => React.ReactNode
   className?: string
+  hideOnMobile?: boolean
 }
 
 interface DataTableProps<T> {
@@ -36,6 +37,13 @@ export default function DataTable<T>({
   const isDark = actualTheme === "dark"
   const [searchTerm, setSearchTerm] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
+
+  // Filter columns based on screen size
+  const visibleColumns = useMemo(() => {
+    if (typeof window === "undefined") return columns
+    const isMobile = window.innerWidth < 768
+    return columns.filter((column) => !column.hideOnMobile || !isMobile)
+  }, [columns])
 
   // Filter data based on search term
   const filteredData = searchTerm
@@ -101,7 +109,7 @@ export default function DataTable<T>({
             className={`border-b ${isDark ? "bg-[#1a1a2e]/10 border-white/5" : "bg-gray-100 border-gray-300"}`}
           >
             <tr>
-              {columns.map((column, index) => (
+              {visibleColumns.map((column, index) => (
                 <th
                   key={index}
                   className={`px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider ${
@@ -119,7 +127,7 @@ export default function DataTable<T>({
             {loading ? (
               <tr>
                 <td
-                  colSpan={columns.length}
+                  colSpan={visibleColumns.length}
                   className={`px-6 py-12 text-center ${isDark ? "text-gray-400" : "text-gray-500"}`}
                 >
                   <div className="flex items-center justify-center">
@@ -132,7 +140,7 @@ export default function DataTable<T>({
             ) : paginatedData.length === 0 ? (
               <tr>
                 <td
-                  colSpan={columns.length}
+                  colSpan={visibleColumns.length}
                   className={`px-6 py-12 text-center ${isDark ? "text-gray-400" : "text-gray-500"}`}
                 >
                   {emptyMessage}
@@ -147,10 +155,10 @@ export default function DataTable<T>({
                     onRowClick ? "cursor-pointer" : ""
                   } ${isDark ? "hover:bg-white/5" : "hover:bg-gray-50"}`}
                 >
-                  {columns.map((column, colIndex) => (
+                  {visibleColumns.map((column, colIndex) => (
                     <td
                       key={colIndex}
-                      className={`px-6 py-4 text-sm ${
+                      className={`px-6 py-4 text-sm whitespace-nowrap ${
                         isDark ? "text-gray-300" : "text-gray-700"
                       } ${column.className || ""}`}
                     >
@@ -169,7 +177,7 @@ export default function DataTable<T>({
       {/* Pagination */}
       {pagination && totalPages > 1 && (
         <div
-          className={`px-6 py-4 border-t flex items-center justify-between ${isDark ? "border-white/10" : "border-gray-200"}`}
+          className={`px-4 sm:px-6 py-4 border-t flex flex-col sm:flex-row items-center justify-between gap-4 ${isDark ? "border-white/10" : "border-gray-200"}`}
         >
           <div
             className={`text-sm ${isDark ? "text-gray-400" : "text-gray-500"}`}
@@ -192,8 +200,12 @@ export default function DataTable<T>({
               />
             </button>
             <div className="flex items-center gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .slice(
+                  Math.max(0, currentPage - 2),
+                  Math.min(totalPages, currentPage + 1),
+                )
+                .map((page) => (
                   <button
                     key={page}
                     onClick={() => handlePageChange(page)}
@@ -205,8 +217,7 @@ export default function DataTable<T>({
                   >
                     {page}
                   </button>
-                ),
-              )}
+                ))}
             </div>
             <button
               onClick={() => handlePageChange(currentPage + 1)}

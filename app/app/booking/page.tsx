@@ -13,9 +13,11 @@ import {
   MapPin,
   Calendar,
   CreditCard,
+  Video,
 } from "lucide-react"
 import logoTesti5 from "@/public/assets/images/logos/logo-testi5.svg"
 import starIcon from "@/public/assets/images/icons/Star.svg"
+import DeviceSelection from "@/components/booking/DeviceSelection"
 import PackageSelection from "@/components/booking/PackageSelection"
 import HostSelection from "@/components/booking/HostSelection"
 import StudioSelection from "@/components/booking/StudioSelection"
@@ -25,6 +27,7 @@ import PaymentSection from "@/components/booking/PaymentSection"
 import BookingSummary from "@/components/booking/BookingSummary"
 
 type BookingStep =
+  | "device"
   | "package"
   | "host"
   | "studio"
@@ -34,6 +37,7 @@ type BookingStep =
   | "success"
 
 interface BookingData {
+  deviceType: string | null
   packageId: string | null
   hostId: string | null
   studioId: string | null
@@ -53,8 +57,9 @@ interface BookingData {
 
 export default function BookingPage() {
   const router = useRouter()
-  const [currentStep, setCurrentStep] = useState<BookingStep>("package")
+  const [currentStep, setCurrentStep] = useState<BookingStep>("device")
   const [bookingData, setBookingData] = useState<BookingData>({
+    deviceType: null,
     packageId: null,
     hostId: null,
     studioId: null,
@@ -73,8 +78,10 @@ export default function BookingPage() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
 
   const steps = [
+    { id: "device", title: "Pilih Perangkat", icon: Video },
     { id: "package", title: "Pilih Paket", icon: Package },
     { id: "host", title: "Pilih Host", icon: User },
     { id: "studio", title: "Pilih Studio", icon: MapPin },
@@ -109,6 +116,8 @@ export default function BookingPage() {
 
   const canProceed = () => {
     switch (currentStep) {
+      case "device":
+        return bookingData.deviceType !== null
       case "package":
         return bookingData.packageId !== null
       case "host":
@@ -135,9 +144,9 @@ export default function BookingPage() {
 
     setIsSubmitting(true)
     setError(null)
+    setValidationErrors([])
 
     try {
-      // Create booking
       const bookingResponse = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -147,6 +156,12 @@ export default function BookingPage() {
       const bookingResult = await bookingResponse.json()
 
       if (!bookingResult.success) {
+        if (bookingResult.details && Array.isArray(bookingResult.details)) {
+          setValidationErrors(bookingResult.details)
+          setError(null)
+          setIsSubmitting(false)
+          return
+        }
         throw new Error(bookingResult.error || "Failed to create booking")
       }
 
@@ -220,9 +235,9 @@ export default function BookingPage() {
       </div>
 
       {/* Right Main Content */}
-      <div className="flex flex-col flex-3 items-center justify-center mx-auto py-4 md:py-6 lg:py-8 px-4 bg-[url('/assets/images/Ellipse.svg')] bg-center bg-no-repeat bg-contain bg-[length:540px]">
+      <div className="flex flex-col flex-3 items-center justify-center mx-auto py-3 md:py-6 lg:py-8 px-3 md:px-4 bg-[url('/assets/images/Ellipse.svg')] bg-center bg-no-repeat bg-contain bg-[length:540px]">
         {/* Progress Steps */}
-        <div className="w-full max-w-4xl mb-6 md:mb-8">
+        <div className="w-full max-w-4xl mb-4 md:mb-6 lg:mb-8">
           <div className="flex items-center justify-between overflow-x-auto pb-2 scrollbar-hide">
             {steps.map((step, index) => {
               const isActive = step.id === currentStep
@@ -232,7 +247,7 @@ export default function BookingPage() {
               return (
                 <div
                   key={step.id}
-                  className={`h-24 flex items-center shrink-0 ${index < steps.length - 1 ? "flex-1 min-w-[80px] md:min-w-[100px]" : "min-w-[60px] md:min-w-[80px]"}`}
+                  className={`h-20 md:h-24 flex items-center shrink-0 ${index < steps.length - 1 ? "flex-1 min-w-[70px] md:min-w-[80px]" : "min-w-[50px] md:min-w-[60px]"}`}
                 >
                   <div
                     className={`flex flex-col items-center cursor-pointer ${
@@ -243,7 +258,7 @@ export default function BookingPage() {
                     }
                   >
                     <div
-                      className={`w-10 min-h-10 md:w-12 md:min-h-12 rounded-full flex items-center justify-center transition-all ${
+                      className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all ${
                         isActive
                           ? "bg-[#4920E5] text-white shadow-lg scale-110"
                           : isCompleted
@@ -252,13 +267,13 @@ export default function BookingPage() {
                       }`}
                     >
                       {isCompleted ? (
-                        <CheckCircle className="w-5 h-5 md:w-6 md:h-6" />
+                        <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
                       ) : (
-                        <step.icon className="w-5 h-5 md:w-6 md:h-6" />
+                        <step.icon className="w-4 h-4 md:w-5 md:h-5" />
                       )}
                     </div>
                     <span
-                      className={`mt-1 md:mt-2 text-xs md:text-sm font-medium ${
+                      className={`mt-0.5 md:mt-1 text-xs md:text-sm font-medium ${
                         isActive
                           ? "text-[#4920E5]"
                           : isCompleted
@@ -271,7 +286,7 @@ export default function BookingPage() {
                   </div>
                   {index < steps.length - 1 && (
                     <div
-                      className={`flex-1 h-0.5 md:h-1 mx-2 md:mx-4 rounded ${
+                      className={`flex-1 h-0.5 md:h-1 mx-1.5 md:mx-4 rounded ${
                         isCompleted ? "bg-[#12BB74]" : "bg-gray-700"
                       }`}
                     />
@@ -294,8 +309,31 @@ export default function BookingPage() {
           </motion.div>
         )}
 
+        {/* Validation Errors */}
+        {validationErrors.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 md:mb-6 p-3 md:p-4 bg-red-500/10 border border-red-500/30 rounded-xl md:rounded-2xl max-w-4xl w-full mx-auto"
+          >
+            <div className="flex items-start gap-2 md:gap-3">
+              <XCircle className="w-4 h-4 md:w-5 md:h-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm md:text-base font-medium text-red-300 mb-2">
+                  Validasi gagal. Mohon perbaiki kesalahan berikut:
+                </p>
+                <ul className="text-sm md:text-base text-red-400 space-y-1 list-disc list-inside">
+                  {validationErrors.map((error, index) => (
+                    <li key={index}>{error}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 w-full max-w-6xl">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6 lg:gap-8 w-full max-w-6xl">
           {/* Step Content */}
           <div className="lg:col-span-2 w-full">
             <AnimatePresence mode="wait">
@@ -305,15 +343,26 @@ export default function BookingPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white/5 backdrop-blur-sm rounded-2xl md:rounded-[30px] p-4 md:p-6 lg:p-8 border border-white/10"
+                className="bg-white/5 backdrop-blur-sm rounded-xl md:rounded-2xl lg:rounded-[30px] p-3 md:p-4 lg:p-6 lg:p-8 border border-white/10"
               >
+                {currentStep === "device" && (
+                  <DeviceSelection
+                    selectedDevice={bookingData.deviceType}
+                    onSelect={(deviceType) =>
+                      setBookingData((prev) => ({ ...prev, deviceType }))
+                    }
+                    onNext={handleNext}
+                  />
+                )}
                 {currentStep === "package" && (
                   <PackageSelection
+                    deviceType={bookingData.deviceType}
                     selectedPackageId={bookingData.packageId}
                     onSelect={(packageId) =>
                       setBookingData((prev) => ({ ...prev, packageId }))
                     }
                     onNext={handleNext}
+                    onBack={handleBack}
                   />
                 )}
                 {currentStep === "host" && (
@@ -379,7 +428,7 @@ export default function BookingPage() {
 
           {/* Booking Summary - Sticky on Desktop, Bottom on Mobile */}
           {currentStep !== "success" && (
-            <div className="lg:col-span-1 order-first lg:order-last mb-4 lg:mb-0">
+            <div className="lg:col-span-1 order-first lg:order-last mb-3 lg:mb-0">
               <div className="lg:sticky lg:top-8">
                 <BookingSummary bookingData={bookingData} />
               </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { usePathname } from "next/navigation"
 import { useTheme } from "@/contexts/ThemeContext"
 import {
@@ -16,6 +17,8 @@ import {
   LogOut,
   Bell,
   Search,
+  Calendar,
+  Clock,
 } from "lucide-react"
 
 interface AdminLayoutProps {
@@ -27,14 +30,26 @@ const navigation = [
   { name: "Packages", href: "/admin/packages", icon: Package },
   { name: "Orders", href: "/admin/orders", icon: ShoppingCart },
   { name: "Customers", href: "/admin/customers", icon: Users },
+  { name: "Slots", href: "/admin/slots", icon: Calendar },
+  { name: "Slot Requests", href: "/admin/slot-requests", icon: Clock },
   { name: "Settings", href: "/admin/settings", icon: Settings },
 ]
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
   const { actualTheme } = useTheme()
   const isDark = actualTheme === "dark"
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" })
+      router.push("/login")
+    } catch (error) {
+      console.error("Logout error:", error)
+    }
+  }
 
   return (
     <div className={`min-h-screen ${isDark ? "bg-[#0B0B1B]" : "bg-gray-100"}`}>
@@ -124,6 +139,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 </p>
               </div>
               <button
+                onClick={handleLogout}
                 className={`p-2 rounded-lg transition-colors ${isDark ? "hover:bg-white/10" : "hover:bg-gray-100"}`}
               >
                 <LogOut

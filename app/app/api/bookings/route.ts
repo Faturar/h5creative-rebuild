@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
 import { Prisma } from "@prisma/client"
+import { sendBookingConfirmationEmail } from "@/lib/email"
 
 type BookingStatus =
   | "PENDING"
@@ -10,6 +11,8 @@ type BookingStatus =
   | "COMPLETED"
   | "IN_PROGRESS"
   | "FINISHED"
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const bookingSchema = z.object({
   packageId: z.string().uuid(),
@@ -21,7 +24,9 @@ const bookingSchema = z.object({
   endTime: z.string(),
   customerName: z.string().min(2),
   customerPhone: z.string().min(10),
-  customerEmail: z.string().email(),
+  customerEmail: z.string().min(1).max(255).regex(emailRegex, {
+    message: "Invalid email address format",
+  }),
   businessName: z.string().min(2),
   productCategory: z.string().min(2),
   notes: z.string().optional(),
@@ -120,17 +125,54 @@ export async function POST(request: Request) {
       },
     )
 
+    await sendBookingConfirmationEmail({
+      to: booking.customerEmail,
+      customerName: booking.customerName,
+      bookingCode: booking.bookingCode,
+      packageName: booking.package.name,
+      studioName: booking.studio.name,
+      date: booking.date.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }),
+      startTime: booking.startTime,
+      endTime: booking.endTime,
+      price: Number(booking.price),
+    })
+
     return NextResponse.json({ success: true, data: booking }, { status: 201 })
   } catch (error) {
     console.error("Failed to create booking:", error)
     if (error instanceof z.ZodError) {
+      const errorMessages = error.issues.map((issue) => {
+        const fieldMap: Record<string, string> = {
+          customerName: "Nama lengkap",
+          customerPhone: "Nomor telepon",
+          customerEmail: "Email",
+          businessName: "Nama bisnis",
+          productCategory: "Kategori produk",
+          packageId: "Paket",
+          hostId: "Host",
+          studioId: "Studio",
+          studioSlotId: "Slot waktu",
+          date: "Tanggal",
+          startTime: "Waktu mulai",
+          endTime: "Waktu selesai",
+        }
+
+        const fieldName = issue.path.join(".")
+        const prettyFieldName = fieldMap[fieldName] || fieldName
+        return `${prettyFieldName}: ${issue.message}`
+      })
+
       return NextResponse.json(
-        { success: false, error: "Validation failed", details: error.issues },
+        {
+          success: false,
+          error: "Validasi gagal. Mohon perbaiki kesalahan berikut:",
+          details: errorMessages,
+        },
         { status: 400 },
       )
     }
     return NextResponse.json(
-      { success: false, error: "Failed to create booking" },
+      { success: false, error: "Gagal membuat booking. Silakan coba lagi." },
       { status: 500 },
     )
   }

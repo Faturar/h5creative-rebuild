@@ -68,14 +68,14 @@ export default function StudioSelection({
 
   return (
     <div>
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-white mb-2">Pilih Studio</h2>
-        <p className="text-gray-400">
+      <div className="text-center mb-6 md:mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Pilih Studio</h2>
+        <p className="text-sm md:text-base text-gray-400">
           Pilih studio profesional untuk live streaming Anda
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
         {studios.map((studio, index) => {
           const isSelected = selectedStudioId === studio.id
           const equipment = parseJson(studio.equipment)
@@ -110,40 +110,40 @@ export default function StudioSelection({
                 </div>
               )}
 
-              <div className="mb-4">
-                <h3 className="text-xl font-bold text-white mb-2">
+              <div className="mb-3 md:mb-4">
+                <h3 className="text-lg md:text-xl font-bold text-white mb-1 md:mb-2">
                   {studio.name}
                 </h3>
-                <div className="flex items-center gap-2 text-sm text-gray-300">
-                  <MapPin className="w-4 h-4 text-[#4920E5]" />
+                <div className="flex items-center gap-2 text-xs md:text-sm text-gray-300">
+                  <MapPin className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#4920E5]" />
                   <span>{studio.location}</span>
                 </div>
               </div>
 
-              <p className="text-gray-300 text-sm mb-4">{studio.description}</p>
+              <p className="text-gray-300 text-xs md:text-sm mb-3 md:mb-4">{studio.description}</p>
 
-              <div className="flex items-center gap-2 text-sm text-gray-300 mb-4">
-                <Users className="w-4 h-4 text-[#4920E5]" />
+              <div className="flex items-center gap-2 text-xs md:text-sm text-gray-300 mb-3 md:mb-4">
+                <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#4920E5]" />
                 <span>Kapasitas: {studio.capacity} orang</span>
               </div>
 
               {equipment.length > 0 && (
-                <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-white mb-2">
+                <div className="mb-3 md:mb-4">
+                  <h4 className="text-xs md:text-sm font-semibold text-white mb-1 md:mb-2">
                     Peralatan:
                   </h4>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1 md:gap-2">
                     {equipment.slice(0, 4).map((item: string, i: number) => (
                       <span
                         key={i}
-                        className="inline-flex items-center gap-1 px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs border border-blue-500/30"
+                        className="inline-flex items-center gap-1 px-1.5 md:px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs border border-blue-500/30"
                       >
-                        <Camera className="w-3 h-3" />
-                        {item}
+                        <Camera className="w-2.5 h-2.5 md:w-3 md:h-3" />
+                        <span className="text-xs">{item}</span>
                       </span>
                     ))}
                     {equipment.length > 4 && (
-                      <span className="inline-block px-2 py-1 bg-white/10 text-gray-400 rounded text-xs">
+                      <span className="inline-block px-1.5 md:px-2 py-1 bg-white/10 text-gray-400 rounded text-xs">
                         +{equipment.length - 4} lainnya
                       </span>
                     )}
@@ -153,21 +153,21 @@ export default function StudioSelection({
 
               {amenities.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-semibold text-white mb-2">
+                  <h4 className="text-xs md:text-sm font-semibold text-white mb-1 md:mb-2">
                     Fasilitas:
                   </h4>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1 md:gap-2">
                     {amenities.slice(0, 3).map((item: string, i: number) => (
                       <span
                         key={i}
-                        className="inline-flex items-center gap-1 px-2 py-1 bg-[#12BB74]/20 text-[#12BB74] rounded text-xs border border-[#12BB74]/30"
+                        className="inline-flex items-center gap-1 px-1.5 md:px-2 py-1 bg-[#12BB74]/20 text-[#12BB74] rounded text-xs border border-[#12BB74]/30"
                       >
-                        <Wifi className="w-3 h-3" />
-                        {item}
+                        <Wifi className="w-2.5 h-2.5 md:w-3 md:h-3" />
+                        <span className="text-xs">{item}</span>
                       </span>
                     ))}
                     {amenities.length > 3 && (
-                      <span className="inline-block px-2 py-1 bg-white/10 text-gray-400 rounded text-xs">
+                      <span className="inline-block px-1.5 md:px-2 py-1 bg-white/10 text-gray-400 rounded text-xs">
                         +{amenities.length - 3} lainnya
                       </span>
                     )}
@@ -182,14 +182,14 @@ export default function StudioSelection({
       <div className="flex justify-between">
         <button
           onClick={onBack}
-          className="px-8 py-3 border-2 border-white/20 text-white rounded-[20px] font-semibold hover:bg-white/10 transition-all"
+          className="px-6 md:px-8 py-2.5 md:py-3 border-2 border-white/20 text-white rounded-[20px] font-semibold hover:bg-white/10 transition-all"
         >
           Kembali
         </button>
         <button
           onClick={onNext}
           disabled={!selectedStudioId}
-          className="px-8 py-3 bg-[#4920E5] text-white rounded-[20px] font-semibold hover:bg-[#5B2CE8] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
+          className="px-6 md:px-8 py-2.5 md:py-3 bg-[#4920E5] text-white rounded-[20px] font-semibold hover:bg-[#5B2CE8] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
         >
           Lanjutkan
         </button>

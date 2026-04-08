@@ -2,42 +2,58 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Clock, Check, Sparkles, Tag } from "lucide-react"
+import { Clock, Check, Sparkles, Tag, Calendar, Video, FileText, Users } from "lucide-react"
 
 interface Package {
   id: string
   name: string
+  packageType: string
   description: string
   price: number
   promoPrice: number | null
-  durationMinutes: number
-  platform: string
+  totalHours: number
+  numberOfDays: number
+  durationPerSession: number
+  workTimeStart: string
+  workTimeEnd: string
+  workDays: string
+  hostCount: number
+  twibbonDesignCount: number
+  weeklyReport: boolean
+  accountReport: boolean
   includesHost: boolean
   includesStudio: boolean
   includesDevice: boolean
 }
 
 interface PackageSelectionProps {
+  deviceType: string | null
   selectedPackageId: string | null
   onSelect: (packageId: string) => void
   onNext: () => void
+  onBack?: () => void
 }
 
 export default function PackageSelection({
+  deviceType,
   selectedPackageId,
   onSelect,
   onNext,
+  onBack,
 }: PackageSelectionProps) {
   const [packages, setPackages] = useState<Package[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchPackages()
-  }, [])
+  }, [deviceType])
 
   const fetchPackages = async () => {
     try {
-      const response = await fetch("/api/packages")
+      const url = deviceType
+        ? `/api/packages?packageType=${encodeURIComponent(deviceType)}`
+        : "/api/packages"
+      const response = await fetch(url)
       const result = await response.json()
       if (result.success) {
         setPackages(result.data)
@@ -57,17 +73,6 @@ export default function PackageSelection({
     }).format(price)
   }
 
-  const formatDuration = (minutes: number) => {
-    const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
-    if (hours > 0 && mins > 0) {
-      return `${hours} jam ${mins} menit`
-    } else if (hours > 0) {
-      return `${hours} jam`
-    }
-    return `${mins} menit`
-  }
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -78,16 +83,18 @@ export default function PackageSelection({
 
   return (
     <div>
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-white mb-2">
+      <div className="text-center mb-6 md:mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
           Pilih Paket Live Streaming
         </h2>
-        <p className="text-gray-400">
-          Pilih paket yang sesuai dengan kebutuhan bisnis Anda
+        <p className="text-sm md:text-base text-gray-400">
+          {deviceType
+            ? `Paket untuk ${deviceType === "Camera+OBS" ? "Camera + OBS" : deviceType}`
+            : "Pilih paket yang sesuai dengan kebutuhan bisnis Anda"}
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
         {packages.map((pkg, index) => {
           const isSelected = selectedPackageId === pkg.id
           const displayPrice = pkg.promoPrice || pkg.price
@@ -113,22 +120,29 @@ export default function PackageSelection({
                 </div>
               )}
 
-              <div className="mb-4">
+              <div className="mb-3 md:mb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-xl font-bold text-white">{pkg.name}</h3>
+                  <h3 className="text-lg md:text-xl font-bold text-white">{pkg.name}</h3>
                   {isSelected && (
-                    <div className="w-8 h-8 bg-[#4920E5] rounded-full flex items-center justify-center">
-                      <Check className="w-5 h-5 text-white" />
+                    <div className="w-7 h-7 md:w-8 md:h-8 bg-[#4920E5] rounded-full flex items-center justify-center">
+                      <Check className="w-4 h-4 md:w-5 md:h-5 text-white" />
                     </div>
                   )}
                 </div>
-                <div className="flex items-center gap-2 text-sm text-[#4920E5] font-semibold mb-2">
-                  <Sparkles className="w-4 h-4" />
-                  {pkg.platform}
+                <div className={`flex items-center gap-2 text-xs md:text-sm font-semibold mb-2 ${
+                  pkg.packageType === "Camera+OBS" ? "text-[#FF6B35]" : "text-[#4920E5]"
+                }`}>
+                  <Video className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                  <span className="hidden sm:inline">
+                    {pkg.packageType === "Camera+OBS" ? "Camera + OBS" : "iPhone"}
+                  </span>
+                  <span className="sm:hidden">
+                    {pkg.packageType === "Camera+OBS" ? "Camera+OBS" : "iPhone"}
+                  </span>
                 </div>
               </div>
 
-              <div className="mb-4">
+              <div className="mb-3 md:mb-4">
                 {hasPromo ? (
                   <div className="space-y-1">
                     <div className="text-2xl font-bold text-[#12BB74]">
@@ -145,31 +159,49 @@ export default function PackageSelection({
                 )}
               </div>
 
-              <p className="text-gray-300 text-sm mb-4 min-h-[60px]">
+              <p className="text-gray-300 text-sm md:text-base mb-3 md:mb-4 min-h-[60px]">
                 {pkg.description}
               </p>
 
-              <div className="space-y-2 mb-4">
+              <div className="space-y-1.5 md:space-y-2 mb-3 md:mb-4">
                 <div className="flex items-center gap-2 text-sm text-gray-300">
                   <Clock className="w-4 h-4 text-[#4920E5]" />
-                  <span>{formatDuration(pkg.durationMinutes)}</span>
+                  <span>{pkg.totalHours} Jam / {pkg.numberOfDays} Hari</span>
                 </div>
-                {pkg.includesHost && (
+                <div className="flex items-center gap-2 text-sm text-gray-300">
+                  <Calendar className="w-4 h-4 text-[#4920E5]" />
+                  <span>{pkg.durationPerSession} Jam per sesi</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-300">
+                  <Clock className="w-4 h-4 text-[#4920E5]" />
+                  <span>{pkg.workTimeStart} - {pkg.workTimeEnd}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-300">
+                  <Calendar className="w-4 h-4 text-[#4920E5]" />
+                  <span>{pkg.workDays}</span>
+                </div>
+                {pkg.hostCount > 0 && (
                   <div className="flex items-center gap-2 text-sm text-gray-300">
-                    <Check className="w-4 h-4 text-[#12BB74]" />
-                    <span>Termasuk Host Profesional</span>
+                    <Users className="w-4 h-4 text-[#12BB74]" />
+                    <span>{pkg.hostCount} Host {pkg.hostCount > 1 ? "(1-2 Host)" : ""}</span>
                   </div>
                 )}
-                {pkg.includesStudio && (
+                {pkg.twibbonDesignCount > 0 && (
                   <div className="flex items-center gap-2 text-sm text-gray-300">
-                    <Check className="w-4 h-4 text-[#12BB74]" />
-                    <span>Termasuk Studio</span>
+                    <Sparkles className="w-4 h-4 text-[#12BB74]" />
+                    <span>{pkg.twibbonDesignCount} Twibbon Design</span>
                   </div>
                 )}
-                {pkg.includesDevice && (
+                {pkg.weeklyReport && (
                   <div className="flex items-center gap-2 text-sm text-gray-300">
-                    <Check className="w-4 h-4 text-[#12BB74]" />
-                    <span>Termasuk Peralatan</span>
+                    <FileText className="w-4 h-4 text-[#12BB74]" />
+                    <span>Weekly Report</span>
+                  </div>
+                )}
+                {pkg.accountReport && (
+                  <div className="flex items-center gap-2 text-sm text-gray-300">
+                    <FileText className="w-4 h-4 text-[#12BB74]" />
+                    <span>Account Report</span>
                   </div>
                 )}
               </div>
@@ -178,11 +210,19 @@ export default function PackageSelection({
         })}
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-between">
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="px-6 md:px-8 py-2.5 md:py-3 bg-white/10 text-white rounded-[20px] font-semibold hover:bg-white/20 transition-all border border-white/20"
+          >
+            Kembali
+          </button>
+        )}
         <button
           onClick={onNext}
           disabled={!selectedPackageId}
-          className="px-8 py-3 bg-[#4920E5] text-white rounded-[20px] font-semibold hover:bg-[#5B2CE8] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
+          className={`px-6 md:px-8 py-2.5 md:py-3 bg-[#4920E5] text-white rounded-[20px] font-semibold hover:bg-[#5B2CE8] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5] ${onBack ? "" : "ml-auto"}`}
         >
           Lanjutkan
         </button>

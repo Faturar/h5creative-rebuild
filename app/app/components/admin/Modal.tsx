@@ -19,10 +19,10 @@ export default function Modal({
   size = "md",
 }: ModalProps) {
   const sizeClasses = {
-    sm: "max-w-md",
-    md: "max-w-lg",
-    lg: "max-w-2xl",
-    xl: "max-w-4xl",
+    sm: "max-w-md w-full",
+    md: "max-w-lg w-full",
+    lg: "max-w-2xl w-full",
+    xl: "max-w-4xl w-full",
   }
 
   return (
@@ -35,7 +35,7 @@ export default function Modal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 md:p-6"
           >
             {/* Modal */}
             <motion.div
@@ -43,11 +43,11 @@ export default function Modal({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className={`bg-white/5 backdrop-blur-sm rounded-[30px] border border-white/20 shadow-2xl w-full ${sizeClasses[size]} max-h-[90vh] overflow-hidden flex flex-col`}
+              className={`bg-white/5 backdrop-blur-sm rounded-[20px] sm:rounded-[30px] border border-white/20 shadow-2xl ${sizeClasses[size]} max-h-[90vh] overflow-hidden flex flex-col`}
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-                <h2 className="text-xl font-bold text-white">{title}</h2>
+              <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-white/10">
+                <h2 className="text-lg sm:text-xl font-bold text-white">{title}</h2>
                 <button
                   onClick={onClose}
                   className="p-2 hover:bg-white/10 rounded-lg transition-colors"
@@ -58,7 +58,7 @@ export default function Modal({
               </div>
 
               {/* Content */}
-              <div className="flex-1 overflow-y-auto px-6 py-4">{children}</div>
+              <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-3 sm:py-4">{children}</div>
             </motion.div>
           </motion.div>
         </>

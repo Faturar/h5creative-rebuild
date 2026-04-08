@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { User, Phone, Mail, Building, Tag, FileText, Info } from "lucide-react"
 import { useTheme } from "@/contexts/ThemeContext"
@@ -29,8 +30,81 @@ export default function CustomerForm({
   const { actualTheme } = useTheme()
   const isDark = actualTheme === "dark"
 
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set())
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  const validateField = (fieldName: string, value: string) => {
+    const newErrors = { ...errors }
+
+    switch (fieldName) {
+      case "customerName":
+        if (!value.trim() || value.trim().length < 2) {
+          newErrors.customerName = "Nama harus diisi minimal 2 karakter"
+        } else {
+          delete newErrors.customerName
+        }
+        break
+
+      case "customerPhone":
+        if (!value.trim() || value.trim().length < 10) {
+          newErrors.customerPhone = "Nomor telepon harus diisi minimal 10 digit"
+        } else {
+          delete newErrors.customerPhone
+        }
+        break
+
+      case "customerEmail":
+        if (!value.trim()) {
+          newErrors.customerEmail = "Email harus diisi"
+        } else if (!emailRegex.test(value.trim())) {
+          newErrors.customerEmail = "Format email tidak valid. Gunakan format: nama@email.com"
+        } else {
+          delete newErrors.customerEmail
+        }
+        break
+
+      case "businessName":
+        if (!value.trim() || value.trim().length < 2) {
+          newErrors.businessName = "Nama bisnis harus diisi minimal 2 karakter"
+        } else {
+          delete newErrors.businessName
+        }
+        break
+
+      case "productCategory":
+        if (!value.trim()) {
+          newErrors.productCategory = "Kategori produk harus dipilih"
+        } else {
+          delete newErrors.productCategory
+        }
+        break
+    }
+
+    setErrors(newErrors)
+  }
+
+  const handleFieldBlur = (fieldName: string, value: string) => {
+    setTouchedFields(new Set([...touchedFields, fieldName]))
+    validateField(fieldName, value)
+  }
+
+  const handleFieldChange = (fieldName: string, value: string) => {
+    onChange({ [fieldName]: value })
+    if (touchedFields.has(fieldName)) {
+      validateField(fieldName, value)
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    const hasErrors = Object.keys(errors).length > 0
+    if (hasErrors) {
+      return
+    }
+
     onNext()
   }
 
@@ -38,7 +112,9 @@ export default function CustomerForm({
     return (
       bookingData.customerName.trim() &&
       bookingData.customerPhone.trim() &&
+      bookingData.customerPhone.trim().length >= 10 &&
       bookingData.customerEmail.trim() &&
+      emailRegex.test(bookingData.customerEmail.trim()) &&
       bookingData.businessName.trim() &&
       bookingData.productCategory.trim()
     )
@@ -55,6 +131,24 @@ export default function CustomerForm({
         </p>
       </div>
 
+      {Object.keys(errors).length > 0 && (
+        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+          <div className="flex items-start gap-3">
+            <Info className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-red-300 mb-2">
+                Mohon perbaiki kesalahan berikut:
+              </p>
+              <ul className="text-sm text-red-400 space-y-1 list-disc list-inside">
+                {Object.entries(errors).map(([field, message]) => (
+                  <li key={field}>{message}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div>
@@ -70,11 +164,19 @@ export default function CustomerForm({
                 type="text"
                 id="customerName"
                 value={bookingData.customerName}
-                onChange={(e) => onChange({ customerName: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500"
+                onChange={(e) => handleFieldChange("customerName", e.target.value)}
+                onBlur={() => handleFieldBlur("customerName", bookingData.customerName)}
+                className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500 ${
+                  touchedFields.has("customerName") && errors.customerName
+                    ? "border-red-500"
+                    : "border-white/10"
+                }`}
                 placeholder="Masukkan nama lengkap"
                 required
               />
+              {touchedFields.has("customerName") && errors.customerName && (
+                <p className="mt-1 text-xs text-red-400">{errors.customerName}</p>
+              )}
             </div>
           </div>
 
@@ -91,11 +193,20 @@ export default function CustomerForm({
                 type="tel"
                 id="customerPhone"
                 value={bookingData.customerPhone}
-                onChange={(e) => onChange({ customerPhone: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500"
+                onChange={(e) => handleFieldChange("customerPhone", e.target.value)}
+                onBlur={() => handleFieldBlur("customerPhone", bookingData.customerPhone)}
+                minLength={10}
+                className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500 ${
+                  touchedFields.has("customerPhone") && errors.customerPhone
+                    ? "border-red-500"
+                    : "border-white/10"
+                }`}
                 placeholder="Contoh: 08123456789"
                 required
               />
+              {touchedFields.has("customerPhone") && errors.customerPhone && (
+                <p className="mt-1 text-xs text-red-400">{errors.customerPhone}</p>
+              )}
             </div>
           </div>
 
@@ -112,11 +223,19 @@ export default function CustomerForm({
                 type="email"
                 id="customerEmail"
                 value={bookingData.customerEmail}
-                onChange={(e) => onChange({ customerEmail: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500"
+                onChange={(e) => handleFieldChange("customerEmail", e.target.value)}
+                onBlur={() => handleFieldBlur("customerEmail", bookingData.customerEmail)}
+                className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500 ${
+                  touchedFields.has("customerEmail") && errors.customerEmail
+                    ? "border-red-500"
+                    : "border-white/10"
+                }`}
                 placeholder="email@contoh.com"
                 required
               />
+              {touchedFields.has("customerEmail") && errors.customerEmail && (
+                <p className="mt-1 text-xs text-red-400">{errors.customerEmail}</p>
+              )}
             </div>
           </div>
 
@@ -133,11 +252,19 @@ export default function CustomerForm({
                 type="text"
                 id="businessName"
                 value={bookingData.businessName}
-                onChange={(e) => onChange({ businessName: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500"
+                onChange={(e) => handleFieldChange("businessName", e.target.value)}
+                onBlur={() => handleFieldBlur("businessName", bookingData.businessName)}
+                className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500 ${
+                  touchedFields.has("businessName") && errors.businessName
+                    ? "border-red-500"
+                    : "border-white/10"
+                }`}
                 placeholder="Nama bisnis Anda"
                 required
               />
+              {touchedFields.has("businessName") && errors.businessName && (
+                <p className="mt-1 text-xs text-red-400">{errors.businessName}</p>
+              )}
             </div>
           </div>
 
@@ -153,14 +280,19 @@ export default function CustomerForm({
               <select
                 id="productCategory"
                 value={bookingData.productCategory}
-                onChange={(e) => onChange({ productCategory: e.target.value })}
-                className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all appearance-none text-white ${
+                onChange={(e) => handleFieldChange("productCategory", e.target.value)}
+                onBlur={() => handleFieldBlur("productCategory", bookingData.productCategory)}
+                className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all appearance-none text-white ${
                   isDark
                     ? "bg-white/5 border-white/10"
                     : "bg-white/5 border-white/10"
+                } ${
+                  touchedFields.has("productCategory") && errors.productCategory
+                    ? "border-red-500"
+                    : "border-white/10"
                 }`}
                 required
-              >
+                >
                 <option
                   value=""
                   className={isDark ? "text-gray-400" : "text-gray-900"}
@@ -228,6 +360,9 @@ export default function CustomerForm({
                   Lainnya
                 </option>
               </select>
+              {touchedFields.has("productCategory") && errors.productCategory && (
+                <p className="mt-1 text-xs text-red-400">{errors.productCategory}</p>
+              )}
             </div>
           </div>
 

@@ -8,71 +8,82 @@ datasource db {
 }
 
 model Package {
-  id               String        @id @default(uuid())
-  name             String
-  description      String        @db.Text
-  price            Decimal       @db.Decimal(10, 2)
-  promoPrice       Decimal?      @db.Decimal(10, 2)
-  durationMinutes  Int           @default(120)
-  platform         String        @default("TikTok") // TikTok, Shopee, Instagram, Tokopedia
-  includesHost     Boolean       @default(true)
-  includesStudio   Boolean       @default(true)
-  includesDevice   Boolean       @default(true)
-  isActive         Boolean       @default(true)
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  packageHosts     PackageHost[]
-  bookings         Booking[]
+  id                 String        @id @default(uuid())
+  name               String
+  description        String        @db.Text
+  price              Decimal       @db.Decimal(10, 2)
+  promoPrice         Decimal?      @db.Decimal(10, 2)
+  includesHost       Boolean       @default(true)
+  includesStudio     Boolean       @default(true)
+  includesDevice     Boolean       @default(true)
+  isActive           Boolean       @default(true)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  accountReport      Boolean       @default(true)
+  durationPerSession Int           @default(2)
+  hostCount          Int           @default(1)
+  numberOfDays       Int           @default(14)
+  packageType        String        @default("iPhone")
+  totalHours         Int           @default(28)
+  twibbonDesignCount Int           @default(0)
+  weeklyReport       Boolean       @default(false)
+  workDays           String        @default("Senin - Sabtu")
+  workTimeEnd        String        @default("20:00")
+  workTimeStart      String        @default("09:00")
+  bookings           Booking[]
+  packageHosts       PackageHost[]
 
   @@map("packages")
 }
 
 model Host {
-  id              String        @id @default(uuid())
-  name            String
-  bio             String        @db.Text
-  photoUrl        String?
-  portfolioUrl    String?
-  expertise       String        // Fashion, Beauty, F&B, Tech, etc.
-  rating          Decimal       @db.Decimal(2, 1) @default(4.5)
-  totalStreams    Int           @default(0)
-  languages       String        @default("Indonesian")
-  socialMediaLinks String?      @db.Text // JSON string
-  isActive        Boolean       @default(true)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  packageHosts    PackageHost[]
-  bookings        Booking[]
+  id               String        @id @default(uuid())
+  name             String
+  bio              String        @db.Text
+  photoUrl         String?
+  portfolioUrl     String?
+  expertise        String
+  rating           Decimal       @default(4.5) @db.Decimal(2, 1)
+  totalStreams     Int           @default(0)
+  languages        String        @default("Indonesian")
+  socialMediaLinks String?       @db.Text
+  isActive         Boolean       @default(true)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  bookings         Booking[]
+  packageHosts     PackageHost[]
 
   @@index([expertise, isActive])
   @@map("hosts")
 }
 
 model PackageHost {
-  id        String   @id @default(uuid())
+  id        String  @id @default(uuid())
   packageId String
   hostId    String
-  package   Package  @relation(fields: [packageId], references: [id], onDelete: Cascade)
-  host      Host     @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  host      Host    @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
 
   @@unique([packageId, hostId])
+  @@index([hostId], map: "package_hosts_hostId_fkey")
   @@map("package_hosts")
 }
 
 model Studio {
-  id          String        @id @default(uuid())
-  name        String
-  location    String
-  description String        @db.Text
-  photoUrl    String?
-  capacity    Int           @default(4)
-  equipment   String        @db.Text // JSON array: ["Camera", "Lighting", "Audio"]
-  amenities   String?       @db.Text // JSON array: ["WiFi", "AC", "Makeup Room"]
-  isActive    Boolean       @default(true)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  studioSlots StudioSlot[]
-  bookings    Booking[]
+  id                 String             @id @default(uuid())
+  name               String
+  location           String
+  description        String             @db.Text
+  photoUrl           String?
+  capacity           Int                @default(4)
+  equipment          String             @db.Text
+  amenities          String?            @db.Text
+  isActive           Boolean            @default(true)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  bookings           Booking[]
+  studioSlots        StudioSlot[]
+  customSlotRequests CustomSlotRequest[]
 
   @@map("studios")
 }
@@ -85,12 +96,27 @@ model StudioSlot {
   endTime   String
   isBooked  Boolean  @default(false)
   createdAt DateTime @default(now())
-  studio    Studio   @relation(fields: [studioId], references: [id], onDelete: Cascade)
   booking   Booking?
+  studio    Studio   @relation(fields: [studioId], references: [id], onDelete: Cascade)
 
   @@unique([studioId, date, startTime])
   @@index([studioId, date, isBooked])
   @@map("studio_slots")
+}
+
+model User {
+  id              String        @id @default(uuid())
+  email           String        @unique
+  name            String
+  password        String
+  role            UserRole      @default(ADMIN)
+  isActive        Boolean       @default(true)
+  lastLoginAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([email, isActive])
+  @@map("users")
 }
 
 model Booking {
@@ -113,30 +139,54 @@ model Booking {
   notes           String?       @db.Text
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  package         Package       @relation(fields: [packageId], references: [id])
   host            Host          @relation(fields: [hostId], references: [id])
+  package         Package       @relation(fields: [packageId], references: [id])
   studio          Studio        @relation(fields: [studioId], references: [id])
   studioSlot      StudioSlot    @relation(fields: [studioSlotId], references: [id])
   payments        Payment[]
 
   @@index([status, date])
+  @@index([hostId], map: "bookings_hostId_fkey")
+  @@index([packageId], map: "bookings_packageId_fkey")
+  @@index([studioId], map: "bookings_studioId_fkey")
   @@map("bookings")
 }
 
 model Payment {
-  id             String       @id @default(uuid())
+  id             String        @id @default(uuid())
   bookingId      String
-  paymentGateway String       @default("midtrans")
-  transactionId  String       @unique
-  amount         Decimal      @db.Decimal(10, 2)
+  paymentGateway String        @default("midtrans")
+  transactionId  String        @unique
+  amount         Decimal       @db.Decimal(10, 2)
   status         PaymentStatus @default(PENDING)
   paidAt         DateTime?
-  rawResponse    String?      @db.Text
-  createdAt      DateTime     @default(now())
-  booking        Booking      @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  rawResponse    String?       @db.Text
+  createdAt      DateTime      @default(now())
+  booking        Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   @@index([bookingId, status])
   @@map("payments")
+}
+
+model CustomSlotRequest {
+  id             String   @id @default(uuid())
+  studioId       String
+  date           DateTime
+  startTime      String
+  endTime        String
+  customerName   String
+  customerPhone  String?
+  customerEmail  String?
+  notes          String?  @db.Text
+  status         String   @default("PENDING")
+  adminNotes     String?  @db.Text
+  studioSlotId   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  studio         Studio   @relation(fields: [studioId], references: [id], onDelete: Cascade)
+
+  @@index([studioId, status])
+  @@map("custom_slot_requests")
 }
 
 enum BookingStatus {
@@ -153,4 +203,9 @@ enum PaymentStatus {
   SUCCESS
   FAILED
   EXPIRED
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
 }

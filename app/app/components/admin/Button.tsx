@@ -29,7 +29,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const isDark = actualTheme === "dark"
 
     const baseClasses =
-      "inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+      "inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
 
     const variantClasses = {
       primary:
@@ -45,9 +45,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     const sizeClasses = {
-      sm: "px-3 py-1.5 text-sm",
-      md: "px-4 py-2 text-sm",
-      lg: "px-6 py-3 text-base",
+      sm: "px-2 sm:px-3 py-1.5 text-xs sm:text-sm",
+      md: "px-3 sm:px-4 py-2 text-xs sm:text-sm",
+      lg: "px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base",
     }
 
     return (
@@ -59,7 +59,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {loading && <Loader2 className="w-4 h-4 animate-spin" />}
         {!loading && icon}
-        {children}
+        <span className="hidden sm:inline">{children}</span>
+        <span className="sm:hidden">{children && typeof children === 'string' ? children.slice(0, 10) : children}</span>
       </button>
     )
   },

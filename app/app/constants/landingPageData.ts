@@ -34,6 +34,15 @@ export const SERVICES_DATA = [
     image: services2,
     alt: "Website & Digital Experience",
   },
+  {
+    id: 4,
+    slug: "live-streaming",
+    title: "Live Streaming",
+    description:
+      "Platform live streaming profesional dengan host berpengalaman, device berkualitas, dan studio lengkap untuk kebutuhan bisnis Anda.",
+    image: services2,
+    alt: "Live Streaming",
+  },
 ]
 
 // Featured Service Data

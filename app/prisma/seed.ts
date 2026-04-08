@@ -1,5 +1,6 @@
 import { PrismaClient, Prisma } from "@prisma/client"
 import { Decimal } from "@prisma/client/runtime/library"
+import bcrypt from "bcryptjs"
 
 // Use the shared Prisma client with logging
 const prisma = new PrismaClient({
@@ -55,32 +56,25 @@ async function main() {
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       console.log("\n📦 Creating packages...")
 
-      // Create Packages
+      // Create iPhone Packages
       const packages = await Promise.all([
         tx.package.create({
           data: {
-            name: "Paket Starter",
-            description:
-              "Paket cocok untuk pemula yang ingin mencoba live streaming. Termasuk host profesional, studio standar, dan peralatan dasar.",
-            price: toDecimal(1500000),
-            promoPrice: toDecimal(1200000),
-            durationMinutes: 120,
-            platform: "TikTok",
-            includesHost: true,
-            includesStudio: true,
-            includesDevice: true,
-            isActive: true,
-          },
-        }),
-        tx.package.create({
-          data: {
-            name: "Paket Business",
-            description:
-              "Paket untuk bisnis yang serius dengan live streaming. Termasuk host berpengalaman, studio premium, dan peralatan lengkap.",
+            name: "Package A (iPhone)",
+            packageType: "iPhone",
+            description: "Paket basic untuk pemula. Termasuk host profesional dan studio lengkap.",
             price: toDecimal(3000000),
-            promoPrice: toDecimal(2500000),
-            durationMinutes: 180,
-            platform: "TikTok",
+            promoPrice: toDecimal(2100000),
+            totalHours: 28,
+            numberOfDays: 14,
+            durationPerSession: 2,
+            workTimeStart: "09:00",
+            workTimeEnd: "20:00",
+            workDays: "Senin - Sabtu",
+            hostCount: 1,
+            twibbonDesignCount: 0,
+            weeklyReport: false,
+            accountReport: true,
             includesHost: true,
             includesStudio: true,
             includesDevice: true,
@@ -89,13 +83,21 @@ async function main() {
         }),
         tx.package.create({
           data: {
-            name: "Paket Enterprise",
-            description:
-              "Paket lengkap untuk brand besar. Termasuk host top-tier, studio flagship, dan peralatan profesional.",
-            price: toDecimal(5000000),
-            promoPrice: toDecimal(4500000),
-            durationMinutes: 240,
-            platform: "TikTok",
+            name: "Package B (iPhone)",
+            packageType: "iPhone",
+            description: "Paket standar untuk bisnis berkembang. Termasuk weekly report dan 1 twibbon design.",
+            price: toDecimal(4500000),
+            promoPrice: toDecimal(3640000),
+            totalHours: 52,
+            numberOfDays: 26,
+            durationPerSession: 2,
+            workTimeStart: "09:00",
+            workTimeEnd: "20:00",
+            workDays: "Senin - Sabtu",
+            hostCount: 1,
+            twibbonDesignCount: 1,
+            weeklyReport: true,
+            accountReport: true,
             includesHost: true,
             includesStudio: true,
             includesDevice: true,
@@ -104,13 +106,21 @@ async function main() {
         }),
         tx.package.create({
           data: {
-            name: "Paket Shopee Starter",
-            description:
-              "Paket live streaming khusus platform Shopee. Cocok untuk seller Shopee.",
-            price: toDecimal(1800000),
-            promoPrice: toDecimal(1500000),
-            durationMinutes: 120,
-            platform: "Shopee",
+            name: "Package C (iPhone)",
+            packageType: "iPhone",
+            description: "Paket intensif dengan live setiap hari. Termasuk weekly report dan 1 twibbon design.",
+            price: toDecimal(8000000),
+            promoPrice: toDecimal(6760000),
+            totalHours: 104,
+            numberOfDays: 26,
+            durationPerSession: 4,
+            workTimeStart: "09:00",
+            workTimeEnd: "20:00",
+            workDays: "Senin - Minggu",
+            hostCount: 1,
+            twibbonDesignCount: 1,
+            weeklyReport: true,
+            accountReport: true,
             includesHost: true,
             includesStudio: true,
             includesDevice: true,
@@ -119,13 +129,113 @@ async function main() {
         }),
         tx.package.create({
           data: {
-            name: "Paket Instagram Live",
-            description:
-              "Paket live streaming untuk Instagram. Cocok untuk influencer dan brand awareness.",
-            price: toDecimal(2000000),
-            promoPrice: toDecimal(1700000),
-            durationMinutes: 120,
-            platform: "Instagram",
+            name: "Package E (iPhone)",
+            packageType: "iPhone",
+            description: "Paket premium untuk hasil maksimal. Termasuk 2 twibbon design dan weekly report.",
+            price: toDecimal(11700000),
+            promoPrice: toDecimal(9360000),
+            totalHours: 156,
+            numberOfDays: 26,
+            durationPerSession: 6,
+            workTimeStart: "09:00",
+            workTimeEnd: "20:00",
+            workDays: "Senin - Minggu",
+            hostCount: 1,
+            twibbonDesignCount: 2,
+            weeklyReport: true,
+            accountReport: true,
+            includesHost: true,
+            includesStudio: true,
+            includesDevice: true,
+            isActive: true,
+          },
+        }),
+        tx.package.create({
+          data: {
+            name: "Package A (Camera+OBS)",
+            packageType: "Camera+OBS",
+            description: "Paket professional dengan kamera Sony dan OBS. Kualitas video premium.",
+            price: toDecimal(9000000),
+            promoPrice: toDecimal(6500000),
+            totalHours: 52,
+            numberOfDays: 26,
+            durationPerSession: 2,
+            workTimeStart: "09:00",
+            workTimeEnd: "20:00",
+            workDays: "Senin - Sabtu",
+            hostCount: 1,
+            twibbonDesignCount: 1,
+            weeklyReport: false,
+            accountReport: true,
+            includesHost: true,
+            includesStudio: true,
+            includesDevice: true,
+            isActive: true,
+          },
+        }),
+        tx.package.create({
+          data: {
+            name: "Package B (Camera+OBS)",
+            packageType: "Camera+OBS",
+            description: "Paket advanced dengan sesi lebih panjang. Kualitas video premium.",
+            price: toDecimal(14000000),
+            promoPrice: toDecimal(9000000),
+            totalHours: 78,
+            numberOfDays: 26,
+            durationPerSession: 3,
+            workTimeStart: "09:00",
+            workTimeEnd: "20:00",
+            workDays: "Senin - Sabtu",
+            hostCount: 1,
+            twibbonDesignCount: 1,
+            weeklyReport: false,
+            accountReport: true,
+            includesHost: true,
+            includesStudio: true,
+            includesDevice: true,
+            isActive: true,
+          },
+        }),
+        tx.package.create({
+          data: {
+            name: "Package C (Camera+OBS)",
+            packageType: "Camera+OBS",
+            description: "Paket intensif kamera profesional dengan live setiap hari. Kualitas video premium.",
+            price: toDecimal(16000000),
+            promoPrice: toDecimal(10900000),
+            totalHours: 104,
+            numberOfDays: 26,
+            durationPerSession: 4,
+            workTimeStart: "09:00",
+            workTimeEnd: "20:00",
+            workDays: "Senin - Sabtu",
+            hostCount: 1,
+            twibbonDesignCount: 2,
+            weeklyReport: false,
+            accountReport: true,
+            includesHost: true,
+            includesStudio: true,
+            includesDevice: true,
+            isActive: true,
+          },
+        }),
+        tx.package.create({
+          data: {
+            name: "Package D (Camera+OBS)",
+            packageType: "Camera+OBS",
+            description: "Paket flagship dengan 1-2 host dan kualitas video terbaik. Kualitas video premium.",
+            price: toDecimal(22000000),
+            promoPrice: toDecimal(14600000),
+            totalHours: 156,
+            numberOfDays: 26,
+            durationPerSession: 6,
+            workTimeStart: "09:00",
+            workTimeEnd: "20:00",
+            workDays: "Senin - Sabtu",
+            hostCount: 2,
+            twibbonDesignCount: 2,
+            weeklyReport: false,
+            accountReport: true,
             includesHost: true,
             includesStudio: true,
             includesDevice: true,
@@ -142,90 +252,90 @@ async function main() {
       const hosts = await Promise.all([
         tx.host.create({
           data: {
-            name: "Sarah Wijaya",
-            bio: "Host berpengalaman dengan 5+ tahun di industri live shopping. Spesialisasi di fashion dan beauty.",
+            name: "Amanda Putri",
+            bio: "Host live streaming profesional dengan 3+ tahun pengalaman. Spesialisasi di fashion dan beauty dengan conversion rate tinggi.",
             photoUrl:
               "https://images.unsplash.com/photo-1494790108377-be1c2998cad8?w=800&h=800&fit=crop",
-            portfolioUrl: "https://example.com/sarah",
-            expertise: "Fashion",
+            portfolioUrl: "https://example.com/amanda",
+            expertise: "Fashion, Beauty",
             rating: toDecimal(4.8),
             totalStreams: 250,
             languages: "Indonesian, English",
             socialMediaLinks: JSON.stringify({
-              instagram: "@sarahwijaya",
-              tiktok: "@sarahlive",
+              instagram: "@amandaputri_h5",
+              tiktok: "@amandalive_h5",
             }),
             isActive: true,
           },
         }),
         tx.host.create({
           data: {
-            name: "Budi Santoso",
-            bio: "Host energik dengan pengalaman di F&B dan electronics. Sangat interaktif dengan audiens.",
+            name: "Dimas Pratama",
+            bio: "Host energik dengan pengalaman di F&B dan electronics. Sangat interaktif dengan audiens dan mampu meningkatkan engagement.",
             photoUrl:
-              "https://images.unsplash.com/photo-1507003211169-0a8ddc6bbf8?w=800&h=800&fit=crop",
-            portfolioUrl: "https://example.com/budi",
-            expertise: "Food & Beverage",
+              "https://images.unsplash.com/photo-1507003211169-0a8a0fa6a65?w=800&h=800&fit=crop",
+            portfolioUrl: "https://example.com/dimas",
+            expertise: "Food & Beverage, Electronics",
             rating: toDecimal(4.7),
             totalStreams: 180,
             languages: "Indonesian",
             socialMediaLinks: JSON.stringify({
-              instagram: "@budisantoso",
-              tiktok: "@budilive",
+              instagram: "@dimaspratama_h5",
+              tiktok: "@dimaslive_h5",
             }),
             isActive: true,
           },
         }),
         tx.host.create({
           data: {
-            name: "Dewi Lestari",
-            bio: "Host profesional dengan background di beauty dan skincare. Sangat detail dalam menjelaskan produk.",
+            name: "Rina Kusuma",
+            bio: "Host profesional dengan background di beauty dan skincare. Sangat detail dalam menjelaskan produk dan memberikan edukasi.",
             photoUrl:
               "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&h=800&fit=crop",
-            portfolioUrl: "https://example.com/dewi",
-            expertise: "Beauty",
+            portfolioUrl: "https://example.com/rina",
+            expertise: "Beauty, Skincare",
             rating: toDecimal(4.9),
             totalStreams: 320,
             languages: "Indonesian, English",
             socialMediaLinks: JSON.stringify({
-              instagram: "@dewilestari",
-              tiktok: "@dewilive",
+              instagram: "@rinakusuma_h5",
+              tiktok: "@rinalive_h5",
             }),
             isActive: true,
           },
         }),
         tx.host.create({
           data: {
-            name: "Rizky Pratama",
-            bio: "Host tech-savvy yang jago menjelaskan produk elektronik dan gadget. Sangat informatif.",
+            name: "Aditya Wijaya",
+            bio: "Host tech-savvy yang jago menjelaskan produk elektronik dan gadget. Sangat informatif dan mampu menjawab pertanyaan teknis.",
             photoUrl:
               "https://images.unsplash.com/photo-1472099645785-5a8a0fa6a65?w=800&h=800&fit=crop",
-            portfolioUrl: "https://example.com/rizky",
-            expertise: "Electronics",
+            portfolioUrl: "https://example.com/aditya",
+            expertise: "Electronics, Tech",
             rating: toDecimal(4.6),
             totalStreams: 150,
             languages: "Indonesian, English",
             socialMediaLinks: JSON.stringify({
-              instagram: "@rizkypratama",
-              tiktok: "@rizkylive",
+              instagram: "@adityawijaya_h5",
+              tiktok: "@adityalive_h5",
             }),
             isActive: true,
           },
         }),
         tx.host.create({
           data: {
-            name: "Anita Sari",
-            bio: "Host versatile yang bisa handle berbagai kategori produk. Sangat adaptif dan profesional.",
+            name: "Maya Sari",
+            bio: "Host versatile yang bisa handle berbagai kategori produk. Sangat adaptif dan profesional dengan berbagai jenis brand.",
             photoUrl:
               "https://images.unsplash.com/photo-1438761681033-6461ffad8dfe?w=800&h=800&fit=crop",
-            portfolioUrl: "https://example.com/anita",
-            expertise: "Fashion",
+            portfolioUrl: "https://example.com/maya",
+            expertise: "Fashion, Lifestyle",
             rating: toDecimal(4.7),
             totalStreams: 200,
             languages: "Indonesian",
             socialMediaLinks: JSON.stringify({
-              instagram: "@anitasari",
-              tiktok: "@anitalive",
+              instagram: "@mayasari_h5",
+              tiktok: "@mayalive_h5",
             }),
             isActive: true,
           },
@@ -260,18 +370,19 @@ async function main() {
       const studios = await Promise.all([
         tx.studio.create({
           data: {
-            name: "Studio Central Jakarta",
-            location: "Jakarta Pusat",
-            description:
-              "Studio modern di pusat kota dengan fasilitas lengkap. Mudah diakses dari berbagai daerah.",
+            name: "H5 Creative - Depok (Head Office)",
+            location: "Depok, Jawa Barat",
+            description: "Studio utama H5 Creative dengan fasilitas lengkap untuk live streaming profesional.",
             photoUrl: null,
             capacity: 6,
             equipment: JSON.stringify([
-              "Sony A7 III Camera",
-              "Professional Lighting Setup",
-              "Wireless Microphones",
-              "Green Screen",
-              "Teleprompter",
+              "OBS Software",
+              "Sony Camera",
+              "Professional Lighting",
+              "Wireless Microphone",
+              "iPhone Device",
+              "Tripod",
+              "Product Display Property",
             ]),
             amenities: JSON.stringify([
               "Free WiFi",
@@ -285,43 +396,18 @@ async function main() {
         }),
         tx.studio.create({
           data: {
-            name: "Studio South Jakarta",
-            location: "Jakarta Selatan",
-            description:
-              "Studio premium di area bisnis dengan desain modern dan profesional.",
-            photoUrl: null,
-            capacity: 8,
-            equipment: JSON.stringify([
-              "Canon R5 Camera",
-              "Professional Lighting Setup",
-              "Wireless Microphones",
-              "Green Screen",
-              "Teleprompter",
-              "Multi-camera Setup",
-            ]),
-            amenities: JSON.stringify([
-              "Free WiFi",
-              "AC",
-              "Makeup Room",
-              "Waiting Area",
-              "Parking",
-              "Catering Available",
-            ]),
-            isActive: true,
-          },
-        }),
-        tx.studio.create({
-          data: {
-            name: "Studio West Jakarta",
-            location: "Jakarta Barat",
-            description:
-              "Studio cozy dengan harga terjangkau namun tetap profesional.",
+            name: "H5 Creative - Yogyakarta",
+            location: "Yogyakarta",
+            description: "Studio cabang Yogyakarta dengan fasilitas live streaming standar profesional.",
             photoUrl: null,
             capacity: 4,
             equipment: JSON.stringify([
-              "Sony A6400 Camera",
-              "Basic Lighting Setup",
-              "Wireless Microphones",
+              "OBS Software",
+              "Sony Camera",
+              "Professional Lighting",
+              "Wireless Microphone",
+              "iPhone Device",
+              "Tripod",
             ]),
             amenities: JSON.stringify([
               "Free WiFi",
@@ -373,6 +459,24 @@ async function main() {
       }
       await Promise.all(slotPromises)
       console.log(`✅ Created ${slotPromises.length} studio slots`)
+
+      console.log("\n👤 Creating admin user...")
+
+      // Create Admin User
+      const adminPassword = await bcrypt.hash('admin123', 10)
+      await tx.user.create({
+        data: {
+          email: 'admin@gmail.com',
+          name: 'H5 Admin',
+          password: adminPassword,
+          role: 'ADMIN',
+          isActive: true,
+        },
+      })
+
+      console.log(`✅ Created admin user`)
+      console.log(`   Email: admin@gmail.com`)
+      console.log(`   Password: admin123`)
     })
 
     // Verify data was created
@@ -381,6 +485,7 @@ async function main() {
     const studioCount = await prisma.studio.count()
     const slotCount = await prisma.studioSlot.count()
     const packageHostCount = await prisma.packageHost.count()
+    const userCount = await prisma.user.count()
 
     console.log("\n📊 Seed Summary:")
     console.log(`   📦 Packages: ${packageCount}`)
@@ -388,6 +493,7 @@ async function main() {
     console.log(`   🏢 Studios: ${studioCount}`)
     console.log(`   📅 Slots: ${slotCount}`)
     console.log(`   🔗 Host-Package Links: ${packageHostCount}`)
+    console.log(`   👤 Users: ${userCount}`)
 
     console.log("\n🎉 Seed completed successfully!")
   } catch (error) {

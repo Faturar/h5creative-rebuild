@@ -24,23 +24,6 @@ services:
     networks:
       - live_booking_network
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: live_booking_phpmyadmin
-    restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      PMA_HOST: db
-      PMA_PORT: 3306
-      PMA_USER: root
-      PMA_PASSWORD: root
-    ports:
-      - "8080:80"
-    networks:
-      - live_booking_network
-
 volumes:
   mysql_data:
 

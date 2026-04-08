@@ -192,7 +192,7 @@ export default function AdminCustomersPage() {
     <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white">Customers</h1>
             <p className="text-gray-400 mt-1">Manage customer information</p>
@@ -200,7 +200,7 @@ export default function AdminCustomersPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card>
             <div className="flex items-center justify-between">
               <div>
@@ -277,61 +277,61 @@ export default function AdminCustomersPage() {
           size="lg"
         >
           {selectedCustomer && (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#4920E5] to-[#6B21A8] rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#4920E5] to-[#6B21A8] rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-white font-bold text-xl">
                     {selectedCustomer.name.charAt(0).toUpperCase()}
                   </span>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h3 className="text-xl font-bold text-white">
                     {selectedCustomer.name}
                   </h3>
-                  <p className="text-gray-400">{selectedCustomer.email}</p>
+                  <p className="text-gray-400 truncate">{selectedCustomer.email}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                  <Phone className="w-5 h-5 text-[#4920E5]" />
-                  <div>
+                  <Phone className="w-5 h-5 text-[#4920E5] flex-shrink-0" />
+                  <div className="min-w-0">
                     <p className="text-sm text-gray-400">Phone</p>
-                    <p className="font-medium text-white">
+                    <p className="font-medium text-white truncate">
                       {selectedCustomer.phone}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                  <Mail className="w-5 h-5 text-[#4920E5]" />
-                  <div>
+                  <Mail className="w-5 h-5 text-[#4920E5] flex-shrink-0" />
+                  <div className="min-w-0">
                     <p className="text-sm text-gray-400">Email</p>
-                    <p className="font-medium text-white">
+                    <p className="font-medium text-white truncate">
                       {selectedCustomer.email}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                  <Building2 className="w-5 h-5 text-[#4920E5]" />
-                  <div>
+                  <Building2 className="w-5 h-5 text-[#4920E5] flex-shrink-0" />
+                  <div className="min-w-0">
                     <p className="text-sm text-gray-400">Business</p>
-                    <p className="font-medium text-white">
+                    <p className="font-medium text-white truncate">
                       {selectedCustomer.businessName}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                  <PackageIcon className="w-5 h-5 text-[#4920E5]" />
-                  <div>
+                  <PackageIcon className="w-5 h-5 text-[#4920E5] flex-shrink-0" />
+                  <div className="min-w-0">
                     <p className="text-sm text-gray-400">Category</p>
-                    <p className="font-medium text-white">
+                    <p className="font-medium text-white truncate">
                       {selectedCustomer.productCategory}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="p-4 bg-gradient-to-br from-[#4920E5]/20 to-[#6B21A8]/20 rounded-lg">
                   <p className="text-sm text-gray-400">Total Bookings</p>
                   <p className="text-2xl font-bold text-[#4920E5]">

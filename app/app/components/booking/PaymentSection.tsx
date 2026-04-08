@@ -115,7 +115,7 @@ export default function PaymentSection({
           <h3
             className={`text-lg font-semibold mb-4 ${isDark ? "text-white" : "text-gray-900"}`}
           >
-            Ringkasan Booking
+            Ringkasan
           </h3>
 
           <div className="space-y-3">

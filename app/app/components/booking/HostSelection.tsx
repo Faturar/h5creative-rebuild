@@ -65,16 +65,16 @@ export default function HostSelection({
 
   return (
     <div>
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-white mb-2">
+      <div className="text-center mb-6 md:mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
           Pilih Host Profesional
         </h2>
-        <p className="text-gray-400">
+        <p className="text-sm md:text-base text-gray-400">
           Pilih host yang sesuai dengan produk dan brand Anda
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
         {hosts.map((host, index) => {
           const isSelected = selectedHostId === host.id
 
@@ -85,7 +85,7 @@ export default function HostSelection({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               onClick={() => onSelect(host.id)}
-              className={`relative overflow-hidden rounded-[30px] border-2 cursor-pointer transition-all h-[400px] md:h-[450px] ${
+              className={`relative overflow-hidden rounded-[30px] border-2 cursor-pointer transition-all h-[350px] sm:h-[400px] md:h-[450px] ${
                 isSelected
                   ? "border-[#4920E5] shadow-lg scale-105"
                   : "border-white/10 hover:border-[#4920E5]/50 hover:shadow-md"
@@ -118,34 +118,34 @@ export default function HostSelection({
               )}
 
               {/* Content Overlay */}
-              <div className="relative z-10 flex flex-col h-full p-6 justify-end">
-                <div className="mb-3">
-                  <span className="inline-block px-3 py-1 bg-[#4920E5] text-white rounded-full text-sm font-medium shadow-lg">
+              <div className="relative z-10 flex flex-col h-full p-4 md:p-6 justify-end">
+                <div className="mb-2 md:mb-3">
+                  <span className="inline-block px-2 md:px-3 py-1 bg-[#4920E5] text-white rounded-full text-xs md:text-sm font-medium shadow-lg">
                     {host.expertise}
                   </span>
                 </div>
 
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">
                   {host.name}
                 </h3>
 
-                <div className="flex items-center gap-2 mb-3">
-                  <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  <span className="text-lg font-semibold text-white">
+                <div className="flex items-center gap-1.5 md:gap-2 mb-2 md:mb-3">
+                  <Star className="w-4 h-4 md:w-5 md:h-5 fill-yellow-400 text-yellow-400" />
+                  <span className="text-base md:text-lg font-semibold text-white">
                     {host.rating}
                   </span>
-                  <span className="text-base text-gray-300">
+                  <span className="text-sm md:text-base text-gray-300">
                     ({host.totalStreams} streams)
                   </span>
                 </div>
 
-                <p className="text-gray-200 text-sm md:text-base mb-4 line-clamp-2">
+                <p className="text-gray-200 text-xs md:text-sm md:text-base mb-3 md:mb-4 line-clamp-2">
                   {host.bio}
                 </p>
 
-                <div className="flex items-center gap-2 text-base text-white">
-                  <Video className="w-5 h-5" />
-                  <span>{host.languages}</span>
+                <div className="flex items-center gap-1.5 md:gap-2 text-sm md:text-base text-white">
+                  <Video className="w-4 h-4 md:w-5 md:h-5" />
+                  <span className="text-sm md:text-base">{host.languages}</span>
                 </div>
               </div>
             </motion.div>
@@ -156,14 +156,14 @@ export default function HostSelection({
       <div className="flex justify-between">
         <button
           onClick={onBack}
-          className="px-8 py-3 border-2 border-white/20 text-white rounded-[20px] font-semibold hover:bg-white/10 transition-all"
+          className="px-6 md:px-8 py-2.5 md:py-3 border-2 border-white/20 text-white rounded-[20px] font-semibold hover:bg-white/10 transition-all"
         >
           Kembali
         </button>
         <button
           onClick={onNext}
           disabled={!selectedHostId}
-          className="px-8 py-3 bg-[#4920E5] text-white rounded-[20px] font-semibold hover:bg-[#5B2CE8] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
+          className="px-6 md:px-8 py-2.5 md:py-3 bg-[#4920E5] text-white rounded-[20px] font-semibold hover:bg-[#5B2CE8] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
         >
           Lanjutkan
         </button>

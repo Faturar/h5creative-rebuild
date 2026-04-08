@@ -78,13 +78,15 @@ export default function SpecialOfferSection() {
           </ul>
 
           <motion.a
-            href="#contact"
+            href="https://wa.me/6285811718049"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-3 bg-white text-black font-bold px-8 py-4 rounded-xl hover:bg-gray-200 transition-all duration-300 hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
             variants={itemVariants}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            DAPATKAN PENAWARAN
+            DAPATKAN PENAWARAN (0858-1171-8049)
             <ArrowRight className="w-5 h-5" />
           </motion.a>
         </motion.div>

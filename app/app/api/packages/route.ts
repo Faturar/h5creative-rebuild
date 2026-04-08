@@ -4,12 +4,12 @@ import { prisma } from "@/lib/prisma"
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
-    const platform = searchParams.get("platform")
+    const packageType = searchParams.get("packageType")
 
     const packages = await prisma.package.findMany({
       where: {
         isActive: true,
-        ...(platform && { platform }),
+        ...(packageType && { packageType }),
       },
       include: {
         packageHosts: {
@@ -34,11 +34,20 @@ export async function POST(request: Request) {
     const body = await request.json()
     const {
       name,
+      packageType,
       description,
       price,
       promoPrice,
-      durationMinutes,
-      platform,
+      totalHours,
+      numberOfDays,
+      durationPerSession,
+      workTimeStart,
+      workTimeEnd,
+      workDays,
+      hostCount,
+      twibbonDesignCount,
+      weeklyReport,
+      accountReport,
       includesHost,
       includesStudio,
       includesDevice,
@@ -47,11 +56,20 @@ export async function POST(request: Request) {
     const newPackage = await prisma.package.create({
       data: {
         name,
+        packageType,
         description,
         price,
         promoPrice,
-        durationMinutes,
-        platform,
+        totalHours,
+        numberOfDays,
+        durationPerSession,
+        workTimeStart,
+        workTimeEnd,
+        workDays,
+        hostCount,
+        twibbonDesignCount,
+        weeklyReport,
+        accountReport,
         includesHost,
         includesStudio,
         includesDevice,

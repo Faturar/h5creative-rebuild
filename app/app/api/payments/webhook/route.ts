@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+import { sendPaymentConfirmationEmail } from "@/lib/email"
 import crypto from "crypto"
 import midtransClient from "midtrans-client"
 
@@ -47,7 +48,11 @@ export async function POST(request: Request) {
     // Find booking by booking code
     const booking = await prisma.booking.findUnique({
       where: { bookingCode: order_id },
-      include: { payments: true },
+      include: {
+        payments: true,
+        package: true,
+        studio: true,
+      },
     })
 
     if (!booking) {
@@ -118,6 +123,21 @@ export async function POST(request: Request) {
       where: { id: booking.id },
       data: { status: bookingStatus as BookingStatus },
     })
+
+    // Send payment confirmation email if payment is successful
+    if (paymentStatus === "SUCCESS") {
+      await sendPaymentConfirmationEmail({
+        to: booking.customerEmail,
+        customerName: booking.customerName,
+        bookingCode: booking.bookingCode,
+        packageName: booking.package.name,
+        studioName: booking.studio.name,
+        date: booking.date.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }),
+        startTime: booking.startTime,
+        endTime: booking.endTime,
+        price: Number(booking.price),
+      })
+    }
 
     console.log(`Payment ${payment.id} updated to ${paymentStatus}`)
     console.log(`Booking ${booking.id} updated to ${bookingStatus}`)

@@ -248,7 +248,7 @@ export default function AdminDashboard() {
     <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white">Dashboard</h1>
             <p className="text-gray-400 mt-1">
@@ -270,7 +270,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card>
             <div className="flex items-center justify-between">
               <div>
@@ -353,8 +353,8 @@ export default function AdminDashboard() {
           size="lg"
         >
           {selectedBooking && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-400">Booking Code</p>
                   <p className="font-semibold text-[#4920E5]">
@@ -374,7 +374,7 @@ export default function AdminDashboard() {
                 <h3 className="font-semibold text-white mb-3">
                   Customer Information
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-gray-400">Name</p>
                     <p className="font-medium text-white">
@@ -406,7 +406,7 @@ export default function AdminDashboard() {
                 <h3 className="font-semibold text-white mb-3">
                   Booking Details
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-gray-400">Package</p>
                     <p className="font-medium text-white">
