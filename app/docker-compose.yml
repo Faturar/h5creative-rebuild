@@ -1,10 +1,41 @@
-version: '3.8'
-
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: live_booking_app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "mysql://h5cr_admin:h5cr_adminlive@db:3306/h5cr_main"
+      NEXT_PUBLIC_APP_URL: "https://live.h5creative.id"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - live_booking_network
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.http.routers.live-booking.rule=Host(live.h5creative.id)"
+      - "traefik.http.routers.live-booking.entrypoints=websecure"
+      - "traefik.http.routers.live-booking.tls.certresolver=letsencrypt"
+      - "traefik.http.services.live-booking.loadbalancer.server.port=3000"
+      - "traefik.http.routers.live-booking-http.rule=Host(live.h5creative.id)"
+      - "traefik.http.routers.live-booking-http.entrypoints=web"
+      - "traefik.http.routers.live-booking-http.middlewares=live-booking-https-redirect"
+      - "traefik.http.middlewares.live-booking-https-redirect.redirectscheme.scheme=https"
+
   db:
     image: mysql:8.0
     container_name: live_booking_db
     restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: h5cr_main
@@ -17,7 +48,8 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/01-init.sql
       - ./import-data.sql:/docker-entrypoint-initdb.d/02-import-data.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      test:
+        ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -30,3 +62,5 @@ volumes:
 networks:
   live_booking_network:
     driver: bridge
+  web:
+    external: true

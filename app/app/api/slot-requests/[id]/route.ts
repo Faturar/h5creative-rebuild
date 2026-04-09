@@ -3,10 +3,10 @@ import { prisma } from "@/lib/prisma"
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id } = params
+    const { id } = await params
     const body = await request.json()
     const { action, notes } = body
 
@@ -107,7 +107,10 @@ export async function PUT(
         createdAt: newSlot.createdAt.toISOString(),
       }
 
-      return NextResponse.json({ success: true, data: { request: serializedRequest, slot: serializedSlot } })
+      return NextResponse.json({
+        success: true,
+        data: { request: serializedRequest, slot: serializedSlot },
+      })
     }
 
     return NextResponse.json(
