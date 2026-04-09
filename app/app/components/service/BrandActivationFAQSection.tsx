@@ -88,7 +88,7 @@ export default function BrandActivationFAQSection() {
             variants={containerVariants}
           >
             {brandActivationFAQ.faqs.map((faq) => {
-              const isOpen = active === faq.id - 1
+              const isOpen = active === parseInt(faq.id) - 1
 
               return (
                 <motion.div
@@ -102,7 +102,9 @@ export default function BrandActivationFAQSection() {
                   variants={itemVariants}
                 >
                   <button
-                    onClick={() => setActive(isOpen ? null : faq.id - 1)}
+                    onClick={() =>
+                      setActive(isOpen ? null : parseInt(faq.id) - 1)
+                    }
                     className="w-full flex justify-between items-center p-4 md:p-6 text-left"
                   >
                     <motion.span

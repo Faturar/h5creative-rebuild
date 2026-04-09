@@ -134,7 +134,7 @@ export default function PricingTiersPage() {
   const columns = [
     {
       key: "deviceType",
-      label: "Device Type",
+      header: "Device Type",
       render: (value: string) => (
         <span
           className={`font-semibold ${
@@ -145,22 +145,44 @@ export default function PricingTiersPage() {
         </span>
       ),
     },
-    { key: "minHours", label: "Min Hours" },
+    { key: "minHours", header: "Min Hours" },
     {
       key: "maxHours",
-      label: "Max Hours",
+      header: "Max Hours",
       render: (value: number | null) => (value ? `${value}+` : "Unlimited"),
     },
     {
       key: "pricePerHour",
-      label: "Price/Hour",
+      header: "Price/Hour",
       render: (value: number) => `Rp ${value.toLocaleString("id-ID")}`,
     },
     {
       key: "isActive",
-      label: "Status",
+      header: "Status",
       render: (value: boolean) => (
         <StatusBadge status={value ? "active" : "inactive"} />
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      render: (_: unknown, row: PricingTier) => (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => handleEdit(row)}
+            className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+            aria-label="Edit pricing tier"
+          >
+            <Edit className="w-4 h-4 text-gray-400" />
+          </button>
+          <button
+            onClick={() => handleDelete(row.id)}
+            className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
+            aria-label="Delete pricing tier"
+          >
+            <Trash2 className="w-4 h-4 text-red-400" />
+          </button>
+        </div>
       ),
     },
   ]
@@ -218,12 +240,7 @@ export default function PricingTiersPage() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4920E5]"></div>
           </div>
         ) : (
-          <DataTable
-            data={filteredTiers}
-            columns={columns}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
+          <DataTable data={filteredTiers} columns={columns} />
         )}
 
         {/* Modal */}

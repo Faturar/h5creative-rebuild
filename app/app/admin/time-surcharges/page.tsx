@@ -134,7 +134,7 @@ export default function TimeSurchargesPage() {
   const columns = [
     {
       key: "startTime",
-      label: "Time Period",
+      header: "Time Period",
       render: (_: any, row: TimeSurcharge) => (
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-[#4920E5]" />
@@ -146,7 +146,7 @@ export default function TimeSurchargesPage() {
     },
     {
       key: "surcharge",
-      label: "Surcharge",
+      header: "Surcharge",
       render: (value: number) => (
         <div className="flex items-center gap-2">
           <DollarSign className="w-4 h-4 text-[#12BB74]" />
@@ -158,12 +158,34 @@ export default function TimeSurchargesPage() {
         </div>
       ),
     },
-    { key: "description", label: "Description" },
+    { key: "description", header: "Description" },
     {
       key: "isActive",
-      label: "Status",
+      header: "Status",
       render: (value: boolean) => (
         <StatusBadge status={value ? "active" : "inactive"} />
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      render: (_: unknown, row: TimeSurcharge) => (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => handleEdit(row)}
+            className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+            aria-label="Edit time surcharge"
+          >
+            <Edit className="w-4 h-4 text-gray-400" />
+          </button>
+          <button
+            onClick={() => handleDelete(row.id)}
+            className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
+            aria-label="Delete time surcharge"
+          >
+            <Trash2 className="w-4 h-4 text-red-400" />
+          </button>
+        </div>
       ),
     },
   ]
@@ -207,12 +229,7 @@ export default function TimeSurchargesPage() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4920E5]"></div>
           </div>
         ) : (
-          <DataTable
-            data={filteredSurcharges}
-            columns={columns}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
+          <DataTable data={filteredSurcharges} columns={columns} />
         )}
 
         {/* Modal */}
