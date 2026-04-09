@@ -9,10 +9,6 @@ services:
       NODE_ENV: production
       DATABASE_URL: "mysql://h5cr_admin:h5cr_adminlive@db:3306/h5cr_main"
       NEXT_PUBLIC_APP_URL: "https://live.h5creative.id"
-    volumes:
-      - ./:/app
-      - /app/node_modules
-      - /app/.next
     depends_on:
       db:
         condition: service_healthy

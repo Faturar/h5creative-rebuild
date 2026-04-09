@@ -8,22 +8,36 @@ The `docker compose up -d --build` command was failing with:
 failed to solve: failed to read dockerfile: open Dockerfile: no such file or directory
 ```
 
+After fixing the missing Dockerfile, builds were taking too long and had potential configuration issues.
+
 ## Root Cause
 
-The [`docker-compose.yml`](docker-compose.yml:5) file referenced a `Dockerfile` that didn't exist in the project.
+1. The [`docker-compose.yml`](docker-compose.yml:5) file referenced a `Dockerfile` that didn't exist
+2. Volume mounts were defeating the multi-stage build, causing unnecessary rebuilds
+3. Package manager inconsistencies between build scripts and Dockerfile
+4. Incomplete `.dockerignore` was bloating build context
 
 ## Solution Applied
 
-### 1. Created Dockerfile
+### 1. Created Optimized Dockerfile
 
 Created a multi-stage [`Dockerfile`](Dockerfile:1) optimized for Next.js production deployment:
 
 - **Base stage**: Uses Node.js 20 Slim for compatibility with Prisma binaries and all dependencies
-- **Deps stage**: Installs dependencies efficiently
+- **Deps stage**: Installs dependencies efficiently with npm ci
 - **Builder stage**: Generates Prisma client and builds the Next.js application
 - **Runner stage**: Creates a production-ready container with only necessary files
 
-### 2. Updated Next.js Configuration
+### 2. Fixed docker-compose.yml
+
+**Removed problematic volume mounts** that were defeating the multi-stage build:
+
+- Before: `volumes: [./:/app, /app/node_modules, /app/.next]`
+- After: No volume mounts for production use
+
+This ensures the container uses the optimized production build from Dockerfile instead of rebuilding from source code.
+
+### 3. Updated Next.js Configuration
 
 Modified [`next.config.ts`](next.config.ts:4) to enable standalone output:
 
@@ -33,6 +47,17 @@ output: "standalone"
 
 This is required for the Dockerfile to work properly with the standalone output mode, which creates a minimal production build.
 
+### 4. Enhanced .dockerignore
+
+Updated [`.dockerignore`](.dockerignore:1) to exclude unnecessary files and speed up builds:
+
+- Dependencies (node_modules)
+- Build outputs (.next, dist)
+- Environment files (.env files)
+- Development files (.vscode, .git, IDE files)
+- Documentation (excluding README.md)
+- Testing files (*.test.ts, coverage)
+
 ## Dockerfile Features
 
 - ✅ Multi-stage build for smaller final image
@@ -41,6 +66,15 @@ This is required for the Dockerfile to work properly with the standalone output 
 - ✅ Proper file permissions
 - ✅ Environment variable configuration
 - ✅ Port 3000 exposure
+- ✅ Consistent npm package manager usage
+- ✅ Optimized .dockerignore for faster builds
+
+## Performance Improvements
+
+- **Build Speed**: Removing volume mounts prevents unnecessary rebuilds
+- **Image Size**: Multi-stage build + proper .dockerignore reduces final image size
+- **Build Time**: .dockerignore reduces Docker context transfer time
+- **Reliability**: Consistent package manager prevents lock file conflicts
 
 ## Next Steps
 
@@ -73,7 +107,7 @@ docker compose down
 
 The Docker setup includes:
 
-- **App Container**: Next.js application with Prisma ORM
+- **App Container**: Next.js application with Prisma ORM (production build, no live code mounting)
 - **Database Container**: MySQL 8.0 with initialization scripts
 - **Network**: Custom bridge network for container communication
 - **External Network**: Connects to Traefik for reverse proxy
@@ -86,6 +120,19 @@ The application uses these environment variables (configured in docker-compose.y
 - `DATABASE_URL`: MySQL connection string
 - `NEXT_PUBLIC_APP_URL`: Public application URL
 
+## Development Mode
+
+For development with hot reload, you can temporarily add volume mounts:
+
+```yaml
+volumes:
+  - ./:/app
+  - /app/node_modules
+  - /app/.next
+```
+
+**Note**: This is for development only. Remove for production deployments.
+
 ## Troubleshooting
 
 ### If Build Fails
@@ -93,6 +140,13 @@ The application uses these environment variables (configured in docker-compose.y
 1. Check Dockerfile syntax: `docker build -t test .`
 2. Verify Next.js build works locally: `npm run build`
 3. Check Prisma schema: `npx prisma generate`
+4. Ensure package-lock.json exists: `ls package-lock.json`
+
+### If Build Takes Too Long
+
+1. Check .dockerignore is properly configured
+2. Ensure no large files in build context: `du -sh .`
+3. Use Docker build cache: `docker compose build --progress=plain`
 
 ### If Container Won't Start
 
@@ -112,6 +166,7 @@ The application uses these environment variables (configured in docker-compose.y
 - The application uses Prisma for database access
 - Traefik is configured for HTTPS and reverse proxy (requires external network)
 - Database initialization scripts are mounted from the host
+- Production containers use optimized builds, not live source code
 
 ## Support
 
