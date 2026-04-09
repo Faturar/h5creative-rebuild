@@ -32,6 +32,10 @@ export interface BookingEmailData {
 export async function sendBookingConfirmationEmail(data: BookingEmailData) {
   try {
     const client = getResendClient()
+    if (!client) {
+      console.warn("Email client not available. Skipping email send.")
+      return { success: false, error: "Email client not available" }
+    }
     const { error } = await client.emails.send({
       from: "H5 Creative <onboarding@resend.dev>",
       to: data.to,
@@ -181,6 +185,10 @@ export async function sendBookingConfirmationEmail(data: BookingEmailData) {
 export async function sendPaymentConfirmationEmail(data: BookingEmailData) {
   try {
     const client = getResendClient()
+    if (!client) {
+      console.warn("Email client not available. Skipping email send.")
+      return { success: false, error: "Email client not available" }
+    }
     const { error } = await client.emails.send({
       from: "H5 Creative <onboarding@resend.dev>",
       to: data.to,
