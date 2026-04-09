@@ -18,7 +18,7 @@ The [`docker-compose.yml`](docker-compose.yml:5) file referenced a `Dockerfile` 
 
 Created a multi-stage [`Dockerfile`](Dockerfile:1) optimized for Next.js production deployment:
 
-- **Base stage**: Uses Node.js 20 Alpine for minimal image size and compatibility with all dependencies
+- **Base stage**: Uses Node.js 20 Slim for compatibility with Prisma binaries and all dependencies
 - **Deps stage**: Installs dependencies efficiently
 - **Builder stage**: Generates Prisma client and builds the Next.js application
 - **Runner stage**: Creates a production-ready container with only necessary files
