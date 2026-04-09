@@ -17,15 +17,11 @@ interface BookingData {
 interface CustomerFormProps {
   bookingData: BookingData
   onChange: (data: Partial<BookingData>) => void
-  onNext: () => void
-  onBack: () => void
 }
 
 export default function CustomerForm({
   bookingData,
   onChange,
-  onNext,
-  onBack,
 }: CustomerFormProps) {
   const { actualTheme } = useTheme()
   const isDark = actualTheme === "dark"
@@ -59,7 +55,8 @@ export default function CustomerForm({
         if (!value.trim()) {
           newErrors.customerEmail = "Email harus diisi"
         } else if (!emailRegex.test(value.trim())) {
-          newErrors.customerEmail = "Format email tidak valid. Gunakan format: nama@email.com"
+          newErrors.customerEmail =
+            "Format email tidak valid. Gunakan format: nama@email.com"
         } else {
           delete newErrors.customerEmail
         }
@@ -95,17 +92,6 @@ export default function CustomerForm({
     if (touchedFields.has(fieldName)) {
       validateField(fieldName, value)
     }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const hasErrors = Object.keys(errors).length > 0
-    if (hasErrors) {
-      return
-    }
-
-    onNext()
   }
 
   const isValid = () => {
@@ -149,7 +135,7 @@ export default function CustomerForm({
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div>
             <label
@@ -164,8 +150,12 @@ export default function CustomerForm({
                 type="text"
                 id="customerName"
                 value={bookingData.customerName}
-                onChange={(e) => handleFieldChange("customerName", e.target.value)}
-                onBlur={() => handleFieldBlur("customerName", bookingData.customerName)}
+                onChange={(e) =>
+                  handleFieldChange("customerName", e.target.value)
+                }
+                onBlur={() =>
+                  handleFieldBlur("customerName", bookingData.customerName)
+                }
                 className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500 ${
                   touchedFields.has("customerName") && errors.customerName
                     ? "border-red-500"
@@ -175,7 +165,9 @@ export default function CustomerForm({
                 required
               />
               {touchedFields.has("customerName") && errors.customerName && (
-                <p className="mt-1 text-xs text-red-400">{errors.customerName}</p>
+                <p className="mt-1 text-xs text-red-400">
+                  {errors.customerName}
+                </p>
               )}
             </div>
           </div>
@@ -193,8 +185,12 @@ export default function CustomerForm({
                 type="tel"
                 id="customerPhone"
                 value={bookingData.customerPhone}
-                onChange={(e) => handleFieldChange("customerPhone", e.target.value)}
-                onBlur={() => handleFieldBlur("customerPhone", bookingData.customerPhone)}
+                onChange={(e) =>
+                  handleFieldChange("customerPhone", e.target.value)
+                }
+                onBlur={() =>
+                  handleFieldBlur("customerPhone", bookingData.customerPhone)
+                }
                 minLength={10}
                 className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500 ${
                   touchedFields.has("customerPhone") && errors.customerPhone
@@ -205,7 +201,9 @@ export default function CustomerForm({
                 required
               />
               {touchedFields.has("customerPhone") && errors.customerPhone && (
-                <p className="mt-1 text-xs text-red-400">{errors.customerPhone}</p>
+                <p className="mt-1 text-xs text-red-400">
+                  {errors.customerPhone}
+                </p>
               )}
             </div>
           </div>
@@ -223,8 +221,12 @@ export default function CustomerForm({
                 type="email"
                 id="customerEmail"
                 value={bookingData.customerEmail}
-                onChange={(e) => handleFieldChange("customerEmail", e.target.value)}
-                onBlur={() => handleFieldBlur("customerEmail", bookingData.customerEmail)}
+                onChange={(e) =>
+                  handleFieldChange("customerEmail", e.target.value)
+                }
+                onBlur={() =>
+                  handleFieldBlur("customerEmail", bookingData.customerEmail)
+                }
                 className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500 ${
                   touchedFields.has("customerEmail") && errors.customerEmail
                     ? "border-red-500"
@@ -234,7 +236,9 @@ export default function CustomerForm({
                 required
               />
               {touchedFields.has("customerEmail") && errors.customerEmail && (
-                <p className="mt-1 text-xs text-red-400">{errors.customerEmail}</p>
+                <p className="mt-1 text-xs text-red-400">
+                  {errors.customerEmail}
+                </p>
               )}
             </div>
           </div>
@@ -252,8 +256,12 @@ export default function CustomerForm({
                 type="text"
                 id="businessName"
                 value={bookingData.businessName}
-                onChange={(e) => handleFieldChange("businessName", e.target.value)}
-                onBlur={() => handleFieldBlur("businessName", bookingData.businessName)}
+                onChange={(e) =>
+                  handleFieldChange("businessName", e.target.value)
+                }
+                onBlur={() =>
+                  handleFieldBlur("businessName", bookingData.businessName)
+                }
                 className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500 ${
                   touchedFields.has("businessName") && errors.businessName
                     ? "border-red-500"
@@ -263,7 +271,9 @@ export default function CustomerForm({
                 required
               />
               {touchedFields.has("businessName") && errors.businessName && (
-                <p className="mt-1 text-xs text-red-400">{errors.businessName}</p>
+                <p className="mt-1 text-xs text-red-400">
+                  {errors.businessName}
+                </p>
               )}
             </div>
           </div>
@@ -280,8 +290,15 @@ export default function CustomerForm({
               <select
                 id="productCategory"
                 value={bookingData.productCategory}
-                onChange={(e) => handleFieldChange("productCategory", e.target.value)}
-                onBlur={() => handleFieldBlur("productCategory", bookingData.productCategory)}
+                onChange={(e) =>
+                  handleFieldChange("productCategory", e.target.value)
+                }
+                onBlur={() =>
+                  handleFieldBlur(
+                    "productCategory",
+                    bookingData.productCategory,
+                  )
+                }
                 className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all appearance-none text-white ${
                   isDark
                     ? "bg-white/5 border-white/10"
@@ -292,7 +309,7 @@ export default function CustomerForm({
                     : "border-white/10"
                 }`}
                 required
-                >
+              >
                 <option
                   value=""
                   className={isDark ? "text-gray-400" : "text-gray-900"}
@@ -360,9 +377,12 @@ export default function CustomerForm({
                   Lainnya
                 </option>
               </select>
-              {touchedFields.has("productCategory") && errors.productCategory && (
-                <p className="mt-1 text-xs text-red-400">{errors.productCategory}</p>
-              )}
+              {touchedFields.has("productCategory") &&
+                errors.productCategory && (
+                  <p className="mt-1 text-xs text-red-400">
+                    {errors.productCategory}
+                  </p>
+                )}
             </div>
           </div>
 
@@ -385,27 +405,6 @@ export default function CustomerForm({
                 placeholder="Tambahkan catatan atau permintaan khusus..."
               />
             </div>
-          </div>
-
-          <div className="md:col-span-2 flex flex-col md:flex-row justify-between pt-6 md:pt-8 gap-4 border-t border-white/10">
-            <button
-              type="button"
-              onClick={onBack}
-              className={`px-6 md:px-8 py-3 border-2 rounded-xl font-semibold hover:bg-white/10 transition-all ${
-                isDark
-                  ? "border-white/20 text-white"
-                  : "border-white/20 text-gray-300"
-              }`}
-            >
-              Kembali
-            </button>
-            <button
-              type="submit"
-              disabled={!isValid()}
-              className="px-6 md:px-8 py-3 bg-linear-to-r from-[#4920E5] to-pink-600 text-white rounded-xl font-semibold hover:from-[#5B2CE8] hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
-            >
-              Lanjutkan ke Pembayaran
-            </button>
           </div>
         </div>
       </form>

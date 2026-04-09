@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import {
-  ChevronRight,
   CheckCircle,
   XCircle,
   Package,
@@ -15,8 +14,6 @@ import {
   CreditCard,
   Video,
 } from "lucide-react"
-import logoTesti5 from "@/public/assets/images/logos/logo-testi5.svg"
-import starIcon from "@/public/assets/images/icons/Star.svg"
 import DeviceSelection from "@/components/booking/DeviceSelection"
 import PackageSelection from "@/components/booking/PackageSelection"
 import HostSelection from "@/components/booking/HostSelection"
@@ -25,6 +22,7 @@ import TimeSlotSelection from "@/components/booking/TimeSlotSelection"
 import CustomerForm from "@/components/booking/CustomerForm"
 import PaymentSection from "@/components/booking/PaymentSection"
 import BookingSummary from "@/components/booking/BookingSummary"
+import FloatingNavigation from "@/components/booking/FloatingNavigation"
 
 type BookingStep =
   | "device"
@@ -197,11 +195,13 @@ export default function BookingPage() {
 
   return (
     <section className="bg-[#0B0B1B] flex flex-col lg:flex-row min-h-screen">
-      {/* Left Sidebar - Testimonial Card */}
-      <div className="hidden lg:flex flex-1 flex-col p-[30px_40px] justify-end overflow-hidden bg-[url('/assets/images/background/livestream.png')] bg-cover bg-center bg-no-repeat sticky top-0 h-screen">
-        <div className="flex flex-col bg-white p-[30px] gap-4 rounded-[30px] sticky bottom-[30px]">
-          <h1 className="text-3xl font-bold">Livestream Service</h1>
-          <p className="text-xl leading-8 text-gray-800">
+      {/* Left Sidebar */}
+      <div className="hidden lg:flex flex-1 flex-col p-[16px_24px] xl:p-[30px_40px] justify-end overflow-hidden bg-[url('/assets/images/background/livestream.png')] bg-cover bg-center bg-no-repeat lg:sticky top-0 h-screen">
+        <div className="flex flex-col bg-white p-[24px] xl:p-[30px] lg:gap-2 xl:gap-4 rounded-[30px] sticky bottom-[16px] xl:bottom-[30px]">
+          <h1 className="lg:text-2xl xl:text-3xl font-bold">
+            Livestream Service
+          </h1>
+          <p className="lg:text-lg xl:text-xl leading-6 xl:leading-8 text-gray-800">
             Platform live streaming profesional untuk bisnis Anda. Tingkatkan
             penjualan dengan host berpengalaman dan studio modern.
           </p>
@@ -209,7 +209,7 @@ export default function BookingPage() {
       </div>
 
       {/* Mobile Testimonial Banner */}
-      <div className="lg:hidden bg-gradient-to-r from-[#4920E5] to-[#6B21A8] p-4">
+      {/* <div className="lg:hidden bg-gradient-to-r from-[#4920E5] to-[#6B21A8] p-4">
         <div className="flex flex-col items-center text-white text-center">
           <div className="flex h-8 items-center mb-2">
             <Image
@@ -232,13 +232,13 @@ export default function BookingPage() {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Right Main Content */}
-      <div className="flex flex-col flex-3 items-center justify-center mx-auto py-3 md:py-6 lg:py-8 px-3 md:px-4 bg-[url('/assets/images/Ellipse.svg')] bg-center bg-no-repeat bg-contain bg-[length:540px]">
+      <div className="flex flex-col flex-3 items-center justify-center mx-auto py-4 md:py-6 lg:py-12 px-4 md:px-8 xl:px-8 bg-[url('/assets/images/Ellipse.svg')] bg-center bg-no-repeat bg-contain bg-[length:540px]">
         {/* Progress Steps */}
         <div className="w-full max-w-4xl mb-4 md:mb-6 lg:mb-8">
-          <div className="flex items-center justify-between overflow-x-auto pb-2 scrollbar-hide">
+          <div className="grid grid-cols-4 lg:grid-cols-7 justify-center overflow-x-auto pb-2 scrollbar-hide">
             {steps.map((step, index) => {
               const isActive = step.id === currentStep
               const isCompleted = index < stepIndex
@@ -247,7 +247,7 @@ export default function BookingPage() {
               return (
                 <div
                   key={step.id}
-                  className={`h-20 md:h-24 flex items-center shrink-0 ${index < steps.length - 1 ? "flex-1 min-w-[70px] md:min-w-[80px]" : "min-w-[50px] md:min-w-[60px]"}`}
+                  className={`h-24 md:h-28 flex items-center justify-center shrink-0 ${index < steps.length - 1 ? "flex-1 min-w-[80px]" : "min-w-[60px]"}`}
                 >
                   <div
                     className={`flex flex-col items-center cursor-pointer ${
@@ -258,7 +258,7 @@ export default function BookingPage() {
                     }
                   >
                     <div
-                      className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all ${
+                      className={`w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all ${
                         isActive
                           ? "bg-[#4920E5] text-white shadow-lg scale-110"
                           : isCompleted
@@ -267,13 +267,13 @@ export default function BookingPage() {
                       }`}
                     >
                       {isCompleted ? (
-                        <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
+                        <CheckCircle className="w-5 h-5 md:w-6 md:h-6" />
                       ) : (
-                        <step.icon className="w-4 h-4 md:w-5 md:h-5" />
+                        <step.icon className="w-5 h-5 md:w-6 md:h-6" />
                       )}
                     </div>
                     <span
-                      className={`mt-0.5 md:mt-1 text-xs md:text-sm font-medium ${
+                      className={`mt-0.5 md:mt-1 text-xs md:text-sm font-medium text-center ${
                         isActive
                           ? "text-[#4920E5]"
                           : isCompleted
@@ -333,9 +333,9 @@ export default function BookingPage() {
         )}
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6 lg:gap-8 w-full max-w-6xl">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-8 w-full max-w-6xl pb-24 relative">
           {/* Step Content */}
-          <div className="lg:col-span-2 w-full">
+          <div className="lg:col-span-3 w-full">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
@@ -343,7 +343,7 @@ export default function BookingPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white/5 backdrop-blur-sm rounded-xl md:rounded-2xl lg:rounded-[30px] p-3 md:p-4 lg:p-6 lg:p-8 border border-white/10"
+                className="flex justify-center bg-white/5 backdrop-blur-sm rounded-xl md:rounded-2xl lg:rounded-[30px] p-4 md:p-4 lg:p-8 border border-white/10"
               >
                 {currentStep === "device" && (
                   <DeviceSelection
@@ -351,7 +351,6 @@ export default function BookingPage() {
                     onSelect={(deviceType) =>
                       setBookingData((prev) => ({ ...prev, deviceType }))
                     }
-                    onNext={handleNext}
                   />
                 )}
                 {currentStep === "package" && (
@@ -361,8 +360,6 @@ export default function BookingPage() {
                     onSelect={(packageId) =>
                       setBookingData((prev) => ({ ...prev, packageId }))
                     }
-                    onNext={handleNext}
-                    onBack={handleBack}
                   />
                 )}
                 {currentStep === "host" && (
@@ -372,8 +369,6 @@ export default function BookingPage() {
                     onSelect={(hostId) =>
                       setBookingData((prev) => ({ ...prev, hostId }))
                     }
-                    onNext={handleNext}
-                    onBack={handleBack}
                   />
                 )}
                 {currentStep === "studio" && (
@@ -382,8 +377,6 @@ export default function BookingPage() {
                     onSelect={(studioId) =>
                       setBookingData((prev) => ({ ...prev, studioId }))
                     }
-                    onNext={handleNext}
-                    onBack={handleBack}
                   />
                 )}
                 {currentStep === "slot" && (
@@ -399,8 +392,6 @@ export default function BookingPage() {
                         endTime,
                       }))
                     }
-                    onNext={handleNext}
-                    onBack={handleBack}
                   />
                 )}
                 {currentStep === "customer" && (
@@ -409,15 +400,11 @@ export default function BookingPage() {
                     onChange={(data) =>
                       setBookingData((prev) => ({ ...prev, ...data }))
                     }
-                    onNext={handleNext}
-                    onBack={handleBack}
                   />
                 )}
                 {currentStep === "payment" && (
                   <PaymentSection
                     bookingData={bookingData}
-                    onSubmit={handleSubmit}
-                    onBack={handleBack}
                     isSubmitting={isSubmitting}
                     canProceed={canProceed()}
                   />
@@ -428,9 +415,18 @@ export default function BookingPage() {
 
           {/* Booking Summary - Sticky on Desktop, Bottom on Mobile */}
           {currentStep !== "success" && (
-            <div className="lg:col-span-1 order-first lg:order-last mb-3 lg:mb-0">
-              <div className="lg:sticky lg:top-8">
+            <div className="lg:col-span-3 order-first lg:order-last mb-3 lg:mb-0">
+              <div className="lg:sticky lg:top-8 flex flex-col gap-4">
                 <BookingSummary bookingData={bookingData} />
+                <FloatingNavigation
+                  currentStep={currentStep}
+                  stepIndex={stepIndex}
+                  canProceed={canProceed}
+                  isSubmitting={isSubmitting}
+                  onNext={handleNext}
+                  onBack={handleBack}
+                  onSubmit={handleSubmit}
+                />
               </div>
             </div>
           )}

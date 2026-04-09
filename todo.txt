@@ -1,0 +1,53 @@
+- making pilih studio ada gambarnya ok
+- ketika pilih waktu streaming bisa request
+- ada informasi penambahan biaya jika diatas jam operasinal
+
+
+# RINCIAN PAKET LIVE
+Device Iphone jam 9 pagi - 8 malem
+70rb/jam (pengambilan dibawah 70jam harga sama)
+
+Penagambilan diatas 70jam
+65.00
+
+Pengambilan diatas 140 jam
+60rb/jam
+
+pengambilan diatas 250 jam
+55.00/jam
+
+
+Device OBS
+Device OBS jam 9 pagi - 8 malem
+125rb/jam (pengambilan dibawah 70jam harga sama)
+
+Penagambilan diatas 70jam
+115.00
+
+Pengambilan diatas 140 jam
+105rb/jam
+
+pengambilan diatas 200 jam
+95.00/jam
+
+# OPSI
+Live Custom Jam
+Live Paket Jam
+
+# HARGA TAMBAHAN 
+Jam 07.00 - 21.00 = harga normal
+Jam 21.00 - 01.00 = 15rb/jam
+Jam 01.00 - 07.00 = 20rb/jam
+
+# DAFTAR JAM
+09.00 - 11.00
+11.00 - 13.00
+13.00 - 15.00
+14.00 - 16.00
+16.00 - 18.00
+18.00 - 20.00
+19.00 - 21.00
+
+# MINIMAL PEMBELIAN
+- Kalau beli custom Minimal 6 hari
+- Kalau beli paketan Minimal 5 hari

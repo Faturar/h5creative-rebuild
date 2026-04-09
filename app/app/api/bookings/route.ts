@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { z } from "zod"
 import { Prisma } from "@prisma/client"
 import { sendBookingConfirmationEmail } from "@/lib/email"
+import { calculateTotalPrice, validateMinimumDays } from "@/lib/pricing"
 
 type BookingStatus =
   | "PENDING"
@@ -30,6 +31,17 @@ const bookingSchema = z.object({
   businessName: z.string().min(2),
   productCategory: z.string().min(2),
   notes: z.string().optional(),
+  deviceType: z.string().optional(),
+  totalHours: z.number().optional(),
+  timeSlots: z
+    .array(
+      z.object({
+        startTime: z.string(),
+        endTime: z.string(),
+        date: z.string(),
+      }),
+    )
+    .optional(),
 })
 
 export async function GET(request: Request) {
@@ -71,7 +83,7 @@ export async function POST(request: Request) {
     // Generate booking code
     const bookingCode = `BK${Date.now().toString().slice(-8)}`
 
-    // Get package price
+    // Get package data
     const packageData = await prisma.package.findUnique({
       where: { id: validatedData.packageId },
     })
@@ -83,7 +95,45 @@ export async function POST(request: Request) {
       )
     }
 
-    const price = packageData.promoPrice || packageData.price
+    // Validate minimum purchase requirements
+    const bookingType = packageData.bookingType as "custom" | "package"
+    const numberOfDays = validatedData.totalHours
+      ? Math.ceil(validatedData.totalHours / 2)
+      : packageData.numberOfDays
+
+    const validation = validateMinimumDays(bookingType, numberOfDays)
+    if (!validation.valid) {
+      return NextResponse.json(
+        { success: false, error: validation.message },
+        { status: 400 },
+      )
+    }
+
+    // Calculate dynamic pricing if device type and total hours are provided
+    let price = Number(packageData.promoPrice || packageData.price)
+    let basePrice = price
+    let surcharge = 0
+    let finalPrice = price
+    let pricingTierId: string | null = null
+    let totalHours = validatedData.totalHours || packageData.totalHours
+
+    if (
+      validatedData.deviceType &&
+      validatedData.totalHours &&
+      validatedData.timeSlots
+    ) {
+      const pricingBreakdown = await calculateTotalPrice(
+        validatedData.deviceType,
+        validatedData.totalHours,
+        validatedData.timeSlots,
+      )
+
+      basePrice = pricingBreakdown.basePrice
+      surcharge = pricingBreakdown.totalSurcharge
+      finalPrice = pricingBreakdown.finalPrice
+      pricingTierId = pricingBreakdown.pricingTier?.id || null
+      totalHours = pricingBreakdown.totalHours
+    }
 
     // Create booking
     const booking = await prisma.$transaction(
@@ -110,7 +160,12 @@ export async function POST(request: Request) {
             customerEmail: validatedData.customerEmail,
             businessName: validatedData.businessName,
             productCategory: validatedData.productCategory,
-            price,
+            price: finalPrice,
+            totalHours,
+            basePrice,
+            surcharge,
+            finalPrice,
+            pricingTierId,
             notes: validatedData.notes,
           },
           include: {
@@ -131,10 +186,14 @@ export async function POST(request: Request) {
       bookingCode: booking.bookingCode,
       packageName: booking.package.name,
       studioName: booking.studio.name,
-      date: booking.date.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }),
+      date: booking.date.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
       startTime: booking.startTime,
       endTime: booking.endTime,
-      price: Number(booking.price),
+      price: Number(booking.finalPrice),
     })
 
     return NextResponse.json({ success: true, data: booking }, { status: 201 })

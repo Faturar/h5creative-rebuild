@@ -1,6 +1,21 @@
 import { Resend } from "resend"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Initialize Resend client lazily to avoid errors during module evaluation
+let resend: Resend | null = null
+
+function getResendClient(): Resend {
+  if (!resend) {
+    const apiKey = process.env.RESEND_API_KEY
+    if (!apiKey) {
+      console.warn(
+        "RESEND_API_KEY is not configured. Email functionality will be disabled.",
+      )
+      throw new Error("RESEND_API_KEY is not configured")
+    }
+    resend = new Resend(apiKey)
+  }
+  return resend
+}
 
 export interface BookingEmailData {
   to: string
@@ -16,7 +31,8 @@ export interface BookingEmailData {
 
 export async function sendBookingConfirmationEmail(data: BookingEmailData) {
   try {
-    const { error } = await resend.emails.send({
+    const client = getResendClient()
+    const { error } = await client.emails.send({
       from: "H5 Creative <onboarding@resend.dev>",
       to: data.to,
       subject: `Konfirmasi Booking - ${data.bookingCode}`,
@@ -129,7 +145,7 @@ export async function sendBookingConfirmationEmail(data: BookingEmailData) {
             </div>
             
             <div class="total-price">
-              Total: Rp ${data.price.toLocaleString('id-ID')}
+              Total: Rp ${data.price.toLocaleString("id-ID")}
             </div>
             
             <p>Silakan lengkapi pembayaran untuk mengkonfirmasi booking Anda. Anda akan menerima email notifikasi setelah pembayaran selesai.</p>
@@ -164,7 +180,8 @@ export async function sendBookingConfirmationEmail(data: BookingEmailData) {
 
 export async function sendPaymentConfirmationEmail(data: BookingEmailData) {
   try {
-    const { error } = await resend.emails.send({
+    const client = getResendClient()
+    const { error } = await client.emails.send({
       from: "H5 Creative <onboarding@resend.dev>",
       to: data.to,
       subject: `Pembayaran Berhasil - ${data.bookingCode}`,
@@ -277,7 +294,7 @@ export async function sendPaymentConfirmationEmail(data: BookingEmailData) {
               </div>
               <div class="detail-row">
                 <span class="label">Total:</span>
-                <span class="value">Rp ${data.price.toLocaleString('id-ID')}</span>
+                <span class="value">Rp ${data.price.toLocaleString("id-ID")}</span>
               </div>
             </div>
             

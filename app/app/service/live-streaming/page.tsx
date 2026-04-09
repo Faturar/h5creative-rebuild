@@ -1,22 +1,9 @@
 "use client"
- 
+
 import Image from "next/image"
 import Link from "next/link"
 import { motion, Easing } from "framer-motion"
-import {
-  ArrowRight,
-  CheckCircle2,
-  Users,
-  Star,
-  Video,
-  Play,
-} from "lucide-react"
-import brand1 from "@/public/assets/images/brand-logos/brand-1.svg"
-import brand2 from "@/public/assets/images/brand-logos/brand-2.svg"
-import brand3 from "@/public/assets/images/brand-logos/brand-3.svg"
-import brand4 from "@/public/assets/images/brand-logos/brand-4.svg"
-import brand5 from "@/public/assets/images/brand-logos/brand-5.svg"
-import brand6 from "@/public/assets/images/brand-logos/brand-6.svg"
+import { ArrowRight, Users, Video, Play } from "lucide-react"
 
 import Navbar from "@/app/components/home/Navbar"
 import FooterFix from "@/app/components/home/FooterFix"
@@ -119,17 +106,17 @@ export default function LiveStreamingPage() {
                 className="flex flex-col sm:flex-row gap-4 mt-8"
                 variants={itemVariants}
               >
-              <motion.a
-                href="https://wa.me/6285811718049"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-3 rounded-lg bg-white text-black font-bold px-8 py-4 shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                CHAT WHATSAPP (0858-1171-8049)
-                <ArrowRight className="w-5 h-5" />
-              </motion.a>
+                <motion.a
+                  href="https://wa.me/6285811718049"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-3 rounded-lg bg-white text-black font-bold px-8 py-4 shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  CHAT WHATSAPP (0858-1171-8049)
+                  <ArrowRight className="w-5 h-5" />
+                </motion.a>
               </motion.div>
             </motion.div>
 
@@ -247,180 +234,9 @@ export default function LiveStreamingPage() {
       <TestimonialsSection />
       <ReportingSection />
       <AdditionalNotesSection />
-      
+
       <LiveStreamSlider />
-      <WhyChooseUsSection />
-      
-      <motion.section
-        className="w-full py-[80px] md:py-[100px] px-4 md:px-8 lg:px-16 bg-white"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={containerVariants}
-      >
-        <div className="container max-w-7xl mx-auto">
-          <motion.div className="text-center mb-16" variants={itemVariants}>
-            <h2 className="font-bold text-[32px] leading-[1.1] md:text-[42px] uppercase text-gray-900 mb-4">
-              Contoh Live Streaming
-            </h2>
-          </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                type: "Fashion",
-                platform: "TikTok",
-                color: "from-blue-500/20 to-blue-600/20",
-              },
-              {
-                type: "Beauty",
-                platform: "Shopee",
-                color: "from-orange-500/20 to-orange-600/20",
-              },
-              {
-                type: "F&B",
-                platform: "Instagram",
-                color: "from-pink-500/20 to-pink-600/20",
-              },
-              {
-                type: "Tech",
-                platform: "Tokopedia",
-                color: "from-green-500/20 to-green-600/20",
-              },
-            ].map((video, index) => (
-              <motion.div
-                key={index}
-                className="flex flex-col items-center"
-                variants={itemVariants}
-                whileHover={{ scale: 1.05, y: -5 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div
-                  className={`relative w-[260px] h-[480px] bg-gradient-to-br ${video.color} rounded-[40px] overflow-hidden shadow-2xl border-[8px] border-gray-900`}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80">
-                    <div className="absolute top-6 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
-                      <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>{" "}
-                      LIVE
-                    </div>
-                    <div className="absolute top-6 right-4 bg-black/40 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
-                      <Users className="w-3 h-3" /> {1 + index}K
-                    </div>
-
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/40 cursor-pointer hover:bg-white/30 transition-colors">
-                        <Play
-                          className="w-6 h-6 text-white ml-1"
-                          fill="white"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10">
-                        <p className="text-white text-xs font-semibold mb-1">
-                          🔥 Flash Sale!
-                        </p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-white/80 text-[10px]">
-                            Stock Terbatas
-                          </span>
-                          <Video className="w-3 h-3 text-white/80" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <p className="mt-4 text-gray-900 font-bold text-center">
-                  {video.type}
-                </p>
-                <p className="text-gray-500 text-sm text-center">
-                  {video.platform}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div className="text-center mt-12" variants={itemVariants}>
-            <motion.a
-              href="https://wa.me/6285811718049"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-black font-semibold border-b-2 border-black pb-1 hover:text-gray-600 transition-colors"
-              whileHover={{ scale: 1.05 }}
-            >
-              LIHAT LEBIH BANYAK
-              <ArrowRight className="w-4 h-4" />
-            </motion.a>
-            </motion.div>
-         </div>
-       </motion.section>
-      
-      <motion.section
-        className="w-full py-16 px-4 bg-black"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={containerVariants}
-      >
-        <div className="max-w-5xl mx-auto text-center">
-          <motion.h2
-            className="text-2xl md:text-3xl font-bold text-white mb-4"
-            variants={itemVariants}
-          >
-            Siap Membantu Kebutuhan Live Streaming Brand Anda
-          </motion.h2>
-          
-          <motion.div
-            className="flex flex-wrap justify-center gap-6 mb-10"
-            variants={itemVariants}
-          >
-            <motion.a
-              href="https://h5creative.id"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-white font-semibold hover:text-gray-300 transition-colors"
-              variants={itemVariants}
-            >
-              Website: h5creative.id
-            </motion.a>
-            <motion.a
-              href="https://instagram.com/h5.creative"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-white font-semibold hover:text-gray-300 transition-colors"
-              variants={itemVariants}
-            >
-              Instagram: @h5.creative
-            </motion.a>
-            <div className="text-white text-sm">
-              WhatsApp: 0858-1171-8049
-            </div>
-          </motion.div>
-          
-          <motion.p
-            className="text-gray-400 mb-6 max-w-2xl mx-auto"
-            variants={itemVariants}
-          >
-            Gak ada kata TERLAMBAT buat naikkan penjualanmu.
-          </motion.p>
-          
-          <motion.a
-            href="https://wa.me/6285811718049"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-white text-black font-bold px-10 py-4 rounded-lg hover:bg-gray-200 transition-all duration-300"
-            variants={itemVariants}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Video className="w-5 h-5 text-green-500" />
-            CHAT VIA WHATSAPP SEKARANG
-            <ArrowRight className="w-5 h-5" />
-          </motion.a>
-        </div>
-      </motion.section>
-      
       <FAQSection />
 
       <FooterFix />
@@ -429,7 +245,5 @@ export default function LiveStreamingPage() {
 }
 
 function FAQSection() {
-  return (
-    <LiveStreamingFAQSection />
-  )
+  return <LiveStreamingFAQSection />
 }

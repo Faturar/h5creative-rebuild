@@ -18,15 +18,11 @@ interface Studio {
 interface StudioSelectionProps {
   selectedStudioId: string | null
   onSelect: (studioId: string) => void
-  onNext: () => void
-  onBack: () => void
 }
 
 export default function StudioSelection({
   selectedStudioId,
   onSelect,
-  onNext,
-  onBack,
 }: StudioSelectionProps) {
   const [studios, setStudios] = useState<Studio[]>([])
   const [loading, setLoading] = useState(true)
@@ -69,7 +65,9 @@ export default function StudioSelection({
   return (
     <div>
       <div className="text-center mb-6 md:mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Pilih Studio</h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+          Pilih Studio
+        </h2>
         <p className="text-sm md:text-base text-gray-400">
           Pilih studio profesional untuk live streaming Anda
         </p>
@@ -120,7 +118,9 @@ export default function StudioSelection({
                 </div>
               </div>
 
-              <p className="text-gray-300 text-xs md:text-sm mb-3 md:mb-4">{studio.description}</p>
+              <p className="text-gray-300 text-xs md:text-sm mb-3 md:mb-4">
+                {studio.description}
+              </p>
 
               <div className="flex items-center gap-2 text-xs md:text-sm text-gray-300 mb-3 md:mb-4">
                 <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#4920E5]" />
@@ -177,22 +177,6 @@ export default function StudioSelection({
             </motion.div>
           )
         })}
-      </div>
-
-      <div className="flex justify-between">
-        <button
-          onClick={onBack}
-          className="px-6 md:px-8 py-2.5 md:py-3 border-2 border-white/20 text-white rounded-[20px] font-semibold hover:bg-white/10 transition-all"
-        >
-          Kembali
-        </button>
-        <button
-          onClick={onNext}
-          disabled={!selectedStudioId}
-          className="px-6 md:px-8 py-2.5 md:py-3 bg-[#4920E5] text-white rounded-[20px] font-semibold hover:bg-[#5B2CE8] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
-        >
-          Lanjutkan
-        </button>
       </div>
     </div>
   )

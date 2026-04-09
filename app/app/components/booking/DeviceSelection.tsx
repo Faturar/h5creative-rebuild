@@ -8,30 +8,40 @@ type DeviceType = "iPhone" | "Camera+OBS"
 interface DeviceSelectionProps {
   selectedDevice: string | null
   onSelect: (deviceType: DeviceType) => void
-  onNext: () => void
 }
 
 export default function DeviceSelection({
   selectedDevice,
   onSelect,
-  onNext,
 }: DeviceSelectionProps) {
   const devices = [
     {
       type: "iPhone" as DeviceType,
       icon: Smartphone,
       title: "iPhone",
-      description: "Live streaming menggunakan iPhone untuk kualitas yang baik dan fleksibel",
+      description:
+        "Live streaming menggunakan iPhone untuk kualitas yang baik dan fleksibel",
       color: "from-[#4920E5] to-[#6B21A8]",
-      features: ["Fleksibel & portable", "Kualitas HD", "Mudah dioperasikan", "Cocok untuk indoor"],
+      features: [
+        "Fleksibel & portable",
+        "Kualitas HD",
+        "Mudah dioperasikan",
+        "Cocok untuk indoor",
+      ],
     },
     {
       type: "Camera+OBS" as DeviceType,
       icon: Video,
       title: "Camera + OBS",
-      description: "Live streaming profesional dengan kamera DSLR dan OBS untuk kualitas terbaik",
+      description:
+        "Live streaming profesional dengan kamera DSLR dan OBS untuk kualitas terbaik",
       color: "from-[#FF6B35] to-[#E85D04]",
-      features: ["Kualitas 4K/Full HD", "Multi-camera setup", "Advanced controls", "Cocok untuk professional production"],
+      features: [
+        "Kualitas 4K/Full HD",
+        "Multi-camera setup",
+        "Advanced controls",
+        "Cocok untuk professional production",
+      ],
     },
   ]
 
@@ -46,7 +56,7 @@ export default function DeviceSelection({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-6 mb-6 md:mb-8">
         {devices.map((device, index) => {
           const isSelected = selectedDevice === device.type
           const Icon = device.icon
@@ -114,16 +124,6 @@ export default function DeviceSelection({
             </motion.div>
           )
         })}
-      </div>
-
-      <div className="flex justify-end">
-        <button
-          onClick={onNext}
-          disabled={!selectedDevice}
-          className="px-6 md:px-8 py-2.5 md:py-3 bg-[#4920E5] text-white rounded-[20px] font-semibold hover:bg-[#5B2CE8] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
-        >
-          Lanjutkan
-        </button>
       </div>
     </div>
   )

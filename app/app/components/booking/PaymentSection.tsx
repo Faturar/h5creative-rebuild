@@ -29,8 +29,6 @@ interface BookingData {
 
 interface PaymentSectionProps {
   bookingData: BookingData
-  onSubmit: () => void
-  onBack: () => void
   isSubmitting: boolean
   canProceed: boolean
 }
@@ -44,8 +42,6 @@ interface Package {
 
 export default function PaymentSection({
   bookingData,
-  onSubmit,
-  onBack,
   isSubmitting,
   canProceed,
 }: PaymentSectionProps) {
@@ -296,40 +292,6 @@ export default function PaymentSection({
               <li>Slot akan dibatalkan otomatis jika pembayaran gagal</li>
             </ul>
           </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div
-          className={`flex justify-between pt-6 border-t ${isDark ? "border-white/10" : "border-gray-200"}`}
-        >
-          <button
-            onClick={onBack}
-            disabled={isSubmitting}
-            className={`px-8 py-3 border-2 rounded-lg font-semibold hover:bg-white/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-              isDark
-                ? "border-white/20 text-white"
-                : "border-gray-300 text-gray-700"
-            }`}
-          >
-            Kembali
-          </button>
-          <button
-            onClick={onSubmit}
-            disabled={!canProceed || isSubmitting || loading}
-            className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center gap-2"
-          >
-            {isSubmitting ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Memproses...</span>
-              </>
-            ) : (
-              <>
-                <CreditCard className="w-5 h-5" />
-                <span>Bayar Sekarang</span>
-              </>
-            )}
-          </button>
         </div>
       </div>
     </div>

@@ -10,7 +10,10 @@ import {
   ChevronRight,
   AlertCircle,
   Plus,
+  Info,
+  DollarSign,
 } from "lucide-react"
+import { getSurchargeInfo } from "@/lib/pricing"
 import {
   format,
   addDays,
@@ -45,42 +48,27 @@ interface TimeSlotSelectionProps {
     startTime: string,
     endTime: string,
   ) => void
-  onNext: () => void
-  onBack: () => void
   customerName?: string
   customerEmail?: string
   customerPhone?: string
-}
-
-interface TimeSlotSelectionProps {
-  studioId: string | null
-  selectedSlotId: string | null
-  onSelect: (
-    slotId: string,
-    date: string,
-    startTime: string,
-    endTime: string,
-  ) => void
-  onNext: () => void
-  onBack: () => void
-  customerName?: string
-  customerEmail?: string
-  customerPhone?: string
+  deviceType?: string | null
 }
 
 export default function TimeSlotSelection({
   studioId,
   selectedSlotId,
   onSelect,
-  onNext,
-  onBack,
   customerName = "",
   customerEmail = "",
   customerPhone = "",
+  deviceType,
 }: TimeSlotSelectionProps) {
   const [slots, setSlots] = useState<StudioSlot[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [slotSurcharges, setSlotSurcharges] = useState<
+    Map<string, { hasSurcharge: boolean; amount: number; description: string }>
+  >(new Map())
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [selectedSlot, setSelectedSlot] = useState<StudioSlot | null>(null)
   const [isCustomSlotModalOpen, setIsCustomSlotModalOpen] = useState(false)
@@ -104,9 +92,16 @@ export default function TimeSlotSelection({
   useEffect(() => {
     if (studioId) {
       fetchSlots()
-      setCustomSlotData(prev => ({ ...prev, studioId }))
+      setCustomSlotData((prev) => ({ ...prev, studioId }))
     }
   }, [studioId, selectedDate])
+
+  useEffect(() => {
+    // Fetch surcharge information for all slots
+    if (slots.length > 0) {
+      fetchSlotSurcharges()
+    }
+  }, [slots])
 
   useEffect(() => {
     if (isCustomSlotModalOpen) {
@@ -162,6 +157,57 @@ export default function TimeSlotSelection({
     }
   }
 
+  const fetchSlotSurcharges = async () => {
+    const surchargeMap = new Map<
+      string,
+      { hasSurcharge: boolean; amount: number; description: string }
+    >()
+
+    for (const slot of slots) {
+      try {
+        const surchargeInfo = await getSurchargeInfo(
+          slot.startTime,
+          slot.endTime,
+        )
+        surchargeMap.set(slot.id, surchargeInfo)
+      } catch (error) {
+        console.error("Error fetching surcharge for slot:", slot.id, error)
+        surchargeMap.set(slot.id, {
+          hasSurcharge: false,
+          amount: 0,
+          description: "Normal operational hours",
+        })
+      }
+    }
+
+    setSlotSurcharges(surchargeMap)
+  }
+
+  const getSlotBorderColor = (slotId: string): string => {
+    const surchargeInfo = slotSurcharges.get(slotId)
+    if (!surchargeInfo?.hasSurcharge) return "border-white/10"
+
+    if (surchargeInfo.amount >= 15000) return "border-orange-500/50"
+    if (surchargeInfo.amount >= 20000) return "border-red-500/50"
+    return "border-yellow-500/50"
+  }
+
+  const getSlotBackgroundColor = (
+    slotId: string,
+    isSelected: boolean,
+    isAvailable: boolean,
+  ): string => {
+    if (!isAvailable) return "bg-white/5"
+    if (isSelected) return "bg-[#4920E5]/20"
+
+    const surchargeInfo = slotSurcharges.get(slotId)
+    if (!surchargeInfo?.hasSurcharge) return "bg-white/5"
+
+    if (surchargeInfo.amount >= 20000) return "bg-red-500/10"
+    if (surchargeInfo.amount >= 15000) return "bg-orange-500/10"
+    return "bg-yellow-500/10"
+  }
+
   const handleDateChange = (days: number) => {
     const newDate =
       days > 0
@@ -191,13 +237,21 @@ export default function TimeSlotSelection({
       errors.push("Studio is required")
     }
 
-    if (!customSlotData.customerName || customSlotData.customerName.trim() === "") {
+    if (
+      !customSlotData.customerName ||
+      customSlotData.customerName.trim() === ""
+    ) {
       errors.push("Your name is required")
     }
 
-    if (!customSlotData.customerEmail || customSlotData.customerEmail.trim() === "") {
+    if (
+      !customSlotData.customerEmail ||
+      customSlotData.customerEmail.trim() === ""
+    ) {
       errors.push("Email is required")
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customSlotData.customerEmail)) {
+    } else if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customSlotData.customerEmail)
+    ) {
       errors.push("Please enter a valid email address")
     }
 
@@ -223,8 +277,12 @@ export default function TimeSlotSelection({
     }
 
     if (customSlotData.startTime && customSlotData.endTime) {
-      const [startHours, startMinutes] = customSlotData.startTime.split(":").map(Number)
-      const [endHours, endMinutes] = customSlotData.endTime.split(":").map(Number)
+      const [startHours, startMinutes] = customSlotData.startTime
+        .split(":")
+        .map(Number)
+      const [endHours, endMinutes] = customSlotData.endTime
+        .split(":")
+        .map(Number)
 
       const startMinutesTotal = startHours * 60 + startMinutes
       const endMinutesTotal = endHours * 60 + endMinutes
@@ -269,7 +327,9 @@ export default function TimeSlotSelection({
           endTime: customSlotData.endTime,
           customerName: customSlotData.customerName.trim(),
           customerEmail: customSlotData.customerEmail.trim(),
-          customerPhone: customSlotData.customerPhone ? customSlotData.customerPhone.trim() : "",
+          customerPhone: customSlotData.customerPhone
+            ? customSlotData.customerPhone.trim()
+            : "",
           notes: customSlotData.notes,
         }),
       })
@@ -291,11 +351,15 @@ export default function TimeSlotSelection({
         setValidationErrors([])
         setTouchedFields(new Set())
       } else {
-        setValidationErrors([result.error || "Failed to submit custom slot request"])
+        setValidationErrors([
+          result.error || "Failed to submit custom slot request",
+        ])
       }
     } catch (err) {
       console.error("Failed to submit custom slot request:", err)
-      setValidationErrors(["Failed to submit custom slot request. Please try again."])
+      setValidationErrors([
+        "Failed to submit custom slot request. Please try again.",
+      ])
     } finally {
       setIsSubmitting(false)
     }
@@ -439,6 +503,7 @@ export default function TimeSlotSelection({
             {slots.map((slot) => {
               const isSelected = selectedSlotId === slot.id
               const isAvailable = !slot.isBooked
+              const surchargeInfo = slotSurcharges.get(slot.id)
 
               return (
                 <motion.button
@@ -452,12 +517,19 @@ export default function TimeSlotSelection({
                       ? "border-[#4920E5] bg-[#4920E5]/20 shadow-lg scale-105"
                       : !isAvailable
                         ? "border-white/10 bg-white/5 cursor-not-allowed opacity-50"
-                        : "border-white/10 hover:border-[#4920E5]/50 hover:shadow-md hover:bg-white/10"
+                        : `${getSlotBorderColor(slot.id)} hover:border-[#4920E5]/50 hover:shadow-md ${getSlotBackgroundColor(slot.id, isSelected, isAvailable)}`
                   }`}
                 >
                   {isSelected && (
                     <div className="absolute top-2 right-2 w-6 h-6 bg-[#4920E5] rounded-full flex items-center justify-center">
                       <Check className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+
+                  {surchargeInfo?.hasSurcharge && !isSelected && (
+                    <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                      <DollarSign className="w-3 h-3" />
+                      +Rp {surchargeInfo.amount.toLocaleString("id-ID")}
                     </div>
                   )}
 
@@ -477,6 +549,12 @@ export default function TimeSlotSelection({
                   >
                     {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
                   </div>
+
+                  {surchargeInfo?.hasSurcharge && (
+                    <div className="mt-2 text-xs text-orange-400 font-medium">
+                      {surchargeInfo.description}
+                    </div>
+                  )}
 
                   {!isAvailable && (
                     <div className="mt-2 text-xs text-red-400 font-medium">
@@ -508,6 +586,32 @@ export default function TimeSlotSelection({
         </div>
       )}
 
+      {/* Surcharge Info Box */}
+      <div className="mb-4 md:mb-6 p-3 md:p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl md:rounded-2xl">
+        <div className="flex items-start gap-2 md:gap-3">
+          <Info className="w-4 h-4 md:w-5 md:h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-xs md:text-sm font-medium text-yellow-300 mb-2">
+              Informasi Biaya Tambahan
+            </p>
+            <ul className="text-xs text-yellow-400 space-y-1">
+              <li className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                <span>07:00 - 21:00: Harga normal</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+                <span>21:00 - 01:00: +Rp 15.000/jam</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                <span>01:00 - 07:00: +Rp 20.000/jam</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       {/* No Slots Available - Request Custom Slot */}
       {availableSlots.length === 0 && !loading && (
         <div className="mb-6">
@@ -518,7 +622,10 @@ export default function TimeSlotSelection({
             </p>
             <button
               onClick={() => {
-                setCustomSlotData(prev => ({ ...prev, studioId: studioId || "" }))
+                setCustomSlotData((prev) => ({
+                  ...prev,
+                  studioId: studioId || "",
+                }))
                 setIsCustomSlotModalOpen(true)
               }}
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#4920E5] text-white rounded-[20px] font-semibold hover:bg-[#5B2CE8] transition-all shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
@@ -548,23 +655,6 @@ export default function TimeSlotSelection({
           </div>
         </motion.div>
       )}
-
-      <div className="flex justify-between">
-        <button
-          onClick={onBack}
-          disabled={loading}
-          className="px-6 md:px-8 py-2.5 md:py-3 border-2 border-white/20 text-white rounded-[20px] font-semibold hover:bg-white/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Kembali
-        </button>
-        <button
-          onClick={onNext}
-          disabled={!selectedSlotId || loading}
-          className="px-6 md:px-8 py-2.5 md:py-3 bg-[#4920E5] text-white rounded-[20px] font-semibold hover:bg-[#5B2CE8] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
-        >
-          Lanjutkan
-        </button>
-      </div>
 
       {/* Custom Slot Request Modal */}
       {isCustomSlotModalOpen && (
@@ -607,7 +697,10 @@ export default function TimeSlotSelection({
                 <select
                   value={customSlotData.studioId}
                   onChange={(e) =>
-                    setCustomSlotData({ ...customSlotData, studioId: e.target.value })
+                    setCustomSlotData({
+                      ...customSlotData,
+                      studioId: e.target.value,
+                    })
                   }
                   onBlur={() => handleFieldBlur("studioId")}
                   disabled={loadingStudios}
@@ -618,11 +711,11 @@ export default function TimeSlotSelection({
                   } bg-white/5 text-white`}
                   style={{
                     backgroundImage: loadingStudios
-                      ? 'none'
+                      ? "none"
                       : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'right 0.75rem center',
-                    backgroundSize: '1.5em 1.5em',
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "right 0.75rem center",
+                    backgroundSize: "1.5em 1.5em",
                   }}
                 >
                   {loadingStudios ? (
@@ -652,7 +745,10 @@ export default function TimeSlotSelection({
                   type="text"
                   value={customSlotData.customerName}
                   onChange={(e) =>
-                    setCustomSlotData({ ...customSlotData, customerName: e.target.value })
+                    setCustomSlotData({
+                      ...customSlotData,
+                      customerName: e.target.value,
+                    })
                   }
                   onBlur={() => handleFieldBlur("customerName")}
                   className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border focus:ring-2 focus:ring-[#4920E5] focus:outline-none text-white ${
@@ -673,7 +769,10 @@ export default function TimeSlotSelection({
                   type="email"
                   value={customSlotData.customerEmail}
                   onChange={(e) =>
-                    setCustomSlotData({ ...customSlotData, customerEmail: e.target.value })
+                    setCustomSlotData({
+                      ...customSlotData,
+                      customerEmail: e.target.value,
+                    })
                   }
                   onBlur={() => handleFieldBlur("customerEmail")}
                   className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border focus:ring-2 focus:ring-[#4920E5] focus:outline-none text-white ${
@@ -697,7 +796,10 @@ export default function TimeSlotSelection({
                   type="tel"
                   value={customSlotData.customerPhone}
                   onChange={(e) =>
-                    setCustomSlotData({ ...customSlotData, customerPhone: e.target.value })
+                    setCustomSlotData({
+                      ...customSlotData,
+                      customerPhone: e.target.value,
+                    })
                   }
                   className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-[#4920E5] focus:outline-none"
                   placeholder="+62 812 3456 7890"
@@ -712,7 +814,10 @@ export default function TimeSlotSelection({
                   type="date"
                   value={customSlotData.date}
                   onChange={(e) => {
-                    setCustomSlotData({ ...customSlotData, date: e.target.value })
+                    setCustomSlotData({
+                      ...customSlotData,
+                      date: e.target.value,
+                    })
                     handleFieldBlur("date")
                   }}
                   min={format(new Date(), "yyyy-MM-dd")}
@@ -733,11 +838,15 @@ export default function TimeSlotSelection({
                     type="time"
                     value={customSlotData.startTime}
                     onChange={(e) =>
-                      setCustomSlotData({ ...customSlotData, startTime: e.target.value })
+                      setCustomSlotData({
+                        ...customSlotData,
+                        startTime: e.target.value,
+                      })
                     }
                     onBlur={() => handleFieldBlur("startTime")}
                     className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border focus:ring-2 focus:ring-[#4920E5] focus:outline-none text-white ${
-                      touchedFields.has("startTime") && !customSlotData.startTime
+                      touchedFields.has("startTime") &&
+                      !customSlotData.startTime
                         ? "border-red-500"
                         : "border-white/10"
                     }`}
@@ -751,7 +860,10 @@ export default function TimeSlotSelection({
                     type="time"
                     value={customSlotData.endTime}
                     onChange={(e) =>
-                      setCustomSlotData({ ...customSlotData, endTime: e.target.value })
+                      setCustomSlotData({
+                        ...customSlotData,
+                        endTime: e.target.value,
+                      })
                     }
                     onBlur={() => handleFieldBlur("endTime")}
                     className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border focus:ring-2 focus:ring-[#4920E5] focus:outline-none text-white ${
@@ -768,12 +880,16 @@ export default function TimeSlotSelection({
                   <Clock className="w-3 h-3 inline mr-1" />
                   Duration:{" "}
                   {(() => {
-                    const [startHours, startMinutes] =
-                      customSlotData.startTime.split(":").map(Number)
-                    const [endHours, endMinutes] =
-                      customSlotData.endTime.split(":").map(Number)
+                    const [startHours, startMinutes] = customSlotData.startTime
+                      .split(":")
+                      .map(Number)
+                    const [endHours, endMinutes] = customSlotData.endTime
+                      .split(":")
+                      .map(Number)
                     const durationMinutes =
-                      endHours * 60 + endMinutes - (startHours * 60 + startMinutes)
+                      endHours * 60 +
+                      endMinutes -
+                      (startHours * 60 + startMinutes)
                     const hours = Math.floor(durationMinutes / 60)
                     const minutes = durationMinutes % 60
                     return `${hours}h ${minutes}m`
@@ -788,7 +904,10 @@ export default function TimeSlotSelection({
                 <textarea
                   value={customSlotData.notes}
                   onChange={(e) =>
-                    setCustomSlotData({ ...customSlotData, notes: e.target.value })
+                    setCustomSlotData({
+                      ...customSlotData,
+                      notes: e.target.value,
+                    })
                   }
                   rows={3}
                   className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-[#4920E5] focus:outline-none resize-none"

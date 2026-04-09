@@ -19,6 +19,7 @@ import {
   Search,
   Calendar,
   Clock,
+  Building2,
 } from "lucide-react"
 
 interface AdminLayoutProps {
@@ -30,6 +31,7 @@ const navigation = [
   { name: "Packages", href: "/admin/packages", icon: Package },
   { name: "Orders", href: "/admin/orders", icon: ShoppingCart },
   { name: "Customers", href: "/admin/customers", icon: Users },
+  { name: "Studios", href: "/admin/studios", icon: Building2 },
   { name: "Slots", href: "/admin/slots", icon: Calendar },
   { name: "Slot Requests", href: "/admin/slot-requests", icon: Clock },
   { name: "Settings", href: "/admin/settings", icon: Settings },

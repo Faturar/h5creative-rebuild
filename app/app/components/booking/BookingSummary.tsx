@@ -10,7 +10,12 @@ import {
   Clock,
   CreditCard,
   Video,
+  DollarSign,
+  Info,
+  TrendingDown,
+  AlertCircle,
 } from "lucide-react"
+import { calculateTotalPrice, TimeSlot } from "@/lib/pricing"
 
 interface BookingData {
   deviceType: string | null
@@ -29,6 +34,8 @@ interface BookingData {
   notes: string
   bookingId: string | null
   bookingCode: string | null
+  totalHours?: number
+  timeSlots?: TimeSlot[]
 }
 
 interface Package {
@@ -36,6 +43,9 @@ interface Package {
   name: string
   price: number
   promoPrice: number | null
+  totalHours: number
+  numberOfDays: number
+  bookingType: string
 }
 
 interface Host {
@@ -58,11 +68,22 @@ export default function BookingSummary({
   const [packageData, setPackageData] = useState<Package | null>(null)
   const [hostData, setHostData] = useState<Host | null>(null)
   const [studioData, setStudioData] = useState<Studio | null>(null)
+  const [pricingBreakdown, setPricingBreakdown] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchData()
   }, [bookingData.packageId, bookingData.hostId, bookingData.studioId])
+
+  useEffect(() => {
+    if (
+      bookingData.deviceType &&
+      bookingData.totalHours &&
+      bookingData.timeSlots
+    ) {
+      calculatePricing()
+    }
+  }, [bookingData.deviceType, bookingData.totalHours, bookingData.timeSlots])
 
   const fetchData = async () => {
     if (
@@ -114,6 +135,21 @@ export default function BookingSummary({
     }
   }
 
+  const calculatePricing = async () => {
+    if (!bookingData.deviceType || !bookingData.totalHours) return
+
+    try {
+      const breakdown = await calculateTotalPrice(
+        bookingData.deviceType,
+        bookingData.totalHours,
+        bookingData.timeSlots || [],
+      )
+      setPricingBreakdown(breakdown)
+    } catch (error) {
+      console.error("Error calculating pricing:", error)
+    }
+  }
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -122,9 +158,9 @@ export default function BookingSummary({
     }).format(price)
   }
 
-  const totalPrice = packageData
-    ? packageData.promoPrice || packageData.price
-    : 0
+  const totalPrice =
+    pricingBreakdown?.finalPrice ||
+    (packageData ? packageData.promoPrice || packageData.price : 0)
 
   const hasData =
     bookingData.deviceType ||
@@ -141,7 +177,7 @@ export default function BookingSummary({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/5 backdrop-blur-sm rounded-[30px] p-4 md:p-6 border border-white/10"
+      className="hidden 2xl:block bg-white/5 backdrop-blur-sm rounded-[30px] p-4 md:p-6 border border-white/10"
     >
       <h3 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-6">
         Ringkasan
@@ -226,17 +262,118 @@ export default function BookingSummary({
           </div>
         )}
         {totalPrice > 0 && (
-          <div className="pt-3 md:pt-4 border-t border-white/10">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 md:gap-2">
-                <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-[#4920E5]" />
-                <span className="font-semibold text-white">Total</span>
+          <>
+            {/* Pricing Breakdown */}
+            {pricingBreakdown && (
+              <div className="pt-3 md:pt-4 border-t border-white/10">
+                <div className="flex items-center gap-2 mb-3">
+                  <DollarSign className="w-4 h-4 text-[#4920E5]" />
+                  <span className="font-semibold text-white">
+                    Rincian Harga
+                  </span>
+                </div>
+
+                {/* Base Price */}
+                <div className="space-y-2 mb-4">
+                  <div className="flex justify-between text-sm text-gray-300">
+                    <span>Harga dasar:</span>
+                    <span className="text-white font-medium">
+                      {formatPrice(pricingBreakdown.basePrice)}
+                    </span>
+                  </div>
+
+                  {/* Pricing Tier Info */}
+                  {pricingBreakdown.pricingTier && (
+                    <div className="flex justify-between text-sm text-gray-300">
+                      <span className="flex items-center gap-1">
+                        <TrendingDown className="w-3 h-3 text-[#12BB74]" />
+                        Harga per jam:
+                      </span>
+                      <span className="text-[#12BB74] font-medium">
+                        {formatPrice(pricingBreakdown.pricingTier.pricePerHour)}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Total Hours */}
+                  <div className="flex justify-between text-sm text-gray-300">
+                    <span>Total jam:</span>
+                    <span className="text-white font-medium">
+                      {pricingBreakdown.totalHours} jam
+                    </span>
+                  </div>
+
+                  {/* Surcharges */}
+                  {pricingBreakdown.surcharges &&
+                    pricingBreakdown.surcharges.length > 0 && (
+                      <div className="pt-2 border-t border-white/10">
+                        <div className="flex items-center gap-1 mb-2">
+                          <AlertCircle className="w-3 h-3 text-orange-400" />
+                          <span className="text-xs font-medium text-orange-400">
+                            Biaya tambahan waktu
+                          </span>
+                        </div>
+                        {pricingBreakdown.surcharges.map(
+                          (surcharge: any, index: number) => (
+                            <div
+                              key={index}
+                              className="flex justify-between text-xs text-gray-400 mb-1"
+                            >
+                              <span>{surcharge.timeSlot}</span>
+                              <span className="text-orange-400">
+                                +{formatPrice(surcharge.amount)}
+                              </span>
+                            </div>
+                          ),
+                        )}
+                        <div className="flex justify-between text-sm text-orange-400 mt-2">
+                          <span>Total biaya tambahan:</span>
+                          <span className="font-medium">
+                            +{formatPrice(pricingBreakdown.totalSurcharge)}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                </div>
+
+                {/* Savings Info */}
+                {pricingBreakdown.pricingTier &&
+                  pricingBreakdown.pricingTier.minHours > 0 && (
+                    <div className="p-3 bg-[#12BB74]/10 border border-[#12BB74]/30 rounded-xl mb-3">
+                      <div className="flex items-start gap-2">
+                        <TrendingDown className="w-4 h-4 text-[#12BB74] flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs font-medium text-[#12BB74] mb-1">
+                            Hemat dengan tier pricing
+                          </p>
+                          <p className="text-xs text-[#12BB74]/80">
+                            Anda mendapatkan harga{" "}
+                            {formatPrice(
+                              pricingBreakdown.pricingTier.pricePerHour,
+                            )}
+                            /jam untuk pembelian {pricingBreakdown.totalHours}{" "}
+                            jam
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
               </div>
-              <span className="text-xl md:text-2xl font-bold text-[#4920E5]">
-                {formatPrice(totalPrice)}
-              </span>
+            )}
+
+            {/* Total */}
+            <div className="pt-3 md:pt-4 border-t border-white/10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-[#4920E5]" />
+                  <span className="font-semibold text-white">Total</span>
+                </div>
+                <span className="text-xl md:text-2xl font-bold text-[#4920E5]">
+                  {formatPrice(totalPrice)}
+                </span>
+              </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </motion.div>
