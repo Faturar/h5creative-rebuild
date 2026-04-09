@@ -53,7 +53,8 @@ async function main() {
     }
 
     // Use a transaction for atomic operations
-    await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    await prisma.$transaction(
+      async (tx: Prisma.TransactionClient) => {
       console.log("\n📦 Creating packages...")
 
       // Create iPhone Packages
@@ -477,6 +478,10 @@ async function main() {
       console.log(`✅ Created admin user`)
       console.log(`   Email: admin@gmail.com`)
       console.log(`   Password: admin123`)
+    },
+    {
+      maxWait: 10000,
+      timeout: 60000
     })
 
     // Verify data was created

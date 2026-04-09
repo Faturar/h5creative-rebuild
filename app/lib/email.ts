@@ -3,14 +3,14 @@ import { Resend } from "resend"
 // Initialize Resend client lazily to avoid errors during module evaluation
 let resend: Resend | null = null
 
-function getResendClient(): Resend {
+function getResendClient(): Resend | null {
   if (!resend) {
     const apiKey = process.env.RESEND_API_KEY
-    if (!apiKey) {
+    if (!apiKey || apiKey === "re_xxxxxxxxxx") {
       console.warn(
-        "RESEND_API_KEY is not configured. Email functionality will be disabled.",
+        "RESEND_API_KEY is not configured or is using placeholder value. Email functionality will be disabled.",
       )
-      throw new Error("RESEND_API_KEY is not configured")
+      return null
     }
     resend = new Resend(apiKey)
   }
