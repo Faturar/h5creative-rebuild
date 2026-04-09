@@ -1,0 +1,71 @@
+<svg width="1200" height="675" viewBox="0 0 1200 675" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="675" fill="#1A1A2E"/>
+  
+  <!-- Dashboard Header -->
+  <rect x="0" y="0" width="1200" height="80" fill="#16213E"/>
+  <text x="40" y="48" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF">Live Streaming Dashboard</text>
+  
+  <!-- Sidebar -->
+  <rect x="0" y="80" width="240" height="595" fill="#0F3460"/>
+  <rect x="20" y="120" width="200" height="40" rx="8" fill="#E94560" fill-opacity="0.3"/>
+  <rect x="20" y="180" width="200" height="40" rx="8" fill="#FFFFFF" fill-opacity="0.1"/>
+  <rect x="20" y="240" width="200" height="40" rx="8" fill="#FFFFFF" fill-opacity="0.1"/>
+  <rect x="20" y="300" width="200" height="40" rx="8" fill="#FFFFFF" fill-opacity="0.1"/>
+  
+  <!-- Main Content Area -->
+  <rect x="240" y="80" width="960" height="595" fill="#1A1A2E"/>
+  
+  <!-- Stats Cards -->
+  <rect x="280" y="120" width="200" height="120" rx="12" fill="#16213E"/>
+  <text x="300" y="160" font-family="Arial, sans-serif" font-size="14" fill="#A0A0A0">Total Viewers</text>
+  <text x="300" y="200" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#E94560">24.5K</text>
+  
+  <rect x="520" y="120" width="200" height="120" rx="12" fill="#16213E"/>
+  <text x="540" y="160" font-family="Arial, sans-serif" font-size="14" fill="#A0A0A0">Engagement Rate</text>
+  <text x="540" y="200" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#E94560">12.3%</text>
+  
+  <rect x="760" y="120" width="200" height="120" rx="12" fill="#16213E"/>
+  <text x="780" y="160" font-family="Arial, sans-serif" font-size="14" fill="#A0A0A0">GMV</text>
+  <text x="780" y="200" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#E94560">Rp 45.2M</text>
+  
+  <rect x="1000" y="120" width="200" height="120" rx="12" fill="#16213E"/>
+  <text x="1020" y="160" font-family="Arial, sans-serif" font-size="14" fill="#A0A0A0">Conversion</text>
+  <text x="1020" y="200" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#E94560">8.7%</text>
+  
+  <!-- Chart Area -->
+  <rect x="280" y="280" width="680" height="300" rx="12" fill="#16213E"/>
+  <text x="300" y="320" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF">Performance Trend</text>
+  
+  <!-- Chart Lines (simplified) -->
+  <polyline points="300,500 400,450 500,480 600,420 700,440 800,380 900,410" stroke="#E94560" stroke-width="3" fill="none"/>
+  
+  <!-- Product Performance Table -->
+  <rect x="280" y="620" width="680" height="200" rx="12" fill="#16213E"/>
+  <text x="300" y="660" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF">Top Products</text>
+  <rect x="300" y="690" width="200" height="30" fill="#E94560" fill-opacity="0.3" rx="4"/>
+  <text x="310" y="710" font-family="Arial, sans-serif" font-size="12" fill="#FFFFFF">Product A</text>
+  <text x="480" y="710" font-family="Arial, sans-serif" font-size="12" fill="#E94560">Rp 12.5M</text>
+  
+  <rect x="300" y="730" width="200" height="30" fill="#FFFFFF" fill-opacity="0.1" rx="4"/>
+  <text x="310" y="750" font-family="Arial, sans-serif" font-size="12" fill="#FFFFFF">Product B</text>
+  <text x="480" y="750" font-family="Arial, sans-serif" font-size="12" fill="#E94560">Rp 9.8M</text>
+  
+  <rect x="300" y="770" width="200" height="30" fill="#FFFFFF" fill-opacity="0.1" rx="4"/>
+  <text x="310" y="790" font-family="Arial, sans-serif" font-size="12" fill="#FFFFFF">Product C</text>
+  <text x="480" y="790" font-family="Arial, sans-serif" font-size="12" fill="#E94560">Rp 8.2M</text>
+  
+  <!-- Live Preview -->
+  <rect x="1000" y="280" width="200" height="300" rx="12" fill="#16213E"/>
+  <text x="1020" y="320" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF">Live Preview</text>
+  <rect x="1020" y="340" width="160" height="90" rx="8" fill="#0F3460"/>
+  <circle cx="1100" cy="385" r="20" fill="#E94560"/>
+  <text x="1092" y="390" font-family="Arial, sans-serif" font-size="10" fill="#FFFFFF">LIVE</text>
+  
+  <!-- Live Stats -->
+  <text x="1020" y="460" font-family="Arial, sans-serif" font-size="12" fill="#A0A0A0">Current Viewers</text>
+  <text x="1020" y="490" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF">2,456</text>
+  
+  <text x="1020" y="520" font-family="Arial, sans-serif" font-size="12" fill="#A0A0A0">Peak Viewers</text>
+  <text x="1020" y="550" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF">3,210</text>
+</svg>

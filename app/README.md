@@ -1,5 +1,83 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Docker Database Setup
+
+### Using Docker for MySQL Database
+
+This project includes a Docker Compose configuration for running MySQL database locally.
+
+#### Start MySQL Database with Docker
+
+```bash
+# Start the database and phpMyAdmin
+docker-compose up -d
+
+# View logs
+docker-compose logs -f db
+
+# Stop the database
+docker-compose down
+```
+
+#### Database Connection
+
+- **MySQL Port:** 3307 (mapped from container 3306)
+- **phpMyAdmin:** http://localhost:8080
+- **Database Name:** live_booking
+- **Root Password:** root
+- **Database URL:** `mysql://root:root@localhost:3307/live_booking`
+
+The `.env` file is already configured to use the Docker MySQL setup.
+
+#### Reset Database
+
+```bash
+# Stop and remove containers and volumes
+docker-compose down -v
+
+# Start fresh
+docker-compose up -d
+```
+
+#### Database Management Scripts
+
+For easy database management, use the provided scripts:
+
+**Windows:**
+```bash
+db-manager.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x db-manager.sh
+./db-manager.sh
+```
+
+The script provides an interactive menu for:
+- Starting/stopping database services
+- Importing sample data
+- Running migrations
+- Opening phpMyAdmin and Prisma Studio
+- Database backup and restore
+- Viewing logs and status
+
+#### Sample Data
+
+The Docker setup includes sample data that will be automatically imported when you first start the database:
+
+- **Packages:** 4 different streaming packages
+- **Hosts:** 4 professional hosts
+- **Studios:** 3 studio locations
+- **Bookings:** 5 sample bookings
+- **Payments:** 5 sample payment transactions
+
+To manually import the sample data:
+
+```bash
+docker-compose exec -T db mysql -uroot -proot live_booking < import-data.sql
+```
+
 ## Getting Started
 
 First, run the development server:

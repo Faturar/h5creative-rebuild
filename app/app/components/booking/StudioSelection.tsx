@@ -1,0 +1,183 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
+import { Check, MapPin, Users, Wifi, Camera, Mic } from "lucide-react"
+
+interface Studio {
+  id: string
+  name: string
+  location: string
+  description: string
+  photoUrl: string | null
+  capacity: number
+  equipment: string
+  amenities: string | null
+}
+
+interface StudioSelectionProps {
+  selectedStudioId: string | null
+  onSelect: (studioId: string) => void
+}
+
+export default function StudioSelection({
+  selectedStudioId,
+  onSelect,
+}: StudioSelectionProps) {
+  const [studios, setStudios] = useState<Studio[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchStudios()
+  }, [])
+
+  const fetchStudios = async () => {
+    try {
+      const response = await fetch("/api/studios")
+      const result = await response.json()
+      if (result.success) {
+        setStudios(result.data)
+      }
+    } catch (error) {
+      console.error("Failed to fetch studios:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const parseJson = (jsonString: string | null) => {
+    if (!jsonString) return []
+    try {
+      return JSON.parse(jsonString)
+    } catch {
+      return []
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4920E5]"></div>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <div className="text-center mb-6 md:mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+          Pilih Studio
+        </h2>
+        <p className="text-sm md:text-base text-gray-400">
+          Pilih studio profesional untuk live streaming Anda
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
+        {studios.map((studio, index) => {
+          const isSelected = selectedStudioId === studio.id
+          const equipment = parseJson(studio.equipment)
+          const amenities = parseJson(studio.amenities)
+
+          return (
+            <motion.div
+              key={studio.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              onClick={() => onSelect(studio.id)}
+              className={`relative p-6 rounded-[30px] border-2 cursor-pointer transition-all ${
+                isSelected
+                  ? "border-[#4920E5] bg-[#4920E5]/20 shadow-lg scale-105"
+                  : "border-white/10 bg-white/5 hover:border-[#4920E5]/50 hover:shadow-md hover:bg-white/10"
+              }`}
+            >
+              {isSelected && (
+                <div className="absolute top-4 right-4 w-8 h-8 bg-[#4920E5] rounded-full flex items-center justify-center">
+                  <Check className="w-5 h-5 text-white" />
+                </div>
+              )}
+
+              {studio.photoUrl && (
+                <div className="mb-4 rounded-2xl overflow-hidden">
+                  <img
+                    src={studio.photoUrl}
+                    alt={studio.name}
+                    className="w-full h-48 object-cover"
+                  />
+                </div>
+              )}
+
+              <div className="mb-3 md:mb-4">
+                <h3 className="text-lg md:text-xl font-bold text-white mb-1 md:mb-2">
+                  {studio.name}
+                </h3>
+                <div className="flex items-center gap-2 text-xs md:text-sm text-gray-300">
+                  <MapPin className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#4920E5]" />
+                  <span>{studio.location}</span>
+                </div>
+              </div>
+
+              <p className="text-gray-300 text-xs md:text-sm mb-3 md:mb-4">
+                {studio.description}
+              </p>
+
+              <div className="flex items-center gap-2 text-xs md:text-sm text-gray-300 mb-3 md:mb-4">
+                <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#4920E5]" />
+                <span>Kapasitas: {studio.capacity} orang</span>
+              </div>
+
+              {equipment.length > 0 && (
+                <div className="mb-3 md:mb-4">
+                  <h4 className="text-xs md:text-sm font-semibold text-white mb-1 md:mb-2">
+                    Peralatan:
+                  </h4>
+                  <div className="flex flex-wrap gap-1 md:gap-2">
+                    {equipment.slice(0, 4).map((item: string, i: number) => (
+                      <span
+                        key={i}
+                        className="inline-flex items-center gap-1 px-1.5 md:px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs border border-blue-500/30"
+                      >
+                        <Camera className="w-2.5 h-2.5 md:w-3 md:h-3" />
+                        <span className="text-xs">{item}</span>
+                      </span>
+                    ))}
+                    {equipment.length > 4 && (
+                      <span className="inline-block px-1.5 md:px-2 py-1 bg-white/10 text-gray-400 rounded text-xs">
+                        +{equipment.length - 4} lainnya
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {amenities.length > 0 && (
+                <div>
+                  <h4 className="text-xs md:text-sm font-semibold text-white mb-1 md:mb-2">
+                    Fasilitas:
+                  </h4>
+                  <div className="flex flex-wrap gap-1 md:gap-2">
+                    {amenities.slice(0, 3).map((item: string, i: number) => (
+                      <span
+                        key={i}
+                        className="inline-flex items-center gap-1 px-1.5 md:px-2 py-1 bg-[#12BB74]/20 text-[#12BB74] rounded text-xs border border-[#12BB74]/30"
+                      >
+                        <Wifi className="w-2.5 h-2.5 md:w-3 md:h-3" />
+                        <span className="text-xs">{item}</span>
+                      </span>
+                    ))}
+                    {amenities.length > 3 && (
+                      <span className="inline-block px-1.5 md:px-2 py-1 bg-white/10 text-gray-400 rounded text-xs">
+                        +{amenities.length - 3} lainnya
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}

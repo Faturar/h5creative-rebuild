@@ -95,7 +95,20 @@ export default function Navbar({
   // Determine if navbar should be transparent
   const isTransparent = scrollTransparent ? !isScrolled : transparent
 
-  const navItems = ["Home", "Services", "Testimonials", "Pricing", "About"]
+  const navItems = ["Home", "Services", "Booking", "Pricing", "About"]
+
+  const getNavLink = (item: string) => {
+    switch (item) {
+      case "Services":
+        return "/service"
+      case "About":
+        return "/about"
+      case "Booking":
+        return "/booking"
+      default:
+        return "#"
+    }
+  }
 
   return (
     <motion.nav
@@ -128,7 +141,7 @@ export default function Navbar({
           {navItems.map((item) => (
             <motion.li key={item} variants={itemVariants}>
               <motion.a
-                href="#"
+                href={getNavLink(item)}
                 className="font-medium text-lg hover:text-[#FFE7C2] transition-all duration-300"
                 whileHover={{ y: -2 }}
                 transition={{ duration: 0.2 }}
@@ -216,7 +229,7 @@ export default function Navbar({
                     variants={mobileItemVariants}
                   >
                     <motion.a
-                      href="#"
+                      href={getNavLink(item)}
                       className="font-medium text-xl text-white hover:bg-[#2E2BFF] transition-all duration-300 block py-3 px-4 w-full"
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setIsMenuOpen(false)}

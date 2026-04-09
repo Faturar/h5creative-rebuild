@@ -3,15 +3,7 @@ import services2 from "@/public/assets/images/services2.png"
 import services3 from "@/public/assets/images/services3.png"
 import logo from "@/public/assets/images/logos/logo.svg"
 import eclipseImage from "@/public/assets/images/Ellipse.svg"
-import {
-  Crown,
-  Code,
-  Box,
-  MessageCircle,
-  ChevronDown,
-  Phone,
-  Mail,
-} from "lucide-react"
+import { Box, MessageCircle, ChevronDown, Phone, Mail } from "lucide-react"
 
 // Services Data
 export const SERVICES_DATA = [
@@ -42,6 +34,15 @@ export const SERVICES_DATA = [
     image: services2,
     alt: "Website & Digital Experience",
   },
+  {
+    id: 4,
+    slug: "live-streaming",
+    title: "Live Streaming",
+    description:
+      "Platform live streaming profesional dengan host berpengalaman, device berkualitas, dan studio lengkap untuk kebutuhan bisnis Anda.",
+    image: services2,
+    alt: "Live Streaming",
+  },
 ]
 
 // Featured Service Data
@@ -58,14 +59,14 @@ export const FEATURED_SERVICE_DATA = {
 
 // Header Data
 export const HEADER_DATA = {
-  title: "AGENCY KREATIF END-TO-END UNTUK BRAND",
-  highlightedText: "BERKEMBANG",
+  title: "DIGITAL ADVERTISING AGENCY FOR",
+  highlightedText: "BRAND GROWTH",
   description:
-    "Kami membantu brand Anda tampil lebih kuat, konsisten, dan berkesan melalui strategi kreatif, desain, dan eksekusi yang berdampak.",
-  buttonText: "Konsultasi Gratis Sekarang",
+    "We focus on artistic + innovative digital ideas for brand and business growth. Comprehensive 360° campaign solutions to help your brand succeed.",
+  buttonText: "Get Started Now",
   buttonIcon: "→",
   heroImage: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db",
-  heroAlt: "Product",
+  heroAlt: "Digital Marketing",
 }
 
 // Services Section Data
@@ -73,7 +74,7 @@ export const SERVICES_SECTION_DATA = {
   titleLine1: "What We Can Do",
   titleLine2: "for Your Brand",
   buttonText: "All Services",
-  buttonLink: "#",
+  buttonLink: "/service",
 }
 
 // Recent Work Section Data
@@ -203,16 +204,16 @@ export const FAQ_SECTION_DATA = {
 
 // Contact Section Data
 export const CONTACT_SECTION_DATA = {
-  title: "Hubungi Kami",
-  subtitle: "Mari Ciptakan Sesuatu yang Luar Biasa Bersama",
+  title: "Contact Us",
+  subtitle: "Let's Create Something Amazing Together",
   description:
-    "Punya project yang ingin dikembangkan? Kami siap membantu mewujudkan ide Anda menjadi karya yang berdampak.",
-  buttonText: "Kirim Pesan",
+    "Have a project you want to develop? We're ready to help bring your ideas to life with impactful results.",
+  buttonText: "Send Message",
   buttonIcon: "→",
   contactInfo: [
     {
       id: 1,
-      type: "Telepon",
+      type: "Phone",
       value: "+62 812-3456-7890",
       icon: Phone,
       link: "tel:+6281234567890",
@@ -220,34 +221,34 @@ export const CONTACT_SECTION_DATA = {
     {
       id: 2,
       type: "Email",
-      value: "hello@yourbrand.com",
+      value: "hello@h5creative.com",
       icon: Mail,
-      link: "mailto:hello@yourbrand.com",
+      link: "mailto:hello@h5creative.com",
     },
   ],
   formFields: [
     {
       id: "name",
       type: "text",
-      placeholder: "Nama Anda",
+      placeholder: "Your Name",
       required: true,
     },
     {
       id: "email",
       type: "email",
-      placeholder: "Email Anda",
+      placeholder: "Your Email",
       required: true,
     },
     {
       id: "subject",
       type: "text",
-      placeholder: "Subjek",
+      placeholder: "Subject",
       required: true,
     },
     {
       id: "message",
       type: "textarea",
-      placeholder: "Pesan Anda",
+      placeholder: "Your Message",
       required: true,
     },
   ],
@@ -255,28 +256,33 @@ export const CONTACT_SECTION_DATA = {
 
 // CTA Section Data
 export const CTA_SECTION_DATA = {
-  title: "Siap Membawa Brand Anda ke Level Berikutnya?",
-  subtitle: "Mari Kolaborasi dan Wujudkan Visi Anda Bersama Kami",
+  title: "Ready to Grow Your Brand?",
+  subtitle: "Let's Collaborate and Achieve Your Vision Together",
   description:
-    "Dengan pendekatan kreatif dan strategis, kami siap membantu brand Anda mencapai potensi maksimal dan bersaing di pasar yang dinamis.",
-  primaryButtonText: "Mulai Projek Sekarang",
+    "With creative and strategic approaches, we're ready to help your brand reach its maximum potential and compete in the dynamic market.",
+  primaryButtonText: "Start Your Project",
   primaryButtonIcon: "→",
-  secondaryButtonText: "Lihat Portfolio",
+  secondaryButtonText: "View Portfolio",
   stats: [
     {
       id: 1,
       value: "100+",
-      label: "Project Selesai",
+      label: "Brands",
     },
     {
       id: 2,
-      value: "50+",
-      label: "Client Puas",
+      value: "150+",
+      label: "Projects",
     },
     {
       id: 3,
-      value: "15+",
-      label: "Penghargaan",
+      value: "3 Years",
+      label: "Experience",
+    },
+    {
+      id: 4,
+      value: "100M+",
+      label: "Ads Spending",
     },
   ],
 }

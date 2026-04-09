@@ -1,0 +1,249 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Package {
+  id                 String        @id @default(uuid())
+  name               String
+  description        String        @db.Text
+  price              Decimal       @db.Decimal(10, 2)
+  promoPrice         Decimal?      @db.Decimal(10, 2)
+  includesHost       Boolean       @default(true)
+  includesStudio     Boolean       @default(true)
+  includesDevice     Boolean       @default(true)
+  isActive           Boolean       @default(true)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  accountReport      Boolean       @default(true)
+  durationPerSession Int           @default(2)
+  hostCount          Int           @default(1)
+  numberOfDays       Int           @default(14)
+  packageType        String        @default("iPhone")
+  totalHours         Int           @default(28)
+  twibbonDesignCount Int           @default(0)
+  weeklyReport       Boolean       @default(false)
+  workDays           String        @default("Senin - Sabtu")
+  workTimeEnd        String        @default("20:00")
+  workTimeStart      String        @default("09:00")
+  bookingType        String        @default("package") // "custom" or "package"
+  tieredPrice        Boolean       @default(true)
+  bookings           Booking[]
+  packageHosts       PackageHost[]
+
+  @@map("packages")
+}
+
+model Host {
+  id               String        @id @default(uuid())
+  name             String
+  bio              String        @db.Text
+  photoUrl         String?
+  portfolioUrl     String?
+  expertise        String
+  rating           Decimal       @default(4.5) @db.Decimal(2, 1)
+  totalStreams     Int           @default(0)
+  languages        String        @default("Indonesian")
+  socialMediaLinks String?       @db.Text
+  isActive         Boolean       @default(true)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  bookings         Booking[]
+  packageHosts     PackageHost[]
+
+  @@index([expertise, isActive])
+  @@map("hosts")
+}
+
+model PackageHost {
+  id        String  @id @default(uuid())
+  packageId String
+  hostId    String
+  host      Host    @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@unique([packageId, hostId])
+  @@index([hostId], map: "package_hosts_hostId_fkey")
+  @@map("package_hosts")
+}
+
+model Studio {
+  id                 String             @id @default(uuid())
+  name               String
+  location           String
+  description        String             @db.Text
+  photoUrl           String?
+  capacity           Int                @default(4)
+  equipment          String             @db.Text
+  amenities          String?            @db.Text
+  isActive           Boolean            @default(true)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  bookings           Booking[]
+  studioSlots        StudioSlot[]
+  customSlotRequests CustomSlotRequest[]
+
+  @@map("studios")
+}
+
+model StudioSlot {
+  id        String   @id @default(uuid())
+  studioId  String
+  date      DateTime
+  startTime String
+  endTime   String
+  isBooked  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  booking   Booking?
+  studio    Studio   @relation(fields: [studioId], references: [id], onDelete: Cascade)
+
+  @@unique([studioId, date, startTime])
+  @@index([studioId, date, isBooked])
+  @@map("studio_slots")
+}
+
+model User {
+  id              String        @id @default(uuid())
+  email           String        @unique
+  name            String
+  password        String
+  role            UserRole      @default(ADMIN)
+  isActive        Boolean       @default(true)
+  lastLoginAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([email, isActive])
+  @@map("users")
+}
+
+model Booking {
+  id              String        @id @default(uuid())
+  bookingCode     String        @unique
+  packageId       String
+  hostId          String
+  studioId        String
+  studioSlotId    String        @unique
+  date            DateTime
+  startTime       String
+  endTime         String
+  customerName    String
+  customerPhone   String
+  customerEmail   String
+  businessName    String
+  productCategory String
+  price           Decimal       @db.Decimal(10, 2)
+  status          BookingStatus @default(PENDING)
+  notes           String?       @db.Text
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  totalHours      Int           @default(0)
+  basePrice       Decimal       @db.Decimal(10, 2)
+  surcharge       Decimal       @default(0) @db.Decimal(10, 2)
+  finalPrice      Decimal       @db.Decimal(10, 2)
+  pricingTierId   String?
+  host            Host          @relation(fields: [hostId], references: [id])
+  package         Package       @relation(fields: [packageId], references: [id])
+  studio          Studio        @relation(fields: [studioId], references: [id])
+  studioSlot      StudioSlot    @relation(fields: [studioSlotId], references: [id])
+  payments        Payment[]
+  pricingTier     PricingTier?  @relation(fields: [pricingTierId], references: [id])
+
+  @@index([status, date])
+  @@index([hostId], map: "bookings_hostId_fkey")
+  @@index([packageId], map: "bookings_packageId_fkey")
+  @@index([studioId], map: "bookings_studioId_fkey")
+  @@index([pricingTierId])
+  @@map("bookings")
+}
+
+model Payment {
+  id             String        @id @default(uuid())
+  bookingId      String
+  paymentGateway String        @default("midtrans")
+  transactionId  String        @unique
+  amount         Decimal       @db.Decimal(10, 2)
+  status         PaymentStatus @default(PENDING)
+  paidAt         DateTime?
+  rawResponse    String?       @db.Text
+  createdAt      DateTime      @default(now())
+  booking        Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, status])
+  @@map("payments")
+}
+
+model CustomSlotRequest {
+  id             String   @id @default(uuid())
+  studioId       String
+  date           DateTime
+  startTime      String
+  endTime        String
+  customerName   String
+  customerPhone  String?
+  customerEmail  String?
+  notes          String?  @db.Text
+  status         String   @default("PENDING")
+  adminNotes     String?  @db.Text
+  studioSlotId   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  studio         Studio   @relation(fields: [studioId], references: [id], onDelete: Cascade)
+
+  @@index([studioId, status])
+  @@map("custom_slot_requests")
+}
+
+model PricingTier {
+  id           String   @id @default(uuid())
+  deviceType   String   // "iPhone" or "Camera+OBS"
+  minHours     Int
+  maxHours     Int?
+  pricePerHour Decimal  @db.Decimal(10, 2)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  bookings     Booking[]
+
+  @@index([deviceType, isActive])
+  @@map("pricing_tiers")
+}
+
+model TimeSurcharge {
+  id          String   @id @default(uuid())
+  startTime   String
+  endTime     String
+  surcharge   Decimal  @db.Decimal(10, 2)
+  description String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
+  @@map("time_surcharges")
+}
+
+enum BookingStatus {
+  PENDING
+  PAID
+  CANCELLED
+  COMPLETED
+  IN_PROGRESS
+  FINISHED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  EXPIRED
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+}

@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: live_booking_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: h5cr_main
+      MYSQL_USER: h5cr_admin
+      MYSQL_PASSWORD: h5cr_adminlive
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./import-data.sql:/docker-entrypoint-initdb.d/02-import-data.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - live_booking_network
+
+volumes:
+  mysql_data:
+
+networks:
+  live_booking_network:
+    driver: bridge
