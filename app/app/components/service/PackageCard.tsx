@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import { Check, Sparkles } from "lucide-react"
 import { LiveStreamingPackage } from "@/app/constants/packages"
+import PackageStats from "./PackageStats"
 
 interface PackageCardProps {
   package: LiveStreamingPackage
@@ -44,10 +45,12 @@ export default function PackageCard({ package: pkg, isHighlighted = false }: Pac
 
       <div className="text-center mb-4">
         <h3 className="text-xl font-bold text-gray-900 mb-2">{pkg.name}</h3>
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-          <span>{pkg.totalHours} Jam</span>
-          <span>•</span>
-          <span>{pkg.days} Hari</span>
+        <div className="mb-3">
+          <PackageStats
+            totalHours={pkg.totalHours}
+            hosts={pkg.hosts}
+            days={pkg.days}
+          />
         </div>
       </div>
 
@@ -84,12 +87,6 @@ export default function PackageCard({ package: pkg, isHighlighted = false }: Pac
           <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
           <span className="text-gray-600">
             Hari kerja: {pkg.workdays}
-          </span>
-        </div>
-        <div className="flex items-start gap-2 text-sm">
-          <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-          <span className="text-gray-600">
-            {pkg.hosts} {pkg.hosts === 1 ? 'Host Profesional' : 'Host Profesional'}
           </span>
         </div>
         {pkg.twibbonDesigns > 0 && (

@@ -247,6 +247,31 @@ async function main() {
 
       console.log(`✅ Created ${packages.length} packages`)
 
+      console.log("\n💰 Creating pricing tiers...")
+
+      // Create Pricing Tiers for iPhone
+      await tx.pricingTier.createMany({
+        data: [
+          { deviceType: "iPhone", minHours: 0, maxHours: 50, pricePerHour: toDecimal(65000), isActive: true },
+          { deviceType: "iPhone", minHours: 51, maxHours: 70, pricePerHour: toDecimal(60000), isActive: true },
+          { deviceType: "iPhone", minHours: 71, maxHours: 120, pricePerHour: toDecimal(58000), isActive: true },
+          { deviceType: "iPhone", minHours: 121, maxHours: 150, pricePerHour: toDecimal(55000), isActive: true },
+          { deviceType: "iPhone", minHours: 151, maxHours: null, pricePerHour: toDecimal(50000), isActive: true },
+        ],
+      })
+
+      // Create Pricing Tiers for Camera+OBS
+      await tx.pricingTier.createMany({
+        data: [
+          { deviceType: "Camera+OBS", minHours: 0, maxHours: 70, pricePerHour: toDecimal(120000), isActive: true },
+          { deviceType: "Camera+OBS", minHours: 71, maxHours: 140, pricePerHour: toDecimal(115000), isActive: true },
+          { deviceType: "Camera+OBS", minHours: 141, maxHours: 200, pricePerHour: toDecimal(105000), isActive: true },
+          { deviceType: "Camera+OBS", minHours: 201, maxHours: null, pricePerHour: toDecimal(95000), isActive: true },
+        ],
+      })
+
+      console.log("✅ Created 9 pricing tiers")
+
       console.log("\n👥 Creating hosts...")
 
       // Create Hosts

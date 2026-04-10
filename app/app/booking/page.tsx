@@ -22,6 +22,7 @@ import TimeSlotSelection from "@/components/booking/TimeSlotSelection"
 import CustomerForm from "@/components/booking/CustomerForm"
 import PaymentSection from "@/components/booking/PaymentSection"
 import BookingSummary from "@/components/booking/BookingSummary"
+import CountdownTimer from "@/app/components/booking/CountdownTimer"
 import FloatingNavigation from "@/components/booking/FloatingNavigation"
 
 type BookingStep =
@@ -51,6 +52,10 @@ interface BookingData {
   notes: string
   bookingId: string | null
   bookingCode: string | null
+  bookingType: string | null
+  customHours: number | null
+  customDays: number | null
+  hoursPerDay: number | null
 }
 
 export default function BookingPage() {
@@ -73,6 +78,10 @@ export default function BookingPage() {
     notes: "",
     bookingId: null,
     bookingCode: null,
+    bookingType: null,
+    customHours: null,
+    customDays: null,
+    hoursPerDay: null,
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -205,6 +214,7 @@ export default function BookingPage() {
             Platform live streaming profesional untuk bisnis Anda. Tingkatkan
             penjualan dengan host berpengalaman dan studio modern.
           </p>
+          <CountdownTimer />
         </div>
       </div>
 
@@ -359,6 +369,18 @@ export default function BookingPage() {
                     selectedPackageId={bookingData.packageId}
                     onSelect={(packageId) =>
                       setBookingData((prev) => ({ ...prev, packageId }))
+                    }
+                    onBookingTypeChange={(bookingType) =>
+                      setBookingData((prev) => ({ ...prev, bookingType }))
+                    }
+                    onCustomHoursChange={(customHours) =>
+                      setBookingData((prev) => ({ ...prev, customHours }))
+                    }
+                    onCustomDaysChange={(customDays) =>
+                      setBookingData((prev) => ({ ...prev, customDays }))
+                    }
+                    onHoursPerDayChange={(hoursPerDay) =>
+                      setBookingData((prev) => ({ ...prev, hoursPerDay }))
                     }
                   />
                 )}

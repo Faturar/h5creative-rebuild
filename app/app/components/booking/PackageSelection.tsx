@@ -14,6 +14,7 @@ import {
   Sliders,
   Package as PackageIcon,
 } from "lucide-react"
+import PackageStats from "@/app/components/service/PackageStats"
 
 interface Package {
   id: string
@@ -45,6 +46,8 @@ interface PackageSelectionProps {
   onSelect: (packageId: string) => void
   onBookingTypeChange?: (bookingType: "custom" | "package") => void
   onCustomHoursChange?: (hours: number) => void
+  onCustomDaysChange?: (days: number) => void
+  onHoursPerDayChange?: (hours: number) => void
 }
 
 type BookingType = "custom" | "package"
@@ -55,12 +58,15 @@ export default function PackageSelection({
   onSelect,
   onBookingTypeChange,
   onCustomHoursChange,
+  onCustomDaysChange,
+  onHoursPerDayChange,
 }: PackageSelectionProps) {
   const [packages, setPackages] = useState<Package[]>([])
   const [loading, setLoading] = useState(true)
   const [bookingType, setBookingType] = useState<BookingType>("package")
   const [customHours, setCustomHours] = useState<number>(28)
   const [customDays, setCustomDays] = useState<number>(14)
+  const [hoursPerDay, setHoursPerDay] = useState<number>(2)
   const [pricingBreakdown, setPricingBreakdown] = useState<{
     finalPrice: number
     pricingTier: { pricePerHour: number } | null
@@ -130,9 +136,20 @@ export default function PackageSelection({
 
   const handleCustomHoursChange = (hours: number) => {
     setCustomHours(hours)
-    // Calculate days based on 2 hours per session
-    const calculatedDays = Math.ceil(hours / 2)
+    // Calculate days based on hours per day
+    const calculatedDays = hoursPerDay > 0 ? Math.ceil(hours / hoursPerDay) : 0
     setCustomDays(calculatedDays)
+    onCustomHoursChange?.(hours)
+    onCustomDaysChange?.(calculatedDays)
+  }
+
+  const handleHoursPerDayChange = (hours: number) => {
+    setHoursPerDay(hours)
+    // Recalculate days based on new hours per day
+    const calculatedDays = hours > 0 ? Math.ceil(customHours / hours) : 0
+    setCustomDays(calculatedDays)
+    onHoursPerDayChange?.(hours)
+    onCustomDaysChange?.(calculatedDays)
   }
 
   const formatPrice = (price: number) => {
@@ -153,6 +170,9 @@ export default function PackageSelection({
 
   const validateCustomBooking = () => {
     if (customDays < 6) {
+      return false
+    }
+    if (customHours < 12) {
       return false
     }
     return true
@@ -213,7 +233,7 @@ export default function PackageSelection({
             Tentukan Jam Live Streaming
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <div>
               <label className="block text-sm md:text-base font-medium text-gray-300 mb-2">
                 Total Jam
@@ -229,7 +249,26 @@ export default function PackageSelection({
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4920E5]"
               />
               <p className="text-xs md:text-sm text-gray-400 mt-2">
-                Minimal 12 jam (6 hari × 2 jam/sesi)
+                Minimal 12 jam
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm md:text-base font-medium text-gray-300 mb-2">
+                Jam per Hari
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="12"
+                value={hoursPerDay}
+                onChange={(e) =>
+                  handleHoursPerDayChange(parseInt(e.target.value) || 1)
+                }
+                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4920E5]"
+              />
+              <p className="text-xs md:text-sm text-gray-400 mt-2">
+                Maksimal 12 jam/hari
               </p>
             </div>
 
@@ -241,7 +280,7 @@ export default function PackageSelection({
                 {customDays} hari
               </div>
               <p className="text-xs md:text-sm text-gray-400 mt-2">
-                Berdasarkan 2 jam per sesi
+                {customHours} jam ÷ {hoursPerDay} jam/hari
               </p>
             </div>
           </div>
@@ -249,7 +288,7 @@ export default function PackageSelection({
           {!validateCustomBooking() && (
             <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl">
               <p className="text-sm text-red-400">
-                Minimal pembelian untuk custom jam adalah 6 hari
+                Minimal pembelian: 6 hari dengan minimal 12 jam total
               </p>
             </div>
           )}
@@ -371,12 +410,11 @@ export default function PackageSelection({
                 </p>
 
                 <div className="space-y-1.5 md:space-y-2 mb-3 md:mb-4">
-                  <div className="flex items-center gap-2 text-sm text-gray-300">
-                    <Clock className="w-4 h-4 text-[#4920E5]" />
-                    <span>
-                      {pkg.totalHours} Jam / {pkg.numberOfDays} Hari
-                    </span>
-                  </div>
+                  <PackageStats
+                    totalHours={pkg.totalHours}
+                    hosts={pkg.hostCount}
+                    days={pkg.numberOfDays}
+                  />
                   <div className="flex items-center gap-2 text-sm text-gray-300">
                     <Calendar className="w-4 h-4 text-[#4920E5]" />
                     <span>{pkg.durationPerSession} Jam per sesi</span>
@@ -391,15 +429,6 @@ export default function PackageSelection({
                     <Calendar className="w-4 h-4 text-[#4920E5]" />
                     <span>{pkg.workDays}</span>
                   </div>
-                  {pkg.hostCount > 0 && (
-                    <div className="flex items-center gap-2 text-sm text-gray-300">
-                      <Users className="w-4 h-4 text-[#12BB74]" />
-                      <span>
-                        {pkg.hostCount} Host{" "}
-                        {pkg.hostCount > 1 ? "(1-2 Host)" : ""}
-                      </span>
-                    </div>
-                  )}
                   {pkg.twibbonDesignCount > 0 && (
                     <div className="flex items-center gap-2 text-sm text-gray-300">
                       <Sparkles className="w-4 h-4 text-[#12BB74]" />

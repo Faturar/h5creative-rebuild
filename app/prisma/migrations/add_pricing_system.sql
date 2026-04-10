@@ -48,14 +48,15 @@ FOREIGN KEY (`pricingTierId`) REFERENCES `pricing_tiers`(`id`) ON DELETE SET NUL
 
 -- Seed pricing tiers for iPhone
 INSERT INTO `pricing_tiers` (`id`, `deviceType`, `minHours`, `maxHours`, `pricePerHour`, `isActive`) VALUES
-(UUID(), 'iPhone', 0, 70, 70000.00, TRUE),
-(UUID(), 'iPhone', 71, 140, 65000.00, TRUE),
-(UUID(), 'iPhone', 141, 250, 60000.00, TRUE),
-(UUID(), 'iPhone', 251, NULL, 55000.00, TRUE);
+(UUID(), 'iPhone', 0, 50, 65000.00, TRUE),
+(UUID(), 'iPhone', 51, 70, 60000.00, TRUE),
+(UUID(), 'iPhone', 71, 120, 58000.00, TRUE),
+(UUID(), 'iPhone', 121, 150, 55000.00, TRUE),
+(UUID(), 'iPhone', 151, NULL, 50000.00, TRUE);
 
 -- Seed pricing tiers for Camera+OBS
 INSERT INTO `pricing_tiers` (`id`, `deviceType`, `minHours`, `maxHours`, `pricePerHour`, `isActive`) VALUES
-(UUID(), 'Camera+OBS', 0, 70, 125000.00, TRUE),
+(UUID(), 'Camera+OBS', 0, 70, 120000.00, TRUE),
 (UUID(), 'Camera+OBS', 71, 140, 115000.00, TRUE),
 (UUID(), 'Camera+OBS', 141, 200, 105000.00, TRUE),
 (UUID(), 'Camera+OBS', 201, NULL, 95000.00, TRUE);

@@ -13,7 +13,6 @@ import {
   Info,
   DollarSign,
 } from "lucide-react"
-import { getSurchargeInfo } from "@/lib/pricing"
 import {
   format,
   addDays,
@@ -165,11 +164,22 @@ export default function TimeSlotSelection({
 
     for (const slot of slots) {
       try {
-        const surchargeInfo = await getSurchargeInfo(
-          slot.startTime,
-          slot.endTime,
-        )
-        surchargeMap.set(slot.id, surchargeInfo)
+        const response = await fetch("/api/pricing/surcharge", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            startTime: slot.startTime,
+            endTime: slot.endTime,
+          }),
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          surchargeMap.set(slot.id, result.data)
+        } else {
+          throw new Error(result.error || "Failed to get surcharge info")
+        }
       } catch (error) {
         console.error("Error fetching surcharge for slot:", slot.id, error)
         surchargeMap.set(slot.id, {

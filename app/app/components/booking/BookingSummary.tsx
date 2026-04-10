@@ -16,6 +16,7 @@ import {
   AlertCircle,
 } from "lucide-react"
 import { calculateTotalPrice, TimeSlot } from "@/lib/pricing"
+import PackageStats from "@/app/components/service/PackageStats"
 
 interface BookingData {
   deviceType: string | null
@@ -200,15 +201,24 @@ export default function BookingSummary({
           </div>
         )}
         {packageData && (
-          <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-[#4920E5]/20 rounded-2xl border border-[#4920E5]/30">
-            <Package className="w-4 h-4 md:w-5 md:h-5 text-[#4920E5] flex-shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-white">
-                {packageData.name}
-              </p>
-              <p className="text-xs md:text-sm text-[#4920E5] font-semibold">
-                {formatPrice(totalPrice)}
-              </p>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-[#4920E5]/20 rounded-2xl border border-[#4920E5]/30">
+              <Package className="w-4 h-4 md:w-5 md:h-5 text-[#4920E5] flex-shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs md:text-sm font-medium text-white">
+                  {packageData.name}
+                </p>
+                <p className="text-xs md:text-sm text-[#4920E5] font-semibold">
+                  {formatPrice(totalPrice)}
+                </p>
+              </div>
+            </div>
+            <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-2">
+              <PackageStats
+                totalHours={packageData.totalHours}
+                hosts={1}
+                days={packageData.numberOfDays}
+              />
             </div>
           </div>
         )}
