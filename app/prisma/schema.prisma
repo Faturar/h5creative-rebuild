@@ -13,6 +13,12 @@ model Package {
   description        String        @db.Text
   price              Decimal       @db.Decimal(10, 2)
   promoPrice         Decimal?      @db.Decimal(10, 2)
+  hasActivePromo     Boolean       @default(false)
+  promoTitle         String?       @db.VarChar(255)
+  promoStartDate     DateTime?
+  promoEndDate       DateTime?
+  promoDiscountType  String?       @default("fixed") // "fixed" or "percentage"
+  promoDiscountValue Decimal?      @db.Decimal(10, 2)
   includesHost       Boolean       @default(true)
   includesStudio     Boolean       @default(true)
   includesDevice     Boolean       @default(true)
