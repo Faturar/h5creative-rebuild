@@ -15,6 +15,7 @@ interface Booking {
   endTime: string
   customerName: string
   customerEmail: string
+  finalPrice: number
   package: {
     name: string
     price: number

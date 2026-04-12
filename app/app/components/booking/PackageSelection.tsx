@@ -48,6 +48,7 @@ interface PackageSelectionProps {
   onCustomHoursChange?: (hours: number) => void
   onCustomDaysChange?: (days: number) => void
   onHoursPerDayChange?: (hours: number) => void
+  onValidationChange?: (isValid: boolean) => void
 }
 
 type BookingType = "custom" | "package"
@@ -60,6 +61,7 @@ export default function PackageSelection({
   onCustomHoursChange,
   onCustomDaysChange,
   onHoursPerDayChange,
+  onValidationChange,
 }: PackageSelectionProps) {
   const [packages, setPackages] = useState<Package[]>([])
   const [loading, setLoading] = useState(true)
@@ -73,6 +75,41 @@ export default function PackageSelection({
   } | null>(null)
   const [loadingPricing, setLoadingPricing] = useState(false)
 
+  const validateCustomBooking = () => {
+    if (customDays < 6) {
+      return { valid: false, message: "Minimal pembelian untuk custom jam adalah 6 hari" }
+    }
+    if (customHours < 12) {
+      return { valid: false, message: "Minimal 12 jam total untuk custom booking" }
+    }
+    return { valid: true, message: "" }
+  }
+
+  const validatePackageBooking = (pkg: Package) => {
+    if (pkg.numberOfDays < 5) {
+      return { valid: false, message: `Minimal pembelian untuk paket jam adalah 5 hari (paket ini ${pkg.numberOfDays} hari)` }
+    }
+    return { valid: true, message: "" }
+  }
+
+  const getValidationWarning = () => {
+    if (bookingType === "custom") {
+      const validation = validateCustomBooking()
+      if (!validation.valid) {
+        return validation.message
+      }
+    } else if (bookingType === "package" && selectedPackageId) {
+      const selectedPackage = packages.find((p) => p.id === selectedPackageId)
+      if (selectedPackage) {
+        const validation = validatePackageBooking(selectedPackage)
+        if (!validation.valid) {
+          return validation.message
+        }
+      }
+    }
+    return null
+  }
+
   useEffect(() => {
     fetchPackages()
   }, [deviceType, bookingType])
@@ -82,6 +119,11 @@ export default function PackageSelection({
       calculateCustomPricing()
     }
   }, [customHours, deviceType, bookingType])
+
+  useEffect(() => {
+    const validation = getValidationWarning()
+    onValidationChange?.(validation === null)
+  }, [bookingType, customHours, customDays, hoursPerDay, selectedPackageId, packages])
 
   const fetchPackages = async () => {
     try {
@@ -168,23 +210,6 @@ export default function PackageSelection({
     )
   }
 
-  const validateCustomBooking = () => {
-    if (customDays < 6) {
-      return false
-    }
-    if (customHours < 12) {
-      return false
-    }
-    return true
-  }
-
-  const validatePackageBooking = (pkg: Package) => {
-    if (pkg.numberOfDays < 5) {
-      return false
-    }
-    return true
-  }
-
   return (
     <div>
       <div className="text-center mb-6 md:mb-8">
@@ -225,6 +250,38 @@ export default function PackageSelection({
           </button>
         </div>
       </div>
+
+      {bookingType === "package" && (
+        <div className="mb-6 p-4 bg-[#4920E5]/10 border-2 border-[#4920E5]/30 rounded-xl">
+          <div className="flex items-start gap-3">
+            <Calendar className="w-5 h-5 text-[#4920E5] flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-base md:text-lg font-bold text-white mb-1">
+                Minimal pembelian untuk Paket Jam
+              </p>
+              <p className="text-sm md:text-base text-gray-300">
+                Minimal pembelian 5 hari untuk paket jam tersedia untuk dipilih. Paket dengan durasi kurang dari 5 hari tidak dapat dipilih.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {bookingType === "custom" && (
+        <div className="mb-6 p-4 bg-[#4920E5]/10 border-2 border-[#4920E5]/30 rounded-xl">
+          <div className="flex items-start gap-3">
+            <Calendar className="w-5 h-5 text-[#4920E5] flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-base md:text-lg font-bold text-white mb-1">
+                Minimal pembelian untuk Custom Jam
+              </p>
+              <p className="text-sm md:text-base text-gray-300">
+                Minimal pembelian 6 hari dengan minimal 12 jam total untuk custom booking.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Custom Hours Section */}
       {bookingType === "custom" && (
@@ -285,10 +342,10 @@ export default function PackageSelection({
             </div>
           </div>
 
-          {!validateCustomBooking() && (
+          {!validateCustomBooking().valid && (
             <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl">
               <p className="text-sm text-red-400">
-                Minimal pembelian: 6 hari dengan minimal 12 jam total
+                {validateCustomBooking().message}
               </p>
             </div>
           )}
@@ -332,7 +389,8 @@ export default function PackageSelection({
             const isSelected = selectedPackageId === pkg.id
             const displayPrice = pkg.promoPrice || pkg.price
             const hasPromo = pkg.promoPrice !== null
-            const isValid = validatePackageBooking(pkg)
+            const validation = validatePackageBooking(pkg)
+            const isValid = validation.valid
 
             return (
               <motion.div
@@ -449,8 +507,8 @@ export default function PackageSelection({
                   )}
                 </div>
                 {!isValid && (
-                  <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
-                    Minimal 5 hari
+                  <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap">
+                    {validation.message}
                   </div>
                 )}
               </motion.div>

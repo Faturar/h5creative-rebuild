@@ -99,10 +99,12 @@ export async function POST(request: Request) {
       bookingStatus = "CANCELLED"
 
       // Release the studio slot
-      await prisma.studioSlot.update({
-        where: { id: booking.studioSlotId },
-        data: { isBooked: false },
-      })
+      if (booking.studioSlotId) {
+        await prisma.studioSlot.update({
+          where: { id: booking.studioSlotId },
+          data: { isBooked: false },
+        })
+      }
     } else if (transaction_status === "pending") {
       paymentStatus = "PENDING"
       bookingStatus = "PENDING"

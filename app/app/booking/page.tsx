@@ -96,6 +96,7 @@ export default function BookingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
+  const [packageValidationWarning, setPackageValidationWarning] = useState<string | null>(null)
   const [packages, setPackages] = useState<any[]>([])
 
   useEffect(() => {
@@ -121,9 +122,27 @@ export default function BookingPage() {
           ...prev,
           totalHours: selectedPackage.totalHours,
         }))
+        // Validate package on load
+        if (selectedPackage.numberOfDays < 5) {
+          setPackageValidationWarning(`Minimal pembelian untuk paket jam adalah 5 hari (paket ini ${selectedPackage.numberOfDays} hari). Paket ini tidak dapat dipilih.`)
+        } else {
+          setPackageValidationWarning(null)
+        }
       }
     }
   }, [bookingData.packageId, packages])
+
+  useEffect(() => {
+    if (bookingData.bookingType === "custom") {
+      const days = bookingData.customDays || 0
+      const hours = bookingData.customHours || 0
+      if (days < 6 || hours < 12) {
+        setPackageValidationWarning(`Minimal pembelian untuk custom jam adalah 6 hari dengan minimal 12 jam total`)
+      } else {
+        setPackageValidationWarning(null)
+      }
+    }
+  }, [bookingData.bookingType, bookingData.customDays, bookingData.customHours])
 
   const steps = [
     { id: "device", title: "Pilih Perangkat", icon: Video },
@@ -180,14 +199,19 @@ export default function BookingPage() {
     }, 0)
   }
 
-  const canProceed = () => {
+  const canProceed = (): boolean => {
     switch (currentStep) {
       case "device":
         return bookingData.deviceType !== null
       case "package":
         return (
-          bookingData.packageId !== null ||
-          bookingData.bookingType === "custom"
+          packageValidationWarning === null &&
+          ((bookingData.bookingType === "package" && bookingData.packageId !== null) ||
+            (bookingData.bookingType === "custom" &&
+              bookingData.customHours !== null &&
+              bookingData.customHours >= 12 &&
+              bookingData.customDays !== null &&
+              bookingData.customDays >= 6))
         )
       case "host":
         return bookingData.hostId !== null
@@ -412,6 +436,27 @@ export default function BookingPage() {
           </motion.div>
         )}
 
+        {/* Package Validation Warning */}
+        {packageValidationWarning && currentStep === "package" && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 md:mb-6 p-3 md:p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl md:rounded-2xl max-w-4xl w-full mx-auto"
+          >
+            <div className="flex items-start gap-2 md:gap-3">
+              <XCircle className="w-4 h-4 md:w-5 md:h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm md:text-base font-medium text-yellow-300 mb-2">
+                  Perhatian - Syarat Belum Terpenuhi
+                </p>
+                <p className="text-sm md:text-base text-yellow-400">
+                  {packageValidationWarning}. Mohon sesuaikan pilihan Anda sebelum melanjutkan.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-8 w-full max-w-6xl pb-24 relative">
           {/* Step Content */}
@@ -453,6 +498,7 @@ export default function BookingPage() {
                           updated.customDays = null
                           updated.hoursPerDay = null
                         }
+                        setPackageValidationWarning(null)
                         return updated
                       })
                     }
@@ -469,6 +515,29 @@ export default function BookingPage() {
                     onHoursPerDayChange={(hoursPerDay) =>
                       setBookingData((prev) => ({ ...prev, hoursPerDay }))
                     }
+                    onValidationChange={(isValid) => {
+                      if (bookingData.bookingType === "custom") {
+                        const days = bookingData.customDays || 0
+                        const hours = bookingData.customHours || 0
+                        const hoursPerDay = bookingData.hoursPerDay || 2
+                        if (days < 6) {
+                          setPackageValidationWarning(`Minimal pembelian untuk custom jam adalah 6 hari (saat ini ${days} hari). Tingkatkan jam per hari atau total jam untuk memenuhi syarat.`)
+                        } else if (hours < 12) {
+                          setPackageValidationWarning(`Minimal 12 jam total untuk custom booking (saat ini ${hours} jam).`)
+                        } else {
+                          setPackageValidationWarning(null)
+                        }
+                      } else if (bookingData.bookingType === "package" && bookingData.packageId) {
+                        const selectedPackage = packages.find((p) => p.id === bookingData.packageId)
+                        if (selectedPackage && selectedPackage.numberOfDays < 5) {
+                          setPackageValidationWarning(`Minimal pembelian untuk paket jam adalah 5 hari (paket ini ${selectedPackage.numberOfDays} hari). Paket ini tidak dapat dipilih.`)
+                        } else {
+                          setPackageValidationWarning(null)
+                        }
+                      } else {
+                        setPackageValidationWarning(null)
+                      }
+                    }}
                   />
                 )}
                 {currentStep === "host" && (

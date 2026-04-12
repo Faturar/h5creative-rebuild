@@ -235,14 +235,14 @@ export function validateMinimumDays(
   if (bookingType === "custom" && numberOfDays < 6) {
     return {
       valid: false,
-      message: "Minimal pembelian untuk custom jam adalah 6 hari",
+      message: "Minimal pembelian untuk custom jam adalah 6 hari dengan minimal 12 jam total",
     }
   }
 
   if (bookingType === "package" && numberOfDays < 5) {
     return {
       valid: false,
-      message: "Minimal pembelian untuk paket jam adalah 5 hari",
+      message: "Minimal pembelian untuk paket jam adalah 5 hari. Paket dengan durasi kurang dari 5 hari tidak dapat dipilih.",
     }
   }
 

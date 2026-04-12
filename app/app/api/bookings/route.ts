@@ -118,7 +118,11 @@ export async function POST(request: Request) {
     const validation = validateMinimumDays(bookingType, numberOfDays)
     if (!validation.valid) {
       return NextResponse.json(
-        { success: false, error: validation.message },
+        {
+          success: false,
+          error: "Validasi gagal",
+          details: [validation.message || "Mohon cek kembali pilihan paket atau jumlah jam Anda."],
+        },
         { status: 400 },
       )
     }

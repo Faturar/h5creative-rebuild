@@ -35,7 +35,7 @@ interface TimeSlotSelectionProps {
   studioId: string | null
   selectedSlotId: string | null
   onSelect: (
-    slotId: string,
+    slotId: string | null,
     date: string,
     startTime: string,
     endTime: string,
