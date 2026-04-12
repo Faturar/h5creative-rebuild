@@ -9,9 +9,8 @@ import {
   ChevronLeft,
   ChevronRight,
   AlertCircle,
-  Plus,
-  Info,
   DollarSign,
+  Info,
 } from "lucide-react"
 import {
   format,
@@ -32,12 +31,6 @@ interface StudioSlot {
   isBooked: boolean
 }
 
-interface Studio {
-  id: string
-  name: string
-  location: string
-}
-
 interface TimeSlotSelectionProps {
   studioId: string | null
   selectedSlotId: string | null
@@ -51,6 +44,7 @@ interface TimeSlotSelectionProps {
   customerEmail?: string
   customerPhone?: string
   deviceType?: string | null
+  totalHours?: number | null
 }
 
 export default function TimeSlotSelection({
@@ -61,6 +55,7 @@ export default function TimeSlotSelection({
   customerEmail = "",
   customerPhone = "",
   deviceType,
+  totalHours,
 }: TimeSlotSelectionProps) {
   const [slots, setSlots] = useState<StudioSlot[]>([])
   const [loading, setLoading] = useState(true)
@@ -70,23 +65,20 @@ export default function TimeSlotSelection({
   >(new Map())
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [selectedSlot, setSelectedSlot] = useState<StudioSlot | null>(null)
-  const [isCustomSlotModalOpen, setIsCustomSlotModalOpen] = useState(false)
+  const [selectionMode, setSelectionMode] = useState<"preset" | "custom">("preset")
   const [customSlotData, setCustomSlotData] = useState({
     studioId: studioId || "",
     date: format(new Date(), "yyyy-MM-dd"),
     startTime: "",
     endTime: "",
-    notes: "",
-    customerName: "",
-    customerEmail: "",
-    customerPhone: "",
   })
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set())
-  const [studios, setStudios] = useState<Studio[]>([])
-  const [loadingStudios, setLoadingStudios] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [customSlotSuccess, setCustomSlotSuccess] = useState(false)
+  const [customSurcharge, setCustomSurcharge] = useState<{
+    hasSurcharge: boolean
+    amount: number
+    description: string
+  } | null>(null)
 
   useEffect(() => {
     if (studioId) {
@@ -96,32 +88,16 @@ export default function TimeSlotSelection({
   }, [studioId, selectedDate])
 
   useEffect(() => {
-    // Fetch surcharge information for all slots
     if (slots.length > 0) {
       fetchSlotSurcharges()
     }
   }, [slots])
 
   useEffect(() => {
-    if (isCustomSlotModalOpen) {
-      fetchStudios()
+    if (customSlotData.startTime && customSlotData.endTime) {
+      fetchCustomSurcharge()
     }
-  }, [isCustomSlotModalOpen])
-
-  const fetchStudios = async () => {
-    setLoadingStudios(true)
-    try {
-      const response = await fetch("/api/studios")
-      const result = await response.json()
-      if (result.success) {
-        setStudios(result.data || [])
-      }
-    } catch (error) {
-      console.error("Failed to fetch studios:", error)
-    } finally {
-      setLoadingStudios(false)
-    }
-  }
+  }, [customSlotData.startTime, customSlotData.endTime])
 
   const fetchSlots = async () => {
     if (!studioId) return
@@ -193,6 +169,40 @@ export default function TimeSlotSelection({
     setSlotSurcharges(surchargeMap)
   }
 
+  const fetchCustomSurcharge = async () => {
+    if (!customSlotData.startTime || !customSlotData.endTime) return
+
+    try {
+      const response = await fetch("/api/pricing/surcharge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          startTime: customSlotData.startTime,
+          endTime: customSlotData.endTime,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setCustomSurcharge(result.data)
+      } else {
+        setCustomSurcharge({
+          hasSurcharge: false,
+          amount: 0,
+          description: "Normal operational hours",
+        })
+      }
+    } catch (error) {
+      console.error("Error fetching custom surcharge:", error)
+      setCustomSurcharge({
+        hasSurcharge: false,
+        amount: 0,
+        description: "Normal operational hours",
+      })
+    }
+  }
+
   const getSlotBorderColor = (slotId: string): string => {
     const surchargeInfo = slotSurcharges.get(slotId)
     if (!surchargeInfo?.hasSurcharge) return "border-white/10"
@@ -240,33 +250,11 @@ export default function TimeSlotSelection({
     )
   }
 
-  const validateCustomSlot = () => {
+  const validateCustomTime = () => {
     const errors: string[] = []
 
-    if (!customSlotData.studioId) {
-      errors.push("Studio is required")
-    }
-
-    if (
-      !customSlotData.customerName ||
-      customSlotData.customerName.trim() === ""
-    ) {
-      errors.push("Your name is required")
-    }
-
-    if (
-      !customSlotData.customerEmail ||
-      customSlotData.customerEmail.trim() === ""
-    ) {
-      errors.push("Email is required")
-    } else if (
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customSlotData.customerEmail)
-    ) {
-      errors.push("Please enter a valid email address")
-    }
-
     if (!customSlotData.date) {
-      errors.push("Date is required")
+      errors.push("Tanggal harus dipilih")
     } else {
       const selectedDate = new Date(customSlotData.date)
       const today = new Date()
@@ -274,16 +262,16 @@ export default function TimeSlotSelection({
       selectedDate.setHours(0, 0, 0, 0)
 
       if (selectedDate < today) {
-        errors.push("Please select a future date")
+        errors.push("Mohon pilih tanggal di masa depan")
       }
     }
 
     if (!customSlotData.startTime) {
-      errors.push("Start time is required")
+      errors.push("Jam mulai harus diisi")
     }
 
     if (!customSlotData.endTime) {
-      errors.push("End time is required")
+      errors.push("Jam selesai harus diisi")
     }
 
     if (customSlotData.startTime && customSlotData.endTime) {
@@ -298,26 +286,22 @@ export default function TimeSlotSelection({
       const endMinutesTotal = endHours * 60 + endMinutes
 
       if (endMinutesTotal <= startMinutesTotal) {
-        errors.push("End time must be after start time")
+        errors.push("Jam selesai harus setelah jam mulai")
       }
 
       const duration = endMinutesTotal - startMinutesTotal
       if (duration < 30) {
-        errors.push("Minimum slot duration is 30 minutes")
+        errors.push("Durasi minimal adalah 30 menit")
       } else if (duration > 480) {
-        errors.push("Maximum slot duration is 8 hours")
+        errors.push("Durasi maksimal adalah 8 jam per sesi")
       }
     }
 
     return errors
   }
 
-  const handleFieldBlur = (fieldName: string) => {
-    setTouchedFields(new Set([...touchedFields, fieldName]))
-  }
-
-  const handleCustomSlotSubmit = async () => {
-    const errors = validateCustomSlot()
+  const handleCustomTimeSelect = () => {
+    const errors = validateCustomTime()
 
     if (errors.length > 0) {
       setValidationErrors(errors)
@@ -325,54 +309,22 @@ export default function TimeSlotSelection({
     }
 
     setValidationErrors([])
-    setIsSubmitting(true)
-    try {
-      const response = await fetch("/api/slot-requests", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          studioId: customSlotData.studioId,
-          date: customSlotData.date,
-          startTime: customSlotData.startTime,
-          endTime: customSlotData.endTime,
-          customerName: customSlotData.customerName.trim(),
-          customerEmail: customSlotData.customerEmail.trim(),
-          customerPhone: customSlotData.customerPhone
-            ? customSlotData.customerPhone.trim()
-            : "",
-          notes: customSlotData.notes,
-        }),
-      })
 
-      const result = await response.json()
-      if (result.success) {
-        setCustomSlotSuccess(true)
-        setIsCustomSlotModalOpen(false)
-        setCustomSlotData({
-          studioId: studioId || "",
-          date: format(new Date(), "yyyy-MM-dd"),
-          startTime: "",
-          endTime: "",
-          notes: "",
-          customerName: "",
-          customerEmail: "",
-          customerPhone: "",
-        })
-        setValidationErrors([])
-        setTouchedFields(new Set())
-      } else {
-        setValidationErrors([
-          result.error || "Failed to submit custom slot request",
-        ])
-      }
-    } catch (err) {
-      console.error("Failed to submit custom slot request:", err)
-      setValidationErrors([
-        "Failed to submit custom slot request. Please try again.",
-      ])
-    } finally {
-      setIsSubmitting(false)
-    }
+    onSelect(
+      null,
+      customSlotData.date,
+      customSlotData.startTime,
+      customSlotData.endTime,
+    )
+  }
+
+  const handleCustomTimeChange = (
+    field: "startTime" | "endTime" | "date",
+    value: string,
+  ) => {
+    setCustomSlotData((prev) => ({ ...prev, [field]: value }))
+    setTouchedFields(new Set([...touchedFields, field]))
+    setValidationErrors([])
   }
 
   const formatTime = (time: string) => {
@@ -412,19 +364,17 @@ export default function TimeSlotSelection({
         </p>
       </div>
 
-      {/* Error Message */}
       {error && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-4 md:mb-6 p-3 md:p-4 bg-red-500/10 border border-red-500/30 rounded-xl md:rounded-2xl flex items-center gap-2 md:gap-3"
+          className="mb-6 p-4 md:p-5 bg-red-500/15 border-2 border-red-500/40 rounded-xl md:rounded-2xl flex items-center gap-3"
         >
-          <AlertCircle className="w-4 h-4 md:w-5 md:h-5 text-red-500 flex-shrink-0" />
-          <p className="text-sm md:text-base text-red-400">{error}</p>
+          <AlertCircle className="w-5 h-5 md:w-6 md:h-6 text-red-400 flex-shrink-0" />
+          <p className="text-base md:text-lg font-medium text-red-400">{error}</p>
         </motion.div>
       )}
 
-      {/* Date Selector */}
       <div className="mb-6 md:mb-8">
         <div className="flex items-center justify-between mb-3 md:mb-4">
           <button
@@ -486,477 +436,314 @@ export default function TimeSlotSelection({
         </div>
       </div>
 
-      {/* Time Slots */}
       <div className="mb-6 md:mb-8">
-        <h3 className="text-base md:text-lg font-semibold text-white mb-3 md:mb-4">
-          Slot Tersedia -{" "}
-          {format(selectedDate, "EEEE, d MMMM yyyy", { locale: localeId })}
-        </h3>
-
-        {loading ? (
-          <div className="flex items-center justify-center h-28 md:h-32">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#4920E5]"></div>
-          </div>
-        ) : availableSlots.length === 0 ? (
-          <div className="text-center py-10 md:py-12 bg-white/5 rounded-2xl border border-white/10">
-            <Calendar className="w-10 h-10 md:w-12 md:h-12 text-gray-400 mx-auto mb-2 md:mb-3" />
-            <p className="text-sm md:text-base text-gray-400 mb-2">
-              Tidak ada slot tersedia untuk tanggal ini
-            </p>
-            <p className="text-xs md:text-sm text-gray-500">
-              Coba pilih tanggal lain atau hubungi kami untuk informasi lebih
-              lanjut
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-            {slots.map((slot) => {
-              const isSelected = selectedSlotId === slot.id
-              const isAvailable = !slot.isBooked
-              const surchargeInfo = slotSurcharges.get(slot.id)
-
-              return (
-                <motion.button
-                  key={slot.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  onClick={() => handleSlotSelect(slot)}
-                  disabled={!isAvailable}
-                  className={`relative p-4 rounded-[20px] border-2 transition-all ${
-                    isSelected
-                      ? "border-[#4920E5] bg-[#4920E5]/20 shadow-lg scale-105"
-                      : !isAvailable
-                        ? "border-white/10 bg-white/5 cursor-not-allowed opacity-50"
-                        : `${getSlotBorderColor(slot.id)} hover:border-[#4920E5]/50 hover:shadow-md ${getSlotBackgroundColor(slot.id, isSelected, isAvailable)}`
-                  }`}
-                >
-                  {isSelected && (
-                    <div className="absolute top-2 right-2 w-6 h-6 bg-[#4920E5] rounded-full flex items-center justify-center">
-                      <Check className="w-4 h-4 text-white" />
-                    </div>
-                  )}
-
-                  {surchargeInfo?.hasSurcharge && !isSelected && (
-                    <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
-                      <DollarSign className="w-3 h-3" />
-                      +Rp {surchargeInfo.amount.toLocaleString("id-ID")}
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-2 mb-2">
-                    <Clock
-                      className={`w-4 h-4 ${isAvailable ? "text-[#4920E5]" : "text-gray-500"}`}
-                    />
-                    <span
-                      className={`font-semibold ${isAvailable ? "text-white" : "text-gray-500"}`}
-                    >
-                      {formatTime(slot.startTime)}
-                    </span>
-                  </div>
-
-                  <div
-                    className={`text-sm ${isAvailable ? "text-gray-300" : "text-gray-500"}`}
-                  >
-                    {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
-                  </div>
-
-                  {surchargeInfo?.hasSurcharge && (
-                    <div className="mt-2 text-xs text-orange-400 font-medium">
-                      {surchargeInfo.description}
-                    </div>
-                  )}
-
-                  {!isAvailable && (
-                    <div className="mt-2 text-xs text-red-400 font-medium">
-                      Sudah Dibooking
-                    </div>
-                  )}
-                </motion.button>
-              )
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* Info Box */}
-      {availableSlots.length > 0 && (
-        <div className="mb-4 md:mb-6 p-3 md:p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl md:rounded-2xl">
-          <div className="flex items-start gap-2 md:gap-3">
-            <Calendar className="w-4 h-4 md:w-5 md:h-5 text-blue-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-xs md:text-sm font-medium text-blue-300 mb-1">
-                {availableSlots.length} slot tersedia
-              </p>
-              <p className="text-xs text-blue-400">
-                Pilih salah satu slot di atas untuk melanjutkan ke langkah
-                berikutnya
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Surcharge Info Box */}
-      <div className="mb-4 md:mb-6 p-3 md:p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl md:rounded-2xl">
-        <div className="flex items-start gap-2 md:gap-3">
-          <Info className="w-4 h-4 md:w-5 md:h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="text-xs md:text-sm font-medium text-yellow-300 mb-2">
-              Informasi Biaya Tambahan
-            </p>
-            <ul className="text-xs text-yellow-400 space-y-1">
-              <li className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                <span>07:00 - 21:00: Harga normal</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-orange-500"></div>
-                <span>21:00 - 01:00: +Rp 15.000/jam</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                <span>01:00 - 07:00: +Rp 20.000/jam</span>
-              </li>
-            </ul>
-          </div>
+        <div className="flex justify-center bg-white/5 rounded-full p-1 inline-flex mx-auto border border-white/10">
+          <button
+            onClick={() => setSelectionMode("preset")}
+            className={`flex items-center gap-2 px-5 md:px-7 py-2.5 md:py-3 rounded-full transition-all font-semibold ${
+              selectionMode === "preset"
+                ? "bg-[#4920E5] text-white shadow-lg shadow-[#4920E5]/30"
+                : "text-gray-400 hover:text-white hover:bg-white/10"
+            }`}
+          >
+            <Calendar className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="text-sm md:text-base">Slot Tersedia</span>
+          </button>
+          <button
+            onClick={() => setSelectionMode("custom")}
+            className={`flex items-center gap-2 px-5 md:px-7 py-2.5 md:py-3 rounded-full transition-all font-semibold ${
+              selectionMode === "custom"
+                ? "bg-[#4920E5] text-white shadow-lg shadow-[#4920E5]/30"
+                : "text-gray-400 hover:text-white hover:bg-white/10"
+            }`}
+          >
+            <Clock className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="text-sm md:text-base">Custom Waktu</span>
+          </button>
         </div>
       </div>
 
-      {/* No Slots Available - Request Custom Slot */}
-      {availableSlots.length === 0 && !loading && (
-        <div className="mb-6">
-          <div className="text-center py-8 bg-white/5 rounded-2xl border border-white/10 mb-4">
-            <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-400 mb-4">
-              Tidak ada slot tersedia untuk tanggal ini
-            </p>
-            <button
-              onClick={() => {
-                setCustomSlotData((prev) => ({
-                  ...prev,
-                  studioId: studioId || "",
-                }))
-                setIsCustomSlotModalOpen(true)
-              }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#4920E5] text-white rounded-[20px] font-semibold hover:bg-[#5B2CE8] transition-all shadow-lg hover:shadow-[0_10px_20px_0_#4920E5]"
-            >
-              <Plus className="w-5 h-5" />
-              Request Custom Slot
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Custom Slot Request Success */}
-      {customSlotSuccess && (
+      {selectionMode === "custom" && validationErrors.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-2xl flex items-center gap-3"
+          className="mb-6 p-4 md:p-5 bg-red-500/15 border-2 border-red-500/40 rounded-xl md:rounded-2xl"
         >
-          <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
-          <div>
-            <p className="text-sm font-medium text-green-300">
-              Custom slot request submitted!
-            </p>
-            <p className="text-xs text-green-400">
-              We'll review your request and get back to you soon.
-            </p>
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 md:w-6 md:h-6 text-red-400 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-base md:text-lg font-bold text-red-300 mb-3">
+                Mohon perbaiki kesalahan berikut:
+              </p>
+              <ul className="text-sm md:text-base text-red-400 space-y-2 list-disc list-inside font-medium">
+                {validationErrors.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         </motion.div>
       )}
 
-      {/* Custom Slot Request Modal */}
-      {isCustomSlotModalOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#0B0B1B] rounded-2xl p-6 max-w-md w-full border border-white/10 max-h-[90vh] overflow-y-auto"
-          >
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Request Custom Slot
-            </h3>
-            <p className="text-gray-400 mb-6">
-              Request a custom time slot for your live streaming session
-            </p>
+      {selectionMode === "custom" && (
+        <div className="mb-6 md:mb-8 p-4 md:p-6 bg-white/5 rounded-2xl border-2 border-white/20 shadow-lg">
+          <h3 className="text-lg md:text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <Clock className="w-5 h-5 md:w-6 md:h-6 text-[#4920E5]" />
+            Tentukan Waktu Live Streaming
+          </h3>
 
-            {validationErrors.length > 0 && (
-              <div className="mb-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
-                <div className="flex items-start gap-2">
-                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-red-300 mb-2">
-                      Please fix the following errors:
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div>
+              <label className="block text-sm md:text-base font-semibold text-white mb-2">
+                Tanggal
+              </label>
+              <input
+                type="date"
+                value={customSlotData.date}
+                onChange={(e) => handleCustomTimeChange("date", e.target.value)}
+                min={format(new Date(), "yyyy-MM-dd")}
+                className="w-full px-4 py-3 bg-white/10 border-2 border-white/20 rounded-xl text-white text-base md:text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4920E5] focus:border-[#4920E5] transition-all"
+                placeholder="Pilih tanggal"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm md:text-base font-semibold text-white mb-2">
+                  Jam Mulai
+                </label>
+                <input
+                  type="time"
+                  value={customSlotData.startTime}
+                  onChange={(e) => handleCustomTimeChange("startTime", e.target.value)}
+                  className="w-full px-4 py-3 bg-white/10 border-2 border-white/20 rounded-xl text-white text-base md:text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4920E5] focus:border-[#4920E5] transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm md:text-base font-semibold text-white mb-2">
+                  Jam Selesai
+                </label>
+                <input
+                  type="time"
+                  value={customSlotData.endTime}
+                  onChange={(e) => handleCustomTimeChange("endTime", e.target.value)}
+                  className="w-full px-4 py-3 bg-white/10 border-2 border-white/20 rounded-xl text-white text-base md:text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4920E5] focus:border-[#4920E5] transition-all"
+                />
+              </div>
+            </div>
+          </div>
+
+          {customSlotData.startTime &&
+            customSlotData.endTime &&
+            (() => {
+              const [startHours, startMinutes] = customSlotData.startTime
+                .split(":")
+                .map(Number)
+              const [endHours, endMinutes] = customSlotData.endTime
+                .split(":")
+                .map(Number)
+              const durationMinutes =
+                endHours * 60 +
+                endMinutes -
+                (startHours * 60 + startMinutes)
+              const hours = Math.floor(durationMinutes / 60)
+              const minutes = durationMinutes % 60
+
+              if (durationMinutes > 0) {
+                return (
+                  <div className="mt-4 p-3 bg-[#4920E5]/10 border border-[#4920E5]/30 rounded-xl">
+                    <p className="text-sm md:text-base text-gray-300">
+                      Durasi:{" "}
+                      <span className="text-white font-bold">
+                        {hours} jam {minutes > 0 && `${minutes} menit`}
+                      </span>
                     </p>
-                    <ul className="text-sm text-red-400 space-y-1 list-disc list-inside">
-                      {validationErrors.map((error, index) => (
-                        <li key={index}>{error}</li>
-                      ))}
-                    </ul>
+                  </div>
+                )
+              }
+              return null
+            })()}
+
+          <button
+            onClick={handleCustomTimeSelect}
+            className="mt-4 w-full py-3 md:py-4 bg-[#4920E5] hover:bg-[#5B2BE8] text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl"
+          >
+            Pilih Waktu Ini
+          </button>
+
+          {customSurcharge?.hasSurcharge && (
+            <div className="mt-4 p-3 md:p-4 bg-orange-500/10 border border-orange-500/30 rounded-xl">
+              <div className="flex items-start gap-2 md:gap-3">
+                <DollarSign className="w-4 h-4 md:w-5 md:h-5 text-orange-400 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-sm md:text-base font-medium text-orange-300 mb-1">
+                    Biaya Tambahan Waktu
+                  </p>
+                  <p className="text-sm md:text-base text-orange-400">
+                    +Rp {customSurcharge.amount.toLocaleString("id-ID")} /{" "}
+                    {customSurcharge.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {!customSurcharge?.hasSurcharge &&
+            customSlotData.startTime &&
+            customSlotData.endTime && (
+              <div className="mt-4 p-3 md:p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
+                <div className="flex items-start gap-2 md:gap-3">
+                  <Info className="w-4 h-4 md:w-5 md:h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm md:text-base font-medium text-green-300">
+                      Jam Normal
+                    </p>
+                    <p className="text-xs md:text-sm text-green-400">
+                      Tidak ada biaya tambahan untuk jam ini
+                    </p>
                   </div>
                 </div>
               </div>
             )}
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Studio <span className="text-red-400">*</span>
-                </label>
-                <select
-                  value={customSlotData.studioId}
-                  onChange={(e) =>
-                    setCustomSlotData({
-                      ...customSlotData,
-                      studioId: e.target.value,
-                    })
-                  }
-                  onBlur={() => handleFieldBlur("studioId")}
-                  disabled={loadingStudios}
-                  className={`w-full px-4 py-2.5 rounded-lg border focus:ring-2 focus:ring-[#4920E5] focus:outline-none appearance-none cursor-pointer ${
-                    touchedFields.has("studioId") && !customSlotData.studioId
-                      ? "border-red-500"
-                      : "border-white/10"
-                  } bg-white/5 text-white`}
-                  style={{
-                    backgroundImage: loadingStudios
-                      ? "none"
-                      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "right 0.75rem center",
-                    backgroundSize: "1.5em 1.5em",
-                  }}
-                >
-                  {loadingStudios ? (
-                    <option value="">Loading studios...</option>
-                  ) : (
-                    <>
-                      <option value="">Select Studio</option>
-                      {studios.map((studio) => (
-                        <option
-                          key={studio.id}
-                          value={studio.id}
-                          className="bg-[#1a1a2e] text-white"
-                        >
-                          {studio.name} - {studio.location}
-                        </option>
-                      ))}
-                    </>
-                  )}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Your Name <span className="text-red-400">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={customSlotData.customerName}
-                  onChange={(e) =>
-                    setCustomSlotData({
-                      ...customSlotData,
-                      customerName: e.target.value,
-                    })
-                  }
-                  onBlur={() => handleFieldBlur("customerName")}
-                  className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border focus:ring-2 focus:ring-[#4920E5] focus:outline-none text-white ${
-                    touchedFields.has("customerName") &&
-                    !customSlotData.customerName.trim()
-                      ? "border-red-500"
-                      : "border-white/10"
-                  }`}
-                  placeholder="Enter your name"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Email <span className="text-red-400">*</span>
-                </label>
-                <input
-                  type="email"
-                  value={customSlotData.customerEmail}
-                  onChange={(e) =>
-                    setCustomSlotData({
-                      ...customSlotData,
-                      customerEmail: e.target.value,
-                    })
-                  }
-                  onBlur={() => handleFieldBlur("customerEmail")}
-                  className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border focus:ring-2 focus:ring-[#4920E5] focus:outline-none text-white ${
-                    touchedFields.has("customerEmail") &&
-                    (!customSlotData.customerEmail.trim() ||
-                      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                        customSlotData.customerEmail,
-                      ))
-                      ? "border-red-500"
-                      : "border-white/10"
-                  }`}
-                  placeholder="your@email.com"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Phone (Optional)
-                </label>
-                <input
-                  type="tel"
-                  value={customSlotData.customerPhone}
-                  onChange={(e) =>
-                    setCustomSlotData({
-                      ...customSlotData,
-                      customerPhone: e.target.value,
-                    })
-                  }
-                  className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-[#4920E5] focus:outline-none"
-                  placeholder="+62 812 3456 7890"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Date <span className="text-red-400">*</span>
-                </label>
-                <input
-                  type="date"
-                  value={customSlotData.date}
-                  onChange={(e) => {
-                    setCustomSlotData({
-                      ...customSlotData,
-                      date: e.target.value,
-                    })
-                    handleFieldBlur("date")
-                  }}
-                  min={format(new Date(), "yyyy-MM-dd")}
-                  className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border focus:ring-2 focus:ring-[#4920E5] focus:outline-none text-white ${
-                    touchedFields.has("date") && !customSlotData.date
-                      ? "border-red-500"
-                      : "border-white/10"
-                  }`}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Start Time <span className="text-red-400">*</span>
-                  </label>
-                  <input
-                    type="time"
-                    value={customSlotData.startTime}
-                    onChange={(e) =>
-                      setCustomSlotData({
-                        ...customSlotData,
-                        startTime: e.target.value,
-                      })
-                    }
-                    onBlur={() => handleFieldBlur("startTime")}
-                    className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border focus:ring-2 focus:ring-[#4920E5] focus:outline-none text-white ${
-                      touchedFields.has("startTime") &&
-                      !customSlotData.startTime
-                        ? "border-red-500"
-                        : "border-white/10"
-                    }`}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    End Time <span className="text-red-400">*</span>
-                  </label>
-                  <input
-                    type="time"
-                    value={customSlotData.endTime}
-                    onChange={(e) =>
-                      setCustomSlotData({
-                        ...customSlotData,
-                        endTime: e.target.value,
-                      })
-                    }
-                    onBlur={() => handleFieldBlur("endTime")}
-                    className={`w-full px-4 py-2.5 rounded-lg bg-white/5 border focus:ring-2 focus:ring-[#4920E5] focus:outline-none text-white ${
-                      touchedFields.has("endTime") && !customSlotData.endTime
-                        ? "border-red-500"
-                        : "border-white/10"
-                    }`}
-                  />
-                </div>
-              </div>
-
-              {customSlotData.startTime && customSlotData.endTime && (
-                <div className="text-sm text-gray-400">
-                  <Clock className="w-3 h-3 inline mr-1" />
-                  Duration:{" "}
-                  {(() => {
-                    const [startHours, startMinutes] = customSlotData.startTime
-                      .split(":")
-                      .map(Number)
-                    const [endHours, endMinutes] = customSlotData.endTime
-                      .split(":")
-                      .map(Number)
-                    const durationMinutes =
-                      endHours * 60 +
-                      endMinutes -
-                      (startHours * 60 + startMinutes)
-                    const hours = Math.floor(durationMinutes / 60)
-                    const minutes = durationMinutes % 60
-                    return `${hours}h ${minutes}m`
-                  })()}
-                </div>
-              )}
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Notes (Optional)
-                </label>
-                <textarea
-                  value={customSlotData.notes}
-                  onChange={(e) =>
-                    setCustomSlotData({
-                      ...customSlotData,
-                      notes: e.target.value,
-                    })
-                  }
-                  rows={3}
-                  className="w-full px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-[#4920E5] focus:outline-none resize-none"
-                  placeholder="Any special requirements..."
-                />
+          <div className="mt-6 p-4 md:p-5 bg-blue-500/10 border-2 border-blue-500/30 rounded-xl">
+            <div className="flex items-start gap-2 md:gap-3">
+              <Info className="w-5 h-5 md:w-6 md:h-6 text-blue-400 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-base md:text-lg font-bold text-blue-300 mb-3">
+                  Informasi Biaya Tambahan
+                </p>
+                <ul className="text-sm md:text-base text-blue-400 space-y-2">
+                  <li className="flex items-center gap-3">
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0"></div>
+                    <span className="font-medium">07:00 - 21:00: Harga normal</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <div className="w-2.5 h-2.5 rounded-full bg-orange-500 flex-shrink-0"></div>
+                    <span className="font-medium">21:00 - 01:00: +Rp 15.000/jam</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"></div>
+                    <span className="font-medium">01:00 - 07:00: +Rp 20.000/jam</span>
+                  </li>
+                </ul>
               </div>
             </div>
+          </div>
+        </div>
+      )}
 
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                onClick={() => {
-                  setIsCustomSlotModalOpen(false)
-                  setCustomSlotData({
-                    studioId: studioId || "",
-                    date: format(new Date(), "yyyy-MM-dd"),
-                    startTime: "",
-                    endTime: "",
-                    notes: "",
-                    customerName: "",
-                    customerEmail: "",
-                    customerPhone: "",
-                  })
-                  setValidationErrors([])
-                  setTouchedFields(new Set())
-                }}
-                disabled={isSubmitting}
-                className="px-6 py-2.5 border-2 border-white/20 text-white rounded-xl font-semibold hover:bg-white/10 transition-all disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleCustomSlotSubmit}
-                disabled={isSubmitting}
-                className="px-6 py-2.5 bg-[#4920E5] text-white rounded-xl font-semibold hover:bg-[#5B2CE8] transition-all disabled:opacity-50"
-              >
-                {isSubmitting ? "Submitting..." : "Submit Request"}
-              </button>
+      {selectionMode === "preset" && (
+        <div className="mb-6 md:mb-8">
+          <h3 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4 flex items-center gap-2">
+            <Calendar className="w-5 h-5 md:w-6 md:h-6 text-[#4920E5]" />
+            Slot Tersedia -{" "}
+            <span className="text-[#4920E5]">
+              {format(selectedDate, "EEEE, d MMMM yyyy", { locale: localeId })}
+            </span>
+          </h3>
+
+          {loading ? (
+            <div className="flex items-center justify-center h-32 md:h-40 bg-white/5 rounded-2xl">
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#4920E5]"></div>
             </div>
-          </motion.div>
+          ) : availableSlots.length === 0 ? (
+            <div className="text-center py-12 md:py-16 bg-white/5 rounded-2xl border-2 border-dashed border-white/20">
+              <Calendar className="w-12 h-12 md:w-16 md:h-16 text-gray-400 mx-auto mb-3 md:mb-4" />
+              <p className="text-base md:text-lg font-medium text-gray-300 mb-2">
+                Tidak ada slot tersedia untuk tanggal ini
+              </p>
+              <p className="text-sm md:text-base text-gray-400">
+                Coba pilih tanggal lain atau gunakan mode "Custom Waktu" untuk
+                menentukan waktu sendiri
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+              {slots.map((slot) => {
+                const isSelected = selectedSlotId === slot.id
+                const isAvailable = !slot.isBooked
+                const surchargeInfo = slotSurcharges.get(slot.id)
+
+                return (
+                  <motion.button
+                    key={slot.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    onClick={() => handleSlotSelect(slot)}
+                    disabled={!isAvailable}
+                    className={`relative p-4 md:p-5 rounded-2xl border-2 transition-all ${
+                      isSelected
+                        ? "border-[#4920E5] bg-[#4920E5]/20 shadow-xl scale-105"
+                        : !isAvailable
+                          ? "border-white/10 bg-white/5 cursor-not-allowed opacity-40"
+                          : `${getSlotBorderColor(slot.id)} hover:border-[#4920E5]/70 hover:shadow-lg hover:scale-102 ${getSlotBackgroundColor(slot.id, isSelected, isAvailable)}`
+                    }`}
+                  >
+                    {isSelected && (
+                      <div className="absolute top-2 right-2 w-7 h-7 bg-[#4920E5] rounded-full flex items-center justify-center shadow-lg">
+                        <Check className="w-4 h-4 text-white" />
+                      </div>
+                    )}
+
+                    {surchargeInfo?.hasSurcharge && !isSelected && (
+                      <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-md">
+                        <DollarSign className="w-3 h-3" />
+                        +Rp {surchargeInfo.amount.toLocaleString("id-ID")}
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock
+                        className={`w-5 h-5 ${isAvailable ? "text-[#4920E5]" : "text-gray-500"}`}
+                      />
+                      <span
+                        className={`font-bold text-lg ${isAvailable ? "text-white" : "text-gray-500"}`}
+                      >
+                        {formatTime(slot.startTime)}
+                      </span>
+                    </div>
+
+                    <div
+                      className={`text-sm md:text-base font-medium ${isAvailable ? "text-gray-300" : "text-gray-500"}`}
+                    >
+                      {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
+                    </div>
+
+                    {surchargeInfo?.hasSurcharge && (
+                      <div className="mt-2 text-xs md:text-sm text-orange-400 font-semibold">
+                        {surchargeInfo.description}
+                      </div>
+                    )}
+
+                    {!isAvailable && (
+                      <div className="mt-2 text-xs md:text-sm text-red-400 font-semibold">
+                        Sudah Dibooking
+                      </div>
+                    )}
+                  </motion.button>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {selectionMode === "preset" && availableSlots.length > 0 && (
+        <div className="mb-6 p-4 md:p-5 bg-green-500/10 border-2 border-green-500/30 rounded-xl md:rounded-2xl">
+          <div className="flex items-start gap-3">
+            <Check className="w-5 h-5 md:w-6 md:h-6 text-green-400 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-base md:text-lg font-bold text-green-300 mb-1">
+                {availableSlots.length} slot tersedia
+              </p>
+              <p className="text-sm md:text-base text-green-400">
+                Pilih salah satu slot di atas untuk melanjutkan ke langkah
+                berikutnya
+              </p>
+            </div>
+          </div>
         </div>
       )}
     </div>

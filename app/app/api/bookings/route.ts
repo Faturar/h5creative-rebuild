@@ -16,10 +16,10 @@ type BookingStatus =
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const bookingSchema = z.object({
-  packageId: z.string().uuid(),
+  packageId: z.string().uuid().nullable().optional(),
   hostId: z.string().uuid(),
   studioId: z.string().uuid(),
-  studioSlotId: z.string().uuid(),
+  studioSlotId: z.string().uuid().nullable().optional(),
   date: z.string(),
   startTime: z.string(),
   endTime: z.string(),
@@ -32,7 +32,7 @@ const bookingSchema = z.object({
   productCategory: z.string().min(2),
   notes: z.string().optional(),
   deviceType: z.string().optional(),
-  totalHours: z.number().optional(),
+  totalHours: z.number().min(0).nullable().optional(),
   timeSlots: z
     .array(
       z.object({
@@ -83,23 +83,37 @@ export async function POST(request: Request) {
     // Generate booking code
     const bookingCode = `BK${Date.now().toString().slice(-8)}`
 
-    // Get package data
-    const packageData = await prisma.package.findUnique({
-      where: { id: validatedData.packageId },
-    })
+    // Get package data only if packageId is provided
+    let packageData = null
+    if (validatedData.packageId) {
+      packageData = await prisma.package.findUnique({
+        where: { id: validatedData.packageId },
+      })
 
-    if (!packageData) {
+      if (!packageData) {
+        return NextResponse.json(
+          { success: false, error: "Package not found" },
+          { status: 404 },
+        )
+      }
+    }
+
+    // For custom bookings, deviceType and totalHours are required
+    if (!packageData && (!validatedData.deviceType || !validatedData.totalHours)) {
       return NextResponse.json(
-        { success: false, error: "Package not found" },
-        { status: 404 },
+        {
+          success: false,
+          error: "Device type and total hours are required for custom bookings",
+        },
+        { status: 400 },
       )
     }
 
     // Validate minimum purchase requirements
-    const bookingType = packageData.bookingType as "custom" | "package"
+    const bookingType = (packageData?.bookingType as "custom" | "package") || "custom"
     const numberOfDays = validatedData.totalHours
       ? Math.ceil(validatedData.totalHours / 2)
-      : packageData.numberOfDays
+      : packageData?.numberOfDays || (validatedData.totalHours ? Math.ceil(validatedData.totalHours / 2) : 0)
 
     const validation = validateMinimumDays(bookingType, numberOfDays)
     if (!validation.valid) {
@@ -110,39 +124,53 @@ export async function POST(request: Request) {
     }
 
     // Calculate dynamic pricing if device type and total hours are provided
-    let price = Number(packageData.promoPrice || packageData.price)
+    let price = packageData ? Number(packageData.promoPrice || packageData.price) : 0
     let basePrice = price
     let surcharge = 0
     let finalPrice = price
     let pricingTierId: string | null = null
-    let totalHours = validatedData.totalHours || packageData.totalHours
+    let totalHours = validatedData.totalHours || packageData?.totalHours || 0
 
+    // Calculate pricing for custom bookings or if device type and time slots are provided
     if (
+      (!packageData || packageData === null) &&
       validatedData.deviceType &&
       validatedData.totalHours &&
-      validatedData.timeSlots
+      validatedData.timeSlots &&
+      validatedData.timeSlots.length > 0
     ) {
-      const pricingBreakdown = await calculateTotalPrice(
-        validatedData.deviceType,
-        validatedData.totalHours,
-        validatedData.timeSlots,
-      )
+      try {
+        const pricingBreakdown = await calculateTotalPrice(
+          validatedData.deviceType,
+          validatedData.totalHours,
+          validatedData.timeSlots,
+        )
 
-      basePrice = pricingBreakdown.basePrice
-      surcharge = pricingBreakdown.totalSurcharge
-      finalPrice = pricingBreakdown.finalPrice
-      pricingTierId = pricingBreakdown.pricingTier?.id || null
-      totalHours = pricingBreakdown.totalHours
+        basePrice = pricingBreakdown.basePrice
+        surcharge = pricingBreakdown.totalSurcharge
+        finalPrice = pricingBreakdown.finalPrice
+        pricingTierId = pricingBreakdown.pricingTier?.id || null
+        totalHours = pricingBreakdown.totalHours
+      } catch (pricingError) {
+        console.error("Failed to calculate pricing:", pricingError)
+        // Use default values if pricing calculation fails
+        basePrice = 0
+        surcharge = 0
+        finalPrice = 0
+        totalHours = validatedData.totalHours || 0
+      }
     }
 
     // Create booking
     const booking = await prisma.$transaction(
       async (tx: Prisma.TransactionClient) => {
-        // Update studio slot as booked
-        await tx.studioSlot.update({
-          where: { id: validatedData.studioSlotId },
-          data: { isBooked: true },
-        })
+        // Update studio slot as booked only if it's a preset slot
+        if (validatedData.studioSlotId) {
+          await tx.studioSlot.update({
+            where: { id: validatedData.studioSlotId },
+            data: { isBooked: true },
+          })
+        }
 
         // Create booking
         const newBooking = await tx.booking.create({
@@ -172,7 +200,7 @@ export async function POST(request: Request) {
             package: true,
             host: true,
             studio: true,
-            studioSlot: true,
+            ...(validatedData.studioSlotId && { studioSlot: true }),
           },
         })
 
@@ -180,21 +208,26 @@ export async function POST(request: Request) {
       },
     )
 
-    await sendBookingConfirmationEmail({
-      to: booking.customerEmail,
-      customerName: booking.customerName,
-      bookingCode: booking.bookingCode,
-      packageName: booking.package.name,
-      studioName: booking.studio.name,
-      date: booking.date.toLocaleDateString("id-ID", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      }),
-      startTime: booking.startTime,
-      endTime: booking.endTime,
-      price: Number(booking.finalPrice),
-    })
+    try {
+      await sendBookingConfirmationEmail({
+        to: booking.customerEmail,
+        customerName: booking.customerName,
+        bookingCode: booking.bookingCode,
+        packageName: booking.package?.name || "Custom Jam",
+        studioName: booking.studio.name,
+        date: booking.date.toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }),
+        startTime: booking.startTime,
+        endTime: booking.endTime,
+        price: Number(booking.finalPrice),
+      })
+    } catch (emailError) {
+      console.error("Failed to send confirmation email:", emailError)
+      // Continue even if email fails - booking was created successfully
+    }
 
     return NextResponse.json({ success: true, data: booking }, { status: 201 })
   } catch (error) {
@@ -231,7 +264,11 @@ export async function POST(request: Request) {
       )
     }
     return NextResponse.json(
-      { success: false, error: "Gagal membuat booking. Silakan coba lagi." },
+      {
+        success: false,
+        error: "Gagal membuat booking. Silakan coba lagi.",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 },
     )
   }

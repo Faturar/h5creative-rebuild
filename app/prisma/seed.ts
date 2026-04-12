@@ -61,7 +61,6 @@ async function main() {
             description: "Paket basic untuk pemula. Termasuk host profesional dan studio lengkap.",
             price: toDecimal(6000000),
             promoPrice: toDecimal(4500000),
-            hasActivePromo: true,
             promoTitle: "Promo Launching",
             promoStartDate: promoStartDate,
             promoEndDate: promoEndDate,

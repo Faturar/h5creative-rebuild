@@ -130,7 +130,7 @@ export async function POST(request: Request) {
         to: booking.customerEmail,
         customerName: booking.customerName,
         bookingCode: booking.bookingCode,
-        packageName: booking.package.name,
+        packageName: booking.package?.name || "Custom Jam",
         studioName: booking.studio.name,
         date: booking.date.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }),
         startTime: booking.startTime,

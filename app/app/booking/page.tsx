@@ -35,6 +35,12 @@ type BookingStep =
   | "payment"
   | "success"
 
+interface TimeSlot {
+  startTime: string
+  endTime: string
+  date: string
+}
+
 interface BookingData {
   deviceType: string | null
   packageId: string | null
@@ -43,7 +49,7 @@ interface BookingData {
   studioSlotId: string | null
   date: string | null
   startTime: string | null
-  endTime: string | null
+  endTime: string
   customerName: string
   customerPhone: string
   customerEmail: string
@@ -56,6 +62,8 @@ interface BookingData {
   customHours: number | null
   customDays: number | null
   hoursPerDay: number | null
+  totalHours?: number
+  timeSlots?: TimeSlot[]
 }
 
 export default function BookingPage() {
@@ -69,7 +77,7 @@ export default function BookingPage() {
     studioSlotId: null,
     date: null,
     startTime: null,
-    endTime: null,
+    endTime: "",
     customerName: "",
     customerPhone: "",
     customerEmail: "",
@@ -82,10 +90,40 @@ export default function BookingPage() {
     customHours: null,
     customDays: null,
     hoursPerDay: null,
+    totalHours: 0,
+    timeSlots: [],
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
+  const [packages, setPackages] = useState<any[]>([])
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const response = await fetch("/api/packages")
+        const result = await response.json()
+        if (result.success) {
+          setPackages(result.data)
+        }
+      } catch (error) {
+        console.error("Failed to fetch packages:", error)
+      }
+    }
+    fetchPackages()
+  }, [])
+
+  useEffect(() => {
+    if (bookingData.packageId && packages.length > 0) {
+      const selectedPackage = packages.find((p) => p.id === bookingData.packageId)
+      if (selectedPackage) {
+        setBookingData((prev) => ({
+          ...prev,
+          totalHours: selectedPackage.totalHours,
+        }))
+      }
+    }
+  }, [bookingData.packageId, packages])
 
   const steps = [
     { id: "device", title: "Pilih Perangkat", icon: Video },
@@ -121,18 +159,50 @@ export default function BookingPage() {
     }
   }
 
+  const calculateHoursFromTimeSlots = (timeSlots: TimeSlot[] | undefined): number => {
+    if (!timeSlots || timeSlots.length === 0) return 0
+
+    return timeSlots.reduce((total, slot) => {
+      const [startHours, startMinutes] = slot.startTime.split(":").map(Number)
+      const [endHours, endMinutes] = slot.endTime.split(":").map(Number)
+
+      const startTotalMinutes = startHours * 60 + startMinutes
+      const endTotalMinutes = endHours * 60 + endMinutes
+
+      let duration = endTotalMinutes - startTotalMinutes
+
+      // Handle overnight slots
+      if (duration < 0) {
+        duration = 24 * 60 + duration
+      }
+
+      return total + duration / 60
+    }, 0)
+  }
+
   const canProceed = () => {
     switch (currentStep) {
       case "device":
         return bookingData.deviceType !== null
       case "package":
-        return bookingData.packageId !== null
+        return (
+          bookingData.packageId !== null ||
+          bookingData.bookingType === "custom"
+        )
       case "host":
         return bookingData.hostId !== null
       case "studio":
         return bookingData.studioId !== null
       case "slot":
-        return bookingData.studioSlotId !== null
+        return (
+          (bookingData.studioSlotId !== null ||
+            (bookingData.date !== null &&
+              bookingData.startTime !== null &&
+              bookingData.endTime !== "")) &&
+          bookingData.date !== null &&
+          bookingData.startTime !== null &&
+          bookingData.endTime !== ""
+        )
       case "customer":
         return !!(
           bookingData.customerName &&
@@ -371,10 +441,27 @@ export default function BookingPage() {
                       setBookingData((prev) => ({ ...prev, packageId }))
                     }
                     onBookingTypeChange={(bookingType) =>
-                      setBookingData((prev) => ({ ...prev, bookingType }))
+                      setBookingData((prev) => {
+                        const updated: any = { ...prev, bookingType }
+                        if (bookingType === "custom") {
+                          updated.packageId = null
+                          updated.totalHours = prev.customHours
+                          updated.timeSlots = []
+                        } else {
+                          updated.packageId = null
+                          updated.customHours = null
+                          updated.customDays = null
+                          updated.hoursPerDay = null
+                        }
+                        return updated
+                      })
                     }
                     onCustomHoursChange={(customHours) =>
-                      setBookingData((prev) => ({ ...prev, customHours }))
+                      setBookingData((prev) => ({
+                        ...prev,
+                        customHours,
+                        totalHours: customHours,
+                      }))
                     }
                     onCustomDaysChange={(customDays) =>
                       setBookingData((prev) => ({ ...prev, customDays }))
@@ -406,13 +493,24 @@ export default function BookingPage() {
                     studioId={bookingData.studioId}
                     selectedSlotId={bookingData.studioSlotId}
                     onSelect={(slotId, date, startTime, endTime) =>
-                      setBookingData((prev) => ({
-                        ...prev,
-                        studioSlotId: slotId,
-                        date,
-                        startTime,
-                        endTime,
-                      }))
+                      setBookingData((prev) => {
+                        const newTimeSlots = [
+                          {
+                            date,
+                            startTime,
+                            endTime,
+                          },
+                        ]
+                        return {
+                          ...prev,
+                          studioSlotId: slotId,
+                          date,
+                          startTime,
+                          endTime,
+                          totalHours: prev.customHours || calculateHoursFromTimeSlots(newTimeSlots),
+                          timeSlots: newTimeSlots,
+                        }
+                      })
                     }
                   />
                 )}

@@ -191,7 +191,7 @@ function BookingSuccessContent() {
                   <span
                     className={`font-medium ${isDark ? "text-gray-200" : "text-gray-900"}`}
                   >
-                    {booking.package.name}
+                    {booking.package?.name || "Custom Jam"}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -253,7 +253,7 @@ function BookingSuccessContent() {
                     Total
                   </span>
                   <span className="text-xl font-bold text-purple-600">
-                    {formatPrice(booking.package.price)}
+                    {formatPrice(booking.finalPrice)}
                   </span>
                 </div>
               </div>

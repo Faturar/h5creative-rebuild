@@ -130,10 +130,10 @@ model User {
 model Booking {
   id              String        @id @default(uuid())
   bookingCode     String        @unique
-  packageId       String
+  packageId       String?
   hostId          String
   studioId        String
-  studioSlotId    String        @unique
+  studioSlotId    String?       @unique
   date            DateTime
   startTime       String
   endTime         String
@@ -153,9 +153,9 @@ model Booking {
   finalPrice      Decimal       @db.Decimal(10, 2)
   pricingTierId   String?
   host            Host          @relation(fields: [hostId], references: [id])
-  package         Package       @relation(fields: [packageId], references: [id])
+  package         Package?       @relation(fields: [packageId], references: [id])
   studio          Studio        @relation(fields: [studioId], references: [id])
-  studioSlot      StudioSlot    @relation(fields: [studioSlotId], references: [id])
+  studioSlot      StudioSlot?   @relation(fields: [studioSlotId], references: [id])
   payments        Payment[]
   pricingTier     PricingTier?  @relation(fields: [pricingTierId], references: [id])
 

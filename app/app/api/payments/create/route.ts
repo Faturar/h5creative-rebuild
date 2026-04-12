@@ -64,10 +64,12 @@ export async function POST(request: Request) {
       },
       item_details: [
         {
-          id: booking.packageId,
+          id: booking.packageId || "custom",
           price: Number(booking.price),
           quantity: 1,
-          name: `${booking.package.name} - ${booking.host.name}`,
+          name: booking.package?.name
+            ? `${booking.package.name} - ${booking.host.name}`
+            : `Custom Jam - ${booking.host.name}`,
         },
       ],
       callbacks: {

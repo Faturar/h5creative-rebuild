@@ -15,7 +15,7 @@ import {
   TrendingDown,
   AlertCircle,
 } from "lucide-react"
-import { calculateTotalPrice, TimeSlot } from "@/lib/pricing"
+import { TimeSlot } from "@/lib/pricing"
 import PackageStats from "@/app/components/service/PackageStats"
 
 interface BookingData {
@@ -84,7 +84,7 @@ export default function BookingSummary({
     ) {
       calculatePricing()
     }
-  }, [bookingData.deviceType, bookingData.totalHours, bookingData.timeSlots])
+  }, [bookingData.deviceType, bookingData.totalHours, bookingData.timeSlots, bookingData.packageId])
 
   const fetchData = async () => {
     if (
@@ -140,12 +140,23 @@ export default function BookingSummary({
     if (!bookingData.deviceType || !bookingData.totalHours) return
 
     try {
-      const breakdown = await calculateTotalPrice(
-        bookingData.deviceType,
-        bookingData.totalHours,
-        bookingData.timeSlots || [],
-      )
-      setPricingBreakdown(breakdown)
+      const res = await fetch("/api/pricing/calculate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          deviceType: bookingData.deviceType,
+          totalHours: bookingData.totalHours,
+          timeSlots: bookingData.timeSlots || [],
+        }),
+      })
+
+      const result = await res.json()
+
+      if (result.success) {
+        setPricingBreakdown(result.data)
+      }
     } catch (error) {
       console.error("Error calculating pricing:", error)
     }
