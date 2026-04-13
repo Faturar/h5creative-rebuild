@@ -77,17 +77,26 @@ export default function PackageSelection({
 
   const validateCustomBooking = () => {
     if (customDays < 6) {
-      return { valid: false, message: "Minimal pembelian untuk custom jam adalah 6 hari" }
+      return {
+        valid: false,
+        message: "Minimal pembelian untuk custom jam adalah 6 hari",
+      }
     }
     if (customHours < 12) {
-      return { valid: false, message: "Minimal 12 jam total untuk custom booking" }
+      return {
+        valid: false,
+        message: "Minimal 12 jam total untuk custom booking",
+      }
     }
     return { valid: true, message: "" }
   }
 
   const validatePackageBooking = (pkg: Package) => {
     if (pkg.numberOfDays < 5) {
-      return { valid: false, message: `Minimal pembelian untuk paket jam adalah 5 hari (paket ini ${pkg.numberOfDays} hari)` }
+      return {
+        valid: false,
+        message: `Minimal pembelian untuk paket jam adalah 5 hari (paket ini ${pkg.numberOfDays} hari)`,
+      }
     }
     return { valid: true, message: "" }
   }
@@ -123,7 +132,14 @@ export default function PackageSelection({
   useEffect(() => {
     const validation = getValidationWarning()
     onValidationChange?.(validation === null)
-  }, [bookingType, customHours, customDays, hoursPerDay, selectedPackageId, packages])
+  }, [
+    bookingType,
+    customHours,
+    customDays,
+    hoursPerDay,
+    selectedPackageId,
+    packages,
+  ])
 
   const fetchPackages = async () => {
     try {
@@ -211,7 +227,7 @@ export default function PackageSelection({
   }
 
   return (
-    <div>
+    <div className="w-full">
       <div className="text-center mb-6 md:mb-8">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
           Pilih Paket Live Streaming
@@ -260,7 +276,8 @@ export default function PackageSelection({
                 Minimal pembelian untuk Paket Jam
               </p>
               <p className="text-sm md:text-base text-gray-300">
-                Minimal pembelian 5 hari untuk paket jam tersedia untuk dipilih. Paket dengan durasi kurang dari 5 hari tidak dapat dipilih.
+                Minimal pembelian 5 hari untuk paket jam tersedia untuk dipilih.
+                Paket dengan durasi kurang dari 5 hari tidak dapat dipilih.
               </p>
             </div>
           </div>
@@ -276,7 +293,8 @@ export default function PackageSelection({
                 Minimal pembelian untuk Custom Jam
               </p>
               <p className="text-sm md:text-base text-gray-300">
-                Minimal pembelian 6 hari dengan minimal 12 jam total untuk custom booking.
+                Minimal pembelian 6 hari dengan minimal 12 jam total untuk
+                custom booking.
               </p>
             </div>
           </div>
@@ -396,7 +414,10 @@ export default function PackageSelection({
               </div>
               <div className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#12BB74] mt-2 flex-shrink-0"></div>
-                <span>Perangkat Live Streaming {deviceType === "OBS Sistem" ? "(OBS Sistem)" : "(iPhone)"}</span>
+                <span>
+                  Perangkat Live Streaming{" "}
+                  {deviceType === "OBS Sistem" ? "(OBS Sistem)" : "(iPhone)"}
+                </span>
               </div>
               <div className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#12BB74] mt-2 flex-shrink-0"></div>
@@ -425,7 +446,9 @@ export default function PackageSelection({
               className="mt-4 w-full py-3 md:py-4 bg-[#12BB74] hover:bg-[#10A862] text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
             >
               <Check className="w-5 h-5" />
-              <span>Fix Pilihan Jam ({customHours} jam - {customDays} hari)</span>
+              <span>
+                Fix Pilihan Jam ({customHours} jam - {customDays} hari)
+              </span>
             </button>
           )}
         </div>

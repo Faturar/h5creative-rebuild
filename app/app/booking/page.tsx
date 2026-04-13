@@ -276,7 +276,7 @@ export default function BookingPage() {
           setIsSubmitting(false)
           return
         }
-        throw new Error(bookingResult.error || "Failed to create booking")
+        throw new Error(bookingResult.error || "Gagal membuat booking")
       }
 
       const booking = bookingResult.data
@@ -296,7 +296,7 @@ export default function BookingPage() {
       const paymentResult = await paymentResponse.json()
 
       if (!paymentResult.success) {
-        throw new Error(paymentResult.error || "Failed to create payment")
+        throw new Error(paymentResult.error || "Gagal membuat pembayaran")
       }
 
       // Redirect to Midtrans payment page
@@ -304,7 +304,7 @@ export default function BookingPage() {
         window.location.href = paymentResult.data.redirectUrl
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred")
+      setError(err instanceof Error ? err.message : "Terjadi kesalahan")
       setIsSubmitting(false)
     }
   }

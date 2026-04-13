@@ -129,23 +129,6 @@ export default function CustomerForm({
         </p>
       </div>
 
-      {/* Info Box */}
-      <div className="mb-6 p-4 bg-[#4920E5]/10 border-2 border-[#4920E5]/20 rounded-xl">
-        <div className="flex items-start gap-3">
-          <Info className="w-5 h-5 text-[#4920E5] flex-shrink-0 mt-0.5" />
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-white mb-2">
-              Pastikan data yang Anda masukkan sudah benar:
-            </p>
-            <ul className="text-sm text-gray-300 space-y-1 list-disc list-inside">
-              <li>Nomor telepon minimal 10 digit (hanya angka)</li>
-              <li>Email menggunakan format yang valid (contoh: nama@email.com)</li>
-              <li>Semua field dengan tanda bintang (*) wajib diisi</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
       {Object.keys(errors).length > 0 && (
         <div className="mb-6 p-4 bg-red-500/10 border-2 border-red-500/30 rounded-xl">
           <div className="flex items-start gap-3">

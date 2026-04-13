@@ -56,7 +56,7 @@ function Slide1() {
   return (
     <>
       <h1 className="text-base lg:text-xl xl:text-2xl font-bold">
-        Livestream Service
+        Layanan Live Streaming
       </h1>
       <p className="text-sm xl:text-lg leading-6 xl:leading-8 text-gray-800">
         Tingkatkan penjualan dengan host profesional dan studio modern.
@@ -121,7 +121,7 @@ function CountdownTimer() {
       <div className="flex items-center gap-3">
         <div className="flex-1">
           <p className="text-xs md:text-sm font-semibold text-white mb-1">
-            promo launching yang akan habis pada tanggal 12
+            promo peluncuran yang akan habis pada tanggal 12
           </p>
           <div className="flex items-center gap-2">
             <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1.5 min-w-[50px] text-center">
@@ -212,7 +212,7 @@ function Testimonial() {
       name: "Dewi Lestari",
       brand: "Beauty Corner",
       rating: 5,
-      text: "Tim yang responsive dan hasil yang memuaskan. Recommended!",
+      text: "Tim yang responsif dan hasil yang memuaskan. Sangat direkomendasikan!",
     },
   ]
 

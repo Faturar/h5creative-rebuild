@@ -31,7 +31,7 @@ export default function CountdownTimer() {
         <Clock className="w-6 h-6 text-white flex-shrink-0" />
         <div className="flex-1">
           <p className="text-sm md:text-base font-semibold text-white mb-1">
-            promo launching yang akan habis pada tanggal 12
+            promo peluncuran yang akan habis pada tanggal 12
           </p>
           <div className="flex items-center gap-2">
             <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1.5 min-w-[50px] text-center">

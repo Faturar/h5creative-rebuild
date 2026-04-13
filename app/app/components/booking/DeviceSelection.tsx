@@ -20,13 +20,13 @@ export default function DeviceSelection({
       icon: Smartphone,
       title: "iPhone",
       description:
-        "Live streaming menggunakan iPhone untuk kualitas yang baik dan fleksibel",
+        "Bisa pilih tema studio, pemilihan podium atau properti tambahan, fleksibilitas host untuk berdiri",
       color: "from-[#4920E5] to-[#6B21A8]",
       features: [
-        "Fleksibel & portable",
-        "Kualitas HD",
-        "Mudah dioperasikan",
-        "Cocok untuk indoor",
+        "Bisa Pilih Tema Studio",
+        "Pemilihan Podium atau Properti Tambahan",
+        "Fleksibelitas Host untuk Berdiri",
+        "Device Memakai Iphone Seri 11 Promax Keatas",
       ],
     },
     {
@@ -34,13 +34,14 @@ export default function DeviceSelection({
       icon: Video,
       title: "OBS Sistem",
       description:
-        "Live streaming profesional dengan kamera DSLR dan OBS untuk kualitas terbaik",
+        "Pemakaian Green Screen, bisa memakai animasi bergerak dan full desain, fleksibilitas desain untuk campaign",
       color: "from-[#FF6B35] to-[#E85D04]",
       features: [
-        "Kualitas 4K/Full HD",
-        "Multi-camera setup",
-        "Advanced controls",
-        "Cocok untuk professional production",
+        "Pemakaian Green Screen",
+        "Bisa memakai animasi bergerak dan full desain",
+        "Fleksibelitas Desain untuk Campaign",
+        "Kamera Profesional dan Sistem Stabil",
+        "Kualitas Gambar HD",
       ],
     },
   ]

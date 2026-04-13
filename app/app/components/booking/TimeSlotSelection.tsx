@@ -356,7 +356,7 @@ export default function TimeSlotSelection({
   const availableSlots = slots.filter((slot) => !slot.isBooked)
 
   return (
-    <div>
+    <div className="w-full">
       <div className="text-center mb-6 md:mb-8">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
           Pilih Waktu Live Streaming
@@ -440,7 +440,7 @@ export default function TimeSlotSelection({
         </div>
       </div>
 
-      <div className="mb-6 md:mb-8">
+      <div className="flex justify-center mb-6 md:mb-8">
         <div className="flex justify-center bg-white/5 rounded-full p-1 inline-flex mx-auto border border-white/10">
           <button
             onClick={() => setSelectionMode("preset")}
