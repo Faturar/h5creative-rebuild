@@ -178,10 +178,10 @@ export async function POST(request: Request) {
         const newBooking = await tx.booking.create({
           data: {
             bookingCode,
-            packageId: validatedData.packageId,
+            packageId: validatedData.packageId ?? undefined,
             hostId: validatedData.hostId,
             studioId: validatedData.studioId,
-            studioSlotId: validatedData.studioSlotId,
+            studioSlotId: validatedData.studioSlotId ?? undefined,
             date: new Date(validatedData.date),
             startTime: validatedData.startTime,
             endTime: validatedData.endTime,
