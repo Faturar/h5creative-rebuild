@@ -106,7 +106,7 @@ export default function Navbar({
       case "Booking":
         return "/booking"
       default:
-        return "#"
+        return "/"
     }
   }
 
