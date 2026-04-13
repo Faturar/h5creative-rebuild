@@ -9,7 +9,6 @@ import Navbar from "@/app/components/home/Navbar"
 import FooterFix from "@/app/components/home/FooterFix"
 import SpecialOfferSection from "@/app/components/service/SpecialOfferSection"
 import LiveStreamSlider from "@/app/components/service/LiveStreamSlider"
-import WhyChooseUsSection from "@/app/components/service/WhyChooseUsSection"
 import LiveStreamingFAQSection from "@/app/components/service/LiveStreamingFAQSection"
 import CompanyOverviewSection from "@/app/components/service/CompanyOverviewSection"
 import ValuePropositionSection from "@/app/components/service/ValuePropositionSection"
@@ -21,7 +20,6 @@ import PricingPackagesSection from "@/app/components/service/PricingPackagesSect
 import ReportingSection from "@/app/components/service/ReportingSection"
 import AdditionalNotesSection from "@/app/components/service/AdditionalNotesSection"
 import TestimonialsSection from "@/app/components/service/TestimonialsSection"
-import { liveStreamingFAQ } from "@/app/constants/faq"
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -106,17 +104,13 @@ export default function LiveStreamingPage() {
                 className="flex flex-col sm:flex-row gap-4 mt-8"
                 variants={itemVariants}
               >
-                <motion.a
-                  href="https://wa.me/6285811718049"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/booking"
                   className="inline-flex items-center justify-center gap-3 rounded-lg bg-white text-black font-bold px-8 py-4 shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
-                  CHAT WHATSAPP (0858-1171-8049)
+                  BOOK SEKARANG
                   <ArrowRight className="w-5 h-5" />
-                </motion.a>
+                </Link>
               </motion.div>
             </motion.div>
 
