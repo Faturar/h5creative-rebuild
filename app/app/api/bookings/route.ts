@@ -111,9 +111,7 @@ export async function POST(request: Request) {
 
     // Validate minimum purchase requirements
     const bookingType = (packageData?.bookingType as "custom" | "package") || "custom"
-    const numberOfDays = validatedData.totalHours
-      ? Math.ceil(validatedData.totalHours / 2)
-      : packageData?.numberOfDays || (validatedData.totalHours ? Math.ceil(validatedData.totalHours / 2) : 0)
+    const numberOfDays = packageData?.numberOfDays || (validatedData.totalHours ? Math.ceil(validatedData.totalHours / 2) : 0)
 
     const validation = validateMinimumDays(bookingType, numberOfDays)
     if (!validation.valid) {

@@ -33,7 +33,7 @@ export default function PricingToggle({ activeType, onToggle }: PricingTogglePro
           whileHover={{ scale: activeType === 'camera' ? 1 : 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          Camera + OBS
+          OBS Sistem
         </motion.button>
       </div>
     </div>

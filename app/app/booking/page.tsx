@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import Image from "next/image"
 import {
   CheckCircle,
   XCircle,
@@ -22,7 +21,7 @@ import TimeSlotSelection from "@/components/booking/TimeSlotSelection"
 import CustomerForm from "@/components/booking/CustomerForm"
 import PaymentSection from "@/components/booking/PaymentSection"
 import BookingSummary from "@/components/booking/BookingSummary"
-import CountdownTimer from "@/app/components/booking/CountdownTimer"
+import SidebarSlider from "@/components/booking/SidebarSlider"
 import FloatingNavigation from "@/components/booking/FloatingNavigation"
 
 type BookingStep =
@@ -96,13 +95,18 @@ export default function BookingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
-  const [packageValidationWarning, setPackageValidationWarning] = useState<string | null>(null)
+  const [packageValidationWarning, setPackageValidationWarning] = useState<
+    string | null
+  >(null)
   const [packages, setPackages] = useState<any[]>([])
 
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await fetch("/api/packages")
+        const packageTypeParam = bookingData.deviceType
+          ? `?packageType=${encodeURIComponent(bookingData.deviceType)}`
+          : ""
+        const response = await fetch(`/api/packages${packageTypeParam}`)
         const result = await response.json()
         if (result.success) {
           setPackages(result.data)
@@ -112,11 +116,13 @@ export default function BookingPage() {
       }
     }
     fetchPackages()
-  }, [])
+  }, [bookingData.deviceType])
 
   useEffect(() => {
     if (bookingData.packageId && packages.length > 0) {
-      const selectedPackage = packages.find((p) => p.id === bookingData.packageId)
+      const selectedPackage = packages.find(
+        (p) => p.id === bookingData.packageId,
+      )
       if (selectedPackage) {
         setBookingData((prev) => ({
           ...prev,
@@ -124,7 +130,9 @@ export default function BookingPage() {
         }))
         // Validate package on load
         if (selectedPackage.numberOfDays < 5) {
-          setPackageValidationWarning(`Minimal pembelian untuk paket jam adalah 5 hari (paket ini ${selectedPackage.numberOfDays} hari). Paket ini tidak dapat dipilih.`)
+          setPackageValidationWarning(
+            `Minimal pembelian untuk paket jam adalah 5 hari (paket ini ${selectedPackage.numberOfDays} hari). Paket ini tidak dapat dipilih.`,
+          )
         } else {
           setPackageValidationWarning(null)
         }
@@ -137,7 +145,9 @@ export default function BookingPage() {
       const days = bookingData.customDays || 0
       const hours = bookingData.customHours || 0
       if (days < 6 || hours < 12) {
-        setPackageValidationWarning(`Minimal pembelian untuk custom jam adalah 6 hari dengan minimal 12 jam total`)
+        setPackageValidationWarning(
+          `Minimal pembelian untuk custom jam adalah 6 hari dengan minimal 12 jam total`,
+        )
       } else {
         setPackageValidationWarning(null)
       }
@@ -178,7 +188,9 @@ export default function BookingPage() {
     }
   }
 
-  const calculateHoursFromTimeSlots = (timeSlots: TimeSlot[] | undefined): number => {
+  const calculateHoursFromTimeSlots = (
+    timeSlots: TimeSlot[] | undefined,
+  ): number => {
     if (!timeSlots || timeSlots.length === 0) return 0
 
     return timeSlots.reduce((total, slot) => {
@@ -206,7 +218,8 @@ export default function BookingPage() {
       case "package":
         return (
           packageValidationWarning === null &&
-          ((bookingData.bookingType === "package" && bookingData.packageId !== null) ||
+          ((bookingData.bookingType === "package" &&
+            bookingData.packageId !== null) ||
             (bookingData.bookingType === "custom" &&
               bookingData.customHours !== null &&
               bookingData.customHours >= 12 &&
@@ -299,17 +312,8 @@ export default function BookingPage() {
   return (
     <section className="bg-[#0B0B1B] flex flex-col lg:flex-row min-h-screen">
       {/* Left Sidebar */}
-      <div className="hidden lg:flex flex-1 flex-col p-[16px_24px] xl:p-[30px_40px] justify-end overflow-hidden bg-[url('/assets/images/background/livestream.png')] bg-cover bg-center bg-no-repeat lg:sticky top-0 h-screen">
-        <div className="flex flex-col bg-white p-[24px] xl:p-[30px] lg:gap-2 xl:gap-4 rounded-[30px] sticky bottom-[16px] xl:bottom-[30px]">
-          <h1 className="lg:text-2xl xl:text-3xl font-bold">
-            Livestream Service
-          </h1>
-          <p className="lg:text-lg xl:text-xl leading-6 xl:leading-8 text-gray-800">
-            Platform live streaming profesional untuk bisnis Anda. Tingkatkan
-            penjualan dengan host berpengalaman dan studio modern.
-          </p>
-          <CountdownTimer />
-        </div>
+      <div className="hidden lg:flex flex-1 flex-col justify-end overflow-hidden lg:sticky top-0 h-screen">
+        <SidebarSlider />
       </div>
 
       {/* Mobile Testimonial Banner */}
@@ -450,7 +454,8 @@ export default function BookingPage() {
                   Perhatian - Syarat Belum Terpenuhi
                 </p>
                 <p className="text-sm md:text-base text-yellow-400">
-                  {packageValidationWarning}. Mohon sesuaikan pilihan Anda sebelum melanjutkan.
+                  {packageValidationWarning}. Mohon sesuaikan pilihan Anda
+                  sebelum melanjutkan.
                 </p>
               </div>
             </div>
@@ -483,7 +488,11 @@ export default function BookingPage() {
                     deviceType={bookingData.deviceType}
                     selectedPackageId={bookingData.packageId}
                     onSelect={(packageId) =>
-                      setBookingData((prev) => ({ ...prev, packageId }))
+                      setBookingData((prev) => ({
+                        ...prev,
+                        packageId,
+                        bookingType: "package",
+                      }))
                     }
                     onBookingTypeChange={(bookingType) =>
                       setBookingData((prev) => {
@@ -521,16 +530,30 @@ export default function BookingPage() {
                         const hours = bookingData.customHours || 0
                         const hoursPerDay = bookingData.hoursPerDay || 2
                         if (days < 6) {
-                          setPackageValidationWarning(`Minimal pembelian untuk custom jam adalah 6 hari (saat ini ${days} hari). Tingkatkan jam per hari atau total jam untuk memenuhi syarat.`)
+                          setPackageValidationWarning(
+                            `Minimal pembelian untuk custom jam adalah 6 hari (saat ini ${days} hari). Tingkatkan jam per hari atau total jam untuk memenuhi syarat.`,
+                          )
                         } else if (hours < 12) {
-                          setPackageValidationWarning(`Minimal 12 jam total untuk custom booking (saat ini ${hours} jam).`)
+                          setPackageValidationWarning(
+                            `Minimal 12 jam total untuk custom booking (saat ini ${hours} jam).`,
+                          )
                         } else {
                           setPackageValidationWarning(null)
                         }
-                      } else if (bookingData.bookingType === "package" && bookingData.packageId) {
-                        const selectedPackage = packages.find((p) => p.id === bookingData.packageId)
-                        if (selectedPackage && selectedPackage.numberOfDays < 5) {
-                          setPackageValidationWarning(`Minimal pembelian untuk paket jam adalah 5 hari (paket ini ${selectedPackage.numberOfDays} hari). Paket ini tidak dapat dipilih.`)
+                      } else if (
+                        bookingData.bookingType === "package" &&
+                        bookingData.packageId
+                      ) {
+                        const selectedPackage = packages.find(
+                          (p) => p.id === bookingData.packageId,
+                        )
+                        if (
+                          selectedPackage &&
+                          selectedPackage.numberOfDays < 5
+                        ) {
+                          setPackageValidationWarning(
+                            `Minimal pembelian untuk paket jam adalah 5 hari (paket ini ${selectedPackage.numberOfDays} hari). Paket ini tidak dapat dipilih.`,
+                          )
                         } else {
                           setPackageValidationWarning(null)
                         }
@@ -576,7 +599,9 @@ export default function BookingPage() {
                           date,
                           startTime,
                           endTime,
-                          totalHours: prev.customHours || calculateHoursFromTimeSlots(newTimeSlots),
+                          totalHours:
+                            prev.customHours ||
+                            calculateHoursFromTimeSlots(newTimeSlots),
                           timeSlots: newTimeSlots,
                         }
                       })

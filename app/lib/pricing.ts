@@ -263,7 +263,7 @@ export function isOperationalHour(time: string, deviceType: string): boolean {
   // Define operational hours for each device type
   const operationalHours = {
     iPhone: { start: "09:00", end: "20:00" },
-    "Camera+OBS": { start: "09:00", end: "20:00" },
+    "OBS Sistem": { start: "09:00", end: "20:00" },
   }
 
   const hours = operationalHours[deviceType as keyof typeof operationalHours]

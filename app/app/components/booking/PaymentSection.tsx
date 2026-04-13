@@ -25,6 +25,13 @@ interface BookingData {
   businessName: string
   productCategory: string
   notes: string
+  deviceType: string | null
+  bookingType: string | null
+  customHours: number | null
+  customDays: number | null
+  hoursPerDay: number | null
+  totalHours?: number
+  timeSlots?: any[]
 }
 
 interface PaymentSectionProps {
@@ -49,13 +56,24 @@ export default function PaymentSection({
   const isDark = actualTheme === "dark"
 
   const [packageData, setPackageData] = useState<Package | null>(null)
+  const [pricingBreakdown, setPricingBreakdown] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (bookingData.packageId) {
       fetchPackage()
+    } else if (bookingData.deviceType && bookingData.totalHours) {
+      calculatePricing()
+      setLoading(false)
+    } else {
+      setLoading(false)
     }
-  }, [bookingData.packageId])
+  }, [
+    bookingData.packageId,
+    bookingData.deviceType,
+    bookingData.totalHours,
+    bookingData.timeSlots,
+  ])
 
   const fetchPackage = async () => {
     if (!bookingData.packageId) return
@@ -78,6 +96,32 @@ export default function PaymentSection({
     }
   }
 
+  const calculatePricing = async () => {
+    if (!bookingData.deviceType || !bookingData.totalHours) return
+
+    try {
+      const res = await fetch("/api/pricing/calculate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          deviceType: bookingData.deviceType,
+          totalHours: bookingData.totalHours,
+          timeSlots: bookingData.timeSlots || [],
+        }),
+      })
+
+      const result = await res.json()
+
+      if (result.success) {
+        setPricingBreakdown(result.data)
+      }
+    } catch (error) {
+      console.error("Error calculating pricing:", error)
+    }
+  }
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -86,9 +130,9 @@ export default function PaymentSection({
     }).format(price)
   }
 
-  const totalPrice = packageData
-    ? packageData.promoPrice || packageData.price
-    : 0
+  const totalPrice =
+    pricingBreakdown?.finalPrice ||
+    (packageData ? packageData.promoPrice || packageData.price : 0)
 
   return (
     <div>
@@ -215,6 +259,127 @@ export default function PaymentSection({
           </div>
         </div>
 
+        {/* Booking Details */}
+        {(bookingData.deviceType || packageData || pricingBreakdown) && (
+          <div
+            className={`${isDark ? "bg-white/5 border border-white/10" : "bg-gradient-to-br from-blue-50 to-purple-50"} rounded-xl p-6`}
+          >
+            <h3
+              className={`text-lg font-semibold mb-4 ${isDark ? "text-white" : "text-gray-900"}`}
+            >
+              Detail Booking
+            </h3>
+
+            <div className="space-y-3">
+              {bookingData.deviceType && (
+                <div
+                  className={`flex justify-between items-center py-2 border-b ${isDark ? "border-white/10" : "border-purple-200"}`}
+                >
+                  <span className={isDark ? "text-gray-400" : "text-gray-600"}>
+                    Tipe Perangkat
+                  </span>
+                  <span
+                    className={`font-medium ${isDark ? "text-gray-200" : "text-gray-900"}`}
+                  >
+                    {bookingData.deviceType === "OBS Sistem"
+                      ? "OBS Sistem"
+                      : bookingData.deviceType}
+                  </span>
+                </div>
+              )}
+
+              {bookingData.bookingType === "custom" &&
+                bookingData.totalHours && (
+                  <div
+                    className={`flex justify-between items-center py-2 border-b ${isDark ? "border-white/10" : "border-purple-200"}`}
+                  >
+                    <span
+                      className={isDark ? "text-gray-400" : "text-gray-600"}
+                    >
+                      Jenis Booking
+                    </span>
+                    <span
+                      className={`font-medium ${isDark ? "text-gray-200" : "text-gray-900"}`}
+                    >
+                      Custom Jam ({bookingData.customHours} jam -{" "}
+                      {bookingData.customDays} hari)
+                    </span>
+                  </div>
+                )}
+
+              {pricingBreakdown && (
+                <div
+                  className={`flex justify-between items-center py-2 border-b ${isDark ? "border-white/10" : "border-purple-200"}`}
+                >
+                  <span className={isDark ? "text-gray-400" : "text-gray-600"}>
+                    Harga per Jam
+                  </span>
+                  <span
+                    className={`font-medium ${isDark ? "text-gray-200" : "text-gray-900"}`}
+                  >
+                    {pricingBreakdown.pricingTier
+                      ? formatPrice(pricingBreakdown.pricingTier.pricePerHour)
+                      : "N/A"}
+                  </span>
+                </div>
+              )}
+
+              {pricingBreakdown && (
+                <div
+                  className={`flex justify-between items-center py-2 border-b ${isDark ? "border-white/10" : "border-purple-200"}`}
+                >
+                  <span className={isDark ? "text-gray-400" : "text-gray-600"}>
+                    Total Jam
+                  </span>
+                  <span
+                    className={`font-medium ${isDark ? "text-gray-200" : "text-gray-900"}`}
+                  >
+                    {pricingBreakdown.totalHours} jam
+                  </span>
+                </div>
+              )}
+
+              {pricingBreakdown?.surcharges &&
+                pricingBreakdown.surcharges.length > 0 && (
+                  <div className="mt-3 p-3 bg-orange-50 rounded-lg">
+                    <p
+                      className={`text-sm font-semibold mb-2 ${isDark ? "text-orange-300" : "text-orange-700"}`}
+                    >
+                      Biaya Tambahan Waktu
+                    </p>
+                    {pricingBreakdown.surcharges.map(
+                      (surcharge: any, index: number) => (
+                        <div
+                          key={index}
+                          className={`flex justify-between text-xs mb-1 ${isDark ? "text-gray-300" : "text-gray-600"}`}
+                        >
+                          <span>{surcharge.timeSlot}</span>
+                          <span className="text-orange-600 font-medium">
+                            +{formatPrice(surcharge.amount)}
+                          </span>
+                        </div>
+                      ),
+                    )}
+                    <div
+                      className={`flex justify-between text-sm font-semibold mt-2 pt-2 border-t ${isDark ? "border-orange-400/30" : "border-orange-200"}`}
+                    >
+                      <span
+                        className={
+                          isDark ? "text-orange-300" : "text-orange-700"
+                        }
+                      >
+                        Total Biaya Tambahan
+                      </span>
+                      <span className="text-orange-600">
+                        +{formatPrice(pricingBreakdown.totalSurcharge)}
+                      </span>
+                    </div>
+                  </div>
+                )}
+            </div>
+          </div>
+        )}
+
         {/* Payment Information */}
         <div
           className={`${isDark ? "bg-white/5 border border-white/10" : "bg-white border-2 border-gray-200"} rounded-xl p-6`}
@@ -264,33 +429,70 @@ export default function PaymentSection({
             </div>
           </div>
 
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-600">Total Pembayaran</span>
+          <div className="mt-6 space-y-4">
+            <div
+              className={`flex items-center justify-between ${isDark ? "bg-[#4920E5]/10 border-2 border-[#4920E5]/30" : "bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200"} rounded-xl p-5`}
+            >
+              <div>
+                <span
+                  className={`text-base font-semibold ${isDark ? "text-white" : "text-gray-700"}`}
+                >
+                  Total Pembayaran
+                </span>
+                <p
+                  className={`text-xs md:text-sm ${isDark ? "text-gray-300" : "text-gray-400"}`}
+                >
+                  Termasuk pajak dan biaya layanan
+                </p>
+              </div>
               {loading ? (
-                <div className="animate-pulse h-6 w-32 bg-gray-300 rounded"></div>
+                <div className="animate-pulse h-7 w-32 bg-gray-300 rounded"></div>
               ) : (
-                <span className="text-2xl font-bold text-purple-600">
+                <span className={`text-2xl md:text-3xl font-bold text-white`}>
                   {formatPrice(totalPrice)}
                 </span>
               )}
             </div>
-            <p className="text-xs text-gray-500">
-              Termasuk pajak dan biaya layanan
-            </p>
           </div>
         </div>
 
         {/* Terms */}
-        <div className="flex items-start gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-          <div className="text-sm text-blue-900">
-            <p className="font-medium mb-1">Penting:</p>
-            <ul className="list-disc list-inside space-y-1">
-              <li>Pastikan data yang Anda masukkan sudah benar</li>
-              <li>Pembayaran harus diselesaikan dalam 24 jam</li>
-              <li>Slot akan dibatalkan otomatis jika pembayaran gagal</li>
-            </ul>
+        <div
+          className={`${isDark ? "bg-blue-500/10 border-2 border-blue-500/30" : "bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200"} rounded-xl p-5`}
+        >
+          <div className="flex items-start gap-3">
+            <AlertCircle
+              className={`w-5 h-5 md:w-6 md:h-6 ${isDark ? "text-blue-400" : "text-blue-600"} flex-shrink-0 mt-0.5`}
+            />
+            <div className="text-sm md:text-base">
+              <p
+                className={`font-bold mb-3 ${isDark ? "text-blue-300" : "text-blue-900"}`}
+              >
+                Penting:
+              </p>
+              <ul
+                className={`space-y-2 md:space-y-3 ${isDark ? "text-blue-200" : "text-blue-800"}`}
+              >
+                <li className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0"></span>
+                  <span className="text-sm md:text-base">
+                    Pastikan data yang Anda masukkan sudah benar
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0"></span>
+                  <span className="text-sm md:text-base">
+                    Pembayaran harus diselesaikan dalam 24 jam
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0"></span>
+                  <span className="text-sm md:text-base">
+                    Slot akan dibatalkan otomatis jika pembayaran gagal
+                  </span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

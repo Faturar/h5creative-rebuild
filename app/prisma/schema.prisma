@@ -206,7 +206,7 @@ model CustomSlotRequest {
 
 model PricingTier {
   id           String   @id @default(uuid())
-  deviceType   String   // "iPhone" or "Camera+OBS"
+  deviceType   String   // "iPhone" or "OBS Sistem"
   minHours     Int
   maxHours     Int?
   pricePerHour Decimal  @db.Decimal(10, 2)

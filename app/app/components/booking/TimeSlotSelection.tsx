@@ -65,7 +65,9 @@ export default function TimeSlotSelection({
   >(new Map())
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [selectedSlot, setSelectedSlot] = useState<StudioSlot | null>(null)
-  const [selectionMode, setSelectionMode] = useState<"preset" | "custom">("preset")
+  const [selectionMode, setSelectionMode] = useState<"preset" | "custom">(
+    "preset",
+  )
   const [customSlotData, setCustomSlotData] = useState({
     studioId: studioId || "",
     date: format(new Date(), "yyyy-MM-dd"),
@@ -371,7 +373,9 @@ export default function TimeSlotSelection({
           className="mb-6 p-4 md:p-5 bg-red-500/15 border-2 border-red-500/40 rounded-xl md:rounded-2xl flex items-center gap-3"
         >
           <AlertCircle className="w-5 h-5 md:w-6 md:h-6 text-red-400 flex-shrink-0" />
-          <p className="text-base md:text-lg font-medium text-red-400">{error}</p>
+          <p className="text-base md:text-lg font-medium text-red-400">
+            {error}
+          </p>
         </motion.div>
       )}
 
@@ -446,7 +450,7 @@ export default function TimeSlotSelection({
                 : "text-gray-400 hover:text-white hover:bg-white/10"
             }`}
           >
-            <Calendar className="w-4 h-4 md:w-5 md:h-5" />
+            <Calendar className="w-4 h-4 md:w-5 md:h-5 text-white" />
             <span className="text-sm md:text-base">Slot Tersedia</span>
           </button>
           <button
@@ -457,7 +461,7 @@ export default function TimeSlotSelection({
                 : "text-gray-400 hover:text-white hover:bg-white/10"
             }`}
           >
-            <Clock className="w-4 h-4 md:w-5 md:h-5" />
+            <Clock className="w-4 h-4 md:w-5 md:h-5 text-white" />
             <span className="text-sm md:text-base">Custom Waktu</span>
           </button>
         </div>
@@ -488,7 +492,7 @@ export default function TimeSlotSelection({
       {selectionMode === "custom" && (
         <div className="mb-6 md:mb-8 p-4 md:p-6 bg-white/5 rounded-2xl border-2 border-white/20 shadow-lg">
           <h3 className="text-lg md:text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <Clock className="w-5 h-5 md:w-6 md:h-6 text-[#4920E5]" />
+            <Clock className="w-5 h-5 md:w-6 md:h-6  text-white" />
             Tentukan Waktu Live Streaming
           </h3>
 
@@ -502,7 +506,7 @@ export default function TimeSlotSelection({
                 value={customSlotData.date}
                 onChange={(e) => handleCustomTimeChange("date", e.target.value)}
                 min={format(new Date(), "yyyy-MM-dd")}
-                className="w-full px-4 py-3 bg-white/10 border-2 border-white/20 rounded-xl text-white text-base md:text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4920E5] focus:border-[#4920E5] transition-all"
+                className="calendar-white w-full px-4 py-3 bg-white/10 border-2 border-white/20 rounded-xl text-white text-base md:text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4920E5] focus:border-[#4920E5] transition-all"
                 placeholder="Pilih tanggal"
               />
             </div>
@@ -515,8 +519,10 @@ export default function TimeSlotSelection({
                 <input
                   type="time"
                   value={customSlotData.startTime}
-                  onChange={(e) => handleCustomTimeChange("startTime", e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border-2 border-white/20 rounded-xl text-white text-base md:text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4920E5] focus:border-[#4920E5] transition-all"
+                  onChange={(e) =>
+                    handleCustomTimeChange("startTime", e.target.value)
+                  }
+                  className="time-white w-full px-4 py-3 bg-white/10 border-2 border-white/20 rounded-xl text-white text-base md:text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4920E5] focus:border-[#4920E5] transition-all"
                 />
               </div>
 
@@ -527,8 +533,10 @@ export default function TimeSlotSelection({
                 <input
                   type="time"
                   value={customSlotData.endTime}
-                  onChange={(e) => handleCustomTimeChange("endTime", e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border-2 border-white/20 rounded-xl text-white text-base md:text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4920E5] focus:border-[#4920E5] transition-all"
+                  onChange={(e) =>
+                    handleCustomTimeChange("endTime", e.target.value)
+                  }
+                  className="time-white w-full px-4 py-3 bg-white/10 border-2 border-white/20 rounded-xl text-white text-base md:text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4920E5] focus:border-[#4920E5] transition-all"
                 />
               </div>
             </div>
@@ -544,9 +552,7 @@ export default function TimeSlotSelection({
                 .split(":")
                 .map(Number)
               const durationMinutes =
-                endHours * 60 +
-                endMinutes -
-                (startHours * 60 + startMinutes)
+                endHours * 60 + endMinutes - (startHours * 60 + startMinutes)
               const hours = Math.floor(durationMinutes / 60)
               const minutes = durationMinutes % 60
 
@@ -617,15 +623,21 @@ export default function TimeSlotSelection({
                 <ul className="text-sm md:text-base text-blue-400 space-y-2">
                   <li className="flex items-center gap-3">
                     <div className="w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0"></div>
-                    <span className="font-medium">07:00 - 21:00: Harga normal</span>
+                    <span className="font-medium">
+                      07:00 - 21:00: Harga normal
+                    </span>
                   </li>
                   <li className="flex items-center gap-3">
                     <div className="w-2.5 h-2.5 rounded-full bg-orange-500 flex-shrink-0"></div>
-                    <span className="font-medium">21:00 - 01:00: +Rp 15.000/jam</span>
+                    <span className="font-medium">
+                      21:00 - 01:00: +Rp 15.000/jam
+                    </span>
                   </li>
                   <li className="flex items-center gap-3">
                     <div className="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"></div>
-                    <span className="font-medium">01:00 - 07:00: +Rp 20.000/jam</span>
+                    <span className="font-medium">
+                      01:00 - 07:00: +Rp 20.000/jam
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -637,7 +649,7 @@ export default function TimeSlotSelection({
       {selectionMode === "preset" && (
         <div className="mb-6 md:mb-8">
           <h3 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4 flex items-center gap-2">
-            <Calendar className="w-5 h-5 md:w-6 md:h-6 text-[#4920E5]" />
+            <Calendar className="w-5 h-5 md:w-6 md:h-6 text-white" />
             Slot Tersedia -{" "}
             <span className="text-[#4920E5]">
               {format(selectedDate, "EEEE, d MMMM yyyy", { locale: localeId })}
@@ -650,7 +662,7 @@ export default function TimeSlotSelection({
             </div>
           ) : availableSlots.length === 0 ? (
             <div className="text-center py-12 md:py-16 bg-white/5 rounded-2xl border-2 border-dashed border-white/20">
-              <Calendar className="w-12 h-12 md:w-16 md:h-16 text-gray-400 mx-auto mb-3 md:mb-4" />
+              <Calendar className="w-12 h-12 md:w-16 md:h-16 text-white mx-auto mb-3 md:mb-4" />
               <p className="text-base md:text-lg font-medium text-gray-300 mb-2">
                 Tidak ada slot tersedia untuk tanggal ini
               </p>

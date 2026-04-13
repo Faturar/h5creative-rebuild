@@ -218,7 +218,7 @@ export default function PackageSelection({
         </h2>
         <p className="text-sm md:text-base text-gray-400">
           {deviceType
-            ? `Paket untuk ${deviceType === "Camera+OBS" ? "Camera + OBS" : deviceType}`
+            ? `Paket untuk ${deviceType === "OBS Sistem" ? "OBS Sistem" : deviceType}`
             : "Pilih paket yang sesuai dengan kebutuhan bisnis Anda"}
         </p>
       </div>
@@ -254,7 +254,7 @@ export default function PackageSelection({
       {bookingType === "package" && (
         <div className="mb-6 p-4 bg-[#4920E5]/10 border-2 border-[#4920E5]/30 rounded-xl">
           <div className="flex items-start gap-3">
-            <Calendar className="w-5 h-5 text-[#4920E5] flex-shrink-0 mt-0.5" />
+            <Calendar className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-base md:text-lg font-bold text-white mb-1">
                 Minimal pembelian untuk Paket Jam
@@ -270,7 +270,7 @@ export default function PackageSelection({
       {bookingType === "custom" && (
         <div className="mb-6 p-4 bg-[#4920E5]/10 border-2 border-[#4920E5]/30 rounded-xl">
           <div className="flex items-start gap-3">
-            <Calendar className="w-5 h-5 text-[#4920E5] flex-shrink-0 mt-0.5" />
+            <Calendar className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-base md:text-lg font-bold text-white mb-1">
                 Minimal pembelian untuk Custom Jam
@@ -379,6 +379,55 @@ export default function PackageSelection({
               </div>
             </div>
           )}
+
+          <div className="mt-4 p-4 bg-[#12BB74]/10 border-2 border-[#12BB74]/30 rounded-xl">
+            <h4 className="text-sm md:text-base font-semibold text-[#12BB74] mb-3 flex items-center gap-2">
+              <Check className="w-4 h-4 md:w-5 md:h-5" />
+              Fasilitas yang Didapat
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm md:text-base text-gray-300">
+              <div className="flex items-start gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#12BB74] mt-2 flex-shrink-0"></div>
+                <span>Host Live Streaming Profesional</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#12BB74] mt-2 flex-shrink-0"></div>
+                <span>Akses Studio Live Streaming</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#12BB74] mt-2 flex-shrink-0"></div>
+                <span>Perangkat Live Streaming {deviceType === "OBS Sistem" ? "(OBS Sistem)" : "(iPhone)"}</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#12BB74] mt-2 flex-shrink-0"></div>
+                <span>Lampu & Mikrofon Profesional</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#12BB74] mt-2 flex-shrink-0"></div>
+                <span>Laporan Performa Live Streaming</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#12BB74] mt-2 flex-shrink-0"></div>
+                <span>Support Teknis selama Live</span>
+              </div>
+            </div>
+          </div>
+
+          {validateCustomBooking().valid && (
+            <button
+              onClick={() => {
+                if (validateCustomBooking().valid) {
+                  onCustomHoursChange?.(customHours)
+                  onCustomDaysChange?.(customDays)
+                  onHoursPerDayChange?.(hoursPerDay)
+                }
+              }}
+              className="mt-4 w-full py-3 md:py-4 bg-[#12BB74] hover:bg-[#10A862] text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+            >
+              <Check className="w-5 h-5" />
+              <span>Fix Pilihan Jam ({customHours} jam - {customDays} hari)</span>
+            </button>
+          )}
         </div>
       )}
 
@@ -427,20 +476,20 @@ export default function PackageSelection({
                   </div>
                   <div
                     className={`flex items-center gap-2 text-xs md:text-sm font-semibold mb-2 ${
-                      pkg.packageType === "Camera+OBS"
+                      pkg.packageType === "OBS Sistem"
                         ? "text-[#FF6B35]"
                         : "text-[#4920E5]"
                     }`}
                   >
                     <Video className="w-3.5 h-3.5 md:w-4 md:h-4" />
                     <span className="hidden sm:inline">
-                      {pkg.packageType === "Camera+OBS"
-                        ? "Camera + OBS"
+                      {pkg.packageType === "OBS Sistem"
+                        ? "OBS Sistem"
                         : "iPhone"}
                     </span>
                     <span className="sm:hidden">
-                      {pkg.packageType === "Camera+OBS"
-                        ? "Camera+OBS"
+                      {pkg.packageType === "OBS Sistem"
+                        ? "OBS Sistem"
                         : "iPhone"}
                     </span>
                   </div>
@@ -474,7 +523,7 @@ export default function PackageSelection({
                     days={pkg.numberOfDays}
                   />
                   <div className="flex items-center gap-2 text-sm text-gray-300">
-                    <Calendar className="w-4 h-4 text-[#4920E5]" />
+                    <Calendar className="w-4 h-4 text-white" />
                     <span>{pkg.durationPerSession} Jam per sesi</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-300">
@@ -484,7 +533,7 @@ export default function PackageSelection({
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-300">
-                    <Calendar className="w-4 h-4 text-[#4920E5]" />
+                    <Calendar className="w-4 h-4 text-white" />
                     <span>{pkg.workDays}</span>
                   </div>
                   {pkg.twibbonDesignCount > 0 && (

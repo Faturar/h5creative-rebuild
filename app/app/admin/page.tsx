@@ -282,7 +282,7 @@ export default function AdminDashboard() {
                 </p>
               </div>
               <div className="w-12 h-12 bg-[#4920E5]/20 rounded-lg flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-[#4920E5]" />
+                <Calendar className="w-6 h-6 text-white" />
               </div>
             </div>
           </Card>

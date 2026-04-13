@@ -138,10 +138,10 @@ export default function PricingTiersPage() {
       render: (value: string) => (
         <span
           className={`font-semibold ${
-            value === "Camera+OBS" ? "text-[#FF6B35]" : "text-[#4920E5]"
+            value === "OBS Sistem" ? "text-[#FF6B35]" : "text-[#4920E5]"
           }`}
         >
-          {value === "Camera+OBS" ? "Camera + OBS" : value}
+          {value === "OBS Sistem" ? "OBS Sistem" : value}
         </span>
       ),
     },
@@ -229,7 +229,7 @@ export default function PricingTiersPage() {
             >
               <option value="all">All Devices</option>
               <option value="iPhone">iPhone</option>
-              <option value="Camera+OBS">Camera + OBS</option>
+              <option value="OBS Sistem">OBS Sistem</option>
             </select>
           </div>
         </div>
@@ -263,7 +263,7 @@ export default function PricingTiersPage() {
                 required
               >
                 <option value="iPhone">iPhone</option>
-                <option value="Camera+OBS">Camera + OBS</option>
+                <option value="OBS Sistem">OBS Sistem</option>
               </select>
             </div>
 

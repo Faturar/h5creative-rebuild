@@ -190,7 +190,7 @@ export default function AdminSlotRequestsPage() {
             </div>
           ) : requests.length === 0 ? (
             <div className="text-center py-12">
-              <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+              <Calendar className="w-12 h-12 text-white mx-auto mb-3" />
               <p className="text-gray-400">No slot requests found</p>
             </div>
           ) : (
@@ -214,7 +214,7 @@ export default function AdminSlotRequestsPage() {
                       </div>
                       <div className="flex flex-wrap gap-3 text-sm text-gray-300 mb-2">
                         <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
+                          <Calendar className="w-4 h-4 text-white" />
                           <span>{formatDate(request.date)}</span>
                         </div>
                         <div className="flex items-center gap-1">

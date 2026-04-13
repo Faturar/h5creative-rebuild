@@ -204,8 +204,8 @@ export default function BookingSummary({
                 Perangkat
               </p>
               <p className="text-xs md:text-sm text-gray-300">
-                {bookingData.deviceType === "Camera+OBS"
-                  ? "Camera + OBS"
+                {bookingData.deviceType === "OBS Sistem"
+                  ? "OBS Sistem"
                   : bookingData.deviceType}
               </p>
             </div>
@@ -260,7 +260,7 @@ export default function BookingSummary({
         )}
         {bookingData.date && bookingData.startTime && bookingData.endTime && (
           <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-orange-500/20 rounded-2xl border border-orange-500/30">
-            <Calendar className="w-4 h-4 md:w-5 md:h-5 text-orange-400 flex-shrink-0 mt-0.5" />
+            <Calendar className="w-4 h-4 md:w-5 md:h-5 text-white flex-shrink-0 mt-0.5" />
             <div className="flex-1 min-w-0">
               <p className="text-xs md:text-sm font-medium text-white">
                 Jadwal

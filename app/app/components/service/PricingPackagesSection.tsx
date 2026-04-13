@@ -81,7 +81,7 @@ export default function PricingPackagesSection() {
             transition={{ duration: 0.3, delay: 0.3 }}
             className="mt-12 bg-gradient-to-r from-orange-50 to-yellow-50 border border-orange-200 p-6 rounded-2xl"
           >
-            <h4 className="text-lg font-bold text-gray-900 mb-3">Peralatan Tambahan untuk Paket Camera + OBS:</h4>
+            <h4 className="text-lg font-bold text-gray-900 mb-3">Peralatan Tambahan untuk Paket OBS Sistem:</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {cameraEquipment.map((item, index) => (
                 <div key={index} className="flex items-center gap-2">

@@ -30,13 +30,17 @@ export default function CustomerForm({
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set())
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const phoneRegex = /^[0-9]+$/
 
   const validateField = (fieldName: string, value: string) => {
     const newErrors = { ...errors }
+    const trimmedValue = value.trim()
 
     switch (fieldName) {
       case "customerName":
-        if (!value.trim() || value.trim().length < 2) {
+        if (!trimmedValue) {
+          newErrors.customerName = "Nama lengkap harus diisi"
+        } else if (trimmedValue.length < 2) {
           newErrors.customerName = "Nama harus diisi minimal 2 karakter"
         } else {
           delete newErrors.customerName
@@ -44,34 +48,42 @@ export default function CustomerForm({
         break
 
       case "customerPhone":
-        if (!value.trim() || value.trim().length < 10) {
-          newErrors.customerPhone = "Nomor telepon harus diisi minimal 10 digit"
+        if (!trimmedValue) {
+          newErrors.customerPhone = "Nomor telepon harus diisi"
+        } else if (!phoneRegex.test(trimmedValue)) {
+          newErrors.customerPhone = "Nomor telepon hanya boleh berisi angka"
+        } else if (trimmedValue.length < 10) {
+          newErrors.customerPhone = "Nomor telepon minimal 10 digit"
+        } else if (trimmedValue.length > 15) {
+          newErrors.customerPhone = "Nomor telepon maksimal 15 digit"
         } else {
           delete newErrors.customerPhone
         }
         break
 
       case "customerEmail":
-        if (!value.trim()) {
+        if (!trimmedValue) {
           newErrors.customerEmail = "Email harus diisi"
-        } else if (!emailRegex.test(value.trim())) {
+        } else if (!emailRegex.test(trimmedValue)) {
           newErrors.customerEmail =
-            "Format email tidak valid. Gunakan format: nama@email.com"
+            "Format email tidak valid. Contoh: nama@email.com"
         } else {
           delete newErrors.customerEmail
         }
         break
 
       case "businessName":
-        if (!value.trim() || value.trim().length < 2) {
-          newErrors.businessName = "Nama bisnis harus diisi minimal 2 karakter"
+        if (!trimmedValue) {
+          newErrors.businessName = "Nama bisnis harus diisi"
+        } else if (trimmedValue.length < 2) {
+          newErrors.businessName = "Nama bisnis minimal 2 karakter"
         } else {
           delete newErrors.businessName
         }
         break
 
       case "productCategory":
-        if (!value.trim()) {
+        if (!trimmedValue) {
           newErrors.productCategory = "Kategori produk harus dipilih"
         } else {
           delete newErrors.productCategory
@@ -117,17 +129,37 @@ export default function CustomerForm({
         </p>
       </div>
 
+      {/* Info Box */}
+      <div className="mb-6 p-4 bg-[#4920E5]/10 border-2 border-[#4920E5]/20 rounded-xl">
+        <div className="flex items-start gap-3">
+          <Info className="w-5 h-5 text-[#4920E5] flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-white mb-2">
+              Pastikan data yang Anda masukkan sudah benar:
+            </p>
+            <ul className="text-sm text-gray-300 space-y-1 list-disc list-inside">
+              <li>Nomor telepon minimal 10 digit (hanya angka)</li>
+              <li>Email menggunakan format yang valid (contoh: nama@email.com)</li>
+              <li>Semua field dengan tanda bintang (*) wajib diisi</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       {Object.keys(errors).length > 0 && (
-        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
+        <div className="mb-6 p-4 bg-red-500/10 border-2 border-red-500/30 rounded-xl">
           <div className="flex items-start gap-3">
             <Info className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm font-medium text-red-300 mb-2">
-                Mohon perbaiki kesalahan berikut:
+              <p className="text-sm font-bold text-red-300 mb-2">
+                Validasi gagal. Mohon perbaiki kesalahan berikut:
               </p>
-              <ul className="text-sm text-red-400 space-y-1 list-disc list-inside">
+              <ul className="text-sm text-red-400 space-y-2 list-disc list-inside">
                 {Object.entries(errors).map(([field, message]) => (
-                  <li key={field}>{message}</li>
+                  <li key={field} className="flex items-start gap-2">
+                    <div className="w-1 h-1 rounded-full bg-red-400 mt-2 flex-shrink-0"></div>
+                    <span>{message}</span>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -143,6 +175,7 @@ export default function CustomerForm({
               className="block text-sm font-medium text-gray-300 mb-2"
             >
               Nama Lengkap
+              <span className="text-red-400 ml-1">*</span>
             </label>
             <div className="relative group">
               <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-[#4920E5] transition-colors" />
@@ -165,9 +198,12 @@ export default function CustomerForm({
                 required
               />
               {touchedFields.has("customerName") && errors.customerName && (
-                <p className="mt-1 text-xs text-red-400">
-                  {errors.customerName}
-                </p>
+                <div className="mt-1 flex items-start gap-1.5">
+                  <div className="w-1 h-1 rounded-full bg-red-400 mt-1.5 flex-shrink-0"></div>
+                  <p className="text-xs text-red-400 flex-1">
+                    {errors.customerName}
+                  </p>
+                </div>
               )}
             </div>
           </div>
@@ -178,6 +214,7 @@ export default function CustomerForm({
               className="block text-sm font-medium text-gray-300 mb-2"
             >
               Nomor Telepon
+              <span className="text-red-400 ml-1">*</span>
             </label>
             <div className="relative group">
               <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-[#4920E5] transition-colors" />
@@ -185,13 +222,17 @@ export default function CustomerForm({
                 type="tel"
                 id="customerPhone"
                 value={bookingData.customerPhone}
-                onChange={(e) =>
-                  handleFieldChange("customerPhone", e.target.value)
-                }
+                onChange={(e) => {
+                  const phoneValue = e.target.value.replace(/[^0-9]/g, "")
+                  handleFieldChange("customerPhone", phoneValue)
+                }}
                 onBlur={() =>
                   handleFieldBlur("customerPhone", bookingData.customerPhone)
                 }
+                inputMode="numeric"
+                pattern="[0-9]*"
                 minLength={10}
+                maxLength={15}
                 className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500 ${
                   touchedFields.has("customerPhone") && errors.customerPhone
                     ? "border-red-500"
@@ -201,8 +242,16 @@ export default function CustomerForm({
                 required
               />
               {touchedFields.has("customerPhone") && errors.customerPhone && (
-                <p className="mt-1 text-xs text-red-400">
-                  {errors.customerPhone}
+                <div className="mt-1 flex items-start gap-1.5">
+                  <div className="w-1 h-1 rounded-full bg-red-400 mt-1.5 flex-shrink-0"></div>
+                  <p className="text-xs text-red-400 flex-1">
+                    {errors.customerPhone}
+                  </p>
+                </div>
+              )}
+              {!touchedFields.has("customerPhone") && !errors.customerPhone && (
+                <p className="mt-1 text-xs text-gray-500">
+                  Minimal 10 digit, maksimal 15 digit
                 </p>
               )}
             </div>
@@ -214,6 +263,7 @@ export default function CustomerForm({
               className="block text-sm font-medium text-gray-300 mb-2"
             >
               Email
+              <span className="text-red-400 ml-1">*</span>
             </label>
             <div className="relative group">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-[#4920E5] transition-colors" />
@@ -227,6 +277,8 @@ export default function CustomerForm({
                 onBlur={() =>
                   handleFieldBlur("customerEmail", bookingData.customerEmail)
                 }
+                autoCapitalize="off"
+                autoCorrect="off"
                 className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all text-white placeholder:text-gray-500 ${
                   touchedFields.has("customerEmail") && errors.customerEmail
                     ? "border-red-500"
@@ -236,8 +288,16 @@ export default function CustomerForm({
                 required
               />
               {touchedFields.has("customerEmail") && errors.customerEmail && (
-                <p className="mt-1 text-xs text-red-400">
-                  {errors.customerEmail}
+                <div className="mt-1 flex items-start gap-1.5">
+                  <div className="w-1 h-1 rounded-full bg-red-400 mt-1.5 flex-shrink-0"></div>
+                  <p className="text-xs text-red-400 flex-1">
+                    {errors.customerEmail}
+                  </p>
+                </div>
+              )}
+              {!touchedFields.has("customerEmail") && !errors.customerEmail && (
+                <p className="mt-1 text-xs text-gray-500">
+                  Gunakan format yang valid, contoh: nama@email.com
                 </p>
               )}
             </div>
@@ -249,6 +309,7 @@ export default function CustomerForm({
               className="block text-sm font-medium text-gray-300 mb-2"
             >
               Nama Bisnis
+              <span className="text-red-400 ml-1">*</span>
             </label>
             <div className="relative group">
               <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-[#4920E5] transition-colors" />
@@ -271,9 +332,12 @@ export default function CustomerForm({
                 required
               />
               {touchedFields.has("businessName") && errors.businessName && (
-                <p className="mt-1 text-xs text-red-400">
-                  {errors.businessName}
-                </p>
+                <div className="mt-1 flex items-start gap-1.5">
+                  <div className="w-1 h-1 rounded-full bg-red-400 mt-1.5 flex-shrink-0"></div>
+                  <p className="text-xs text-red-400 flex-1">
+                    {errors.businessName}
+                  </p>
+                </div>
               )}
             </div>
           </div>
@@ -284,6 +348,7 @@ export default function CustomerForm({
               className="block text-sm font-medium text-gray-300 mb-2"
             >
               Kategori Produk
+              <span className="text-red-400 ml-1">*</span>
             </label>
             <div className="relative group">
               <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-[#4920E5] transition-colors" />
@@ -299,7 +364,7 @@ export default function CustomerForm({
                     bookingData.productCategory,
                   )
                 }
-                className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all appearance-none text-white ${
+                className={`w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border focus:ring-2 focus:ring-[#4920E5] focus:border-transparent transition-all appearance-none text-white cursor-pointer ${
                   isDark
                     ? "bg-white/5 border-white/10"
                     : "bg-white/5 border-white/10"
@@ -312,6 +377,7 @@ export default function CustomerForm({
               >
                 <option
                   value=""
+                  disabled
                   className={isDark ? "text-gray-400" : "text-gray-900"}
                 >
                   Pilih kategori produk
@@ -379,9 +445,12 @@ export default function CustomerForm({
               </select>
               {touchedFields.has("productCategory") &&
                 errors.productCategory && (
-                  <p className="mt-1 text-xs text-red-400">
-                    {errors.productCategory}
-                  </p>
+                  <div className="mt-1 flex items-start gap-1.5">
+                    <div className="w-1 h-1 rounded-full bg-red-400 mt-1.5 flex-shrink-0"></div>
+                    <p className="text-xs text-red-400 flex-1">
+                      {errors.productCategory}
+                    </p>
+                  </div>
                 )}
             </div>
           </div>

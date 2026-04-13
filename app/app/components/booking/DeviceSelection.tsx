@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { Video, Smartphone } from "lucide-react"
 
-type DeviceType = "iPhone" | "Camera+OBS"
+type DeviceType = "iPhone" | "OBS Sistem"
 
 interface DeviceSelectionProps {
   selectedDevice: string | null
@@ -30,9 +30,9 @@ export default function DeviceSelection({
       ],
     },
     {
-      type: "Camera+OBS" as DeviceType,
+      type: "OBS Sistem" as DeviceType,
       icon: Video,
-      title: "Camera + OBS",
+      title: "OBS Sistem",
       description:
         "Live streaming profesional dengan kamera DSLR dan OBS untuk kualitas terbaik",
       color: "from-[#FF6B35] to-[#E85D04]",

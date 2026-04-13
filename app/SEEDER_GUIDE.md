@@ -51,13 +51,23 @@ bun run prisma:seed
 
 The seeder creates the following data:
 
-### 1. Packages (5 items)
+### 1. Packages (8 items)
 
-- Paket Starter - TikTok (Rp 1.500.000)
-- Paket Business - TikTok (Rp 3.000.000)
-- Paket Enterprise - TikTok (Rp 5.000.000)
-- Paket Shopee Starter - Shopee (Rp 1.800.000)
-- Paket Instagram Live - Instagram (Rp 2.000.000)
+**iPhone Packages (4 items):**
+- Package A - 28 hours, 14 days (Rp 3.000.000 → Rp 2.100.000)
+- Package B - 52 hours, 26 days (Rp 4.500.000 → Rp 3.640.000)
+- Package C - 104 hours, 26 days (Rp 8.000.000 → Rp 6.760.000)
+- Package E - 156 hours, 26 days (Rp 11.700.000 → Rp 9.360.000)
+
+Features: Bisa Pilih Tema Studio, Pemilihan Podium atau Properti Tambahan, Fleksibelitas Host untuk Berdiri, Device Memakai Iphone Seri 11 Promax Keatas
+
+**Camera+OBS Packages (4 items):**
+- Package A - 52 hours, 26 days (Rp 9.000.000 → Rp 6.500.000)
+- Package B - 78 hours, 26 days (Rp 14.000.000 → Rp 9.000.000)
+- Package C - 104 hours, 26 days (Rp 16.000.000 → Rp 10.900.000)
+- Package D - 156 hours, 26 days (Rp 22.000.000 → Rp 14.600.000)
+
+Features: Pemakaian Green Screen, Bisa memakai animasi bergerak dan full desain, Fleksibelitas Desain untuk Campaign, Kamera Profesional dan Sistem Stabil, Kualitas Gambar HD
 
 ### 2. Hosts (5 items)
 
@@ -82,7 +92,7 @@ The seeder creates the following data:
 ### 5. Host-Package Links
 
 - All hosts are linked to all packages
-- Total: 25 links (5 hosts × 5 packages)
+- Total: 40 links (5 hosts × 8 packages)
 
 ## Troubleshooting
 
@@ -144,7 +154,9 @@ SELECT 'studios', COUNT(*) FROM studios
 UNION ALL
 SELECT 'studio_slots', COUNT(*) FROM studio_slots
 UNION ALL
-SELECT 'package_hosts', COUNT(*) FROM package_hosts;
+SELECT 'package_hosts', COUNT(*) FROM package_hosts
+UNION ALL
+SELECT 'pricing_tiers', COUNT(*) FROM pricing_tiers;
 ```
 
 ## Seeder Features

@@ -272,7 +272,7 @@ export default function AdminSlotsPage() {
             </div>
           ) : slots.length === 0 ? (
             <div className="text-center py-12">
-              <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+              <Calendar className="w-12 h-12 text-white mx-auto mb-3" />
               <p className="text-gray-400">No slots found</p>
             </div>
           ) : (
@@ -289,7 +289,7 @@ export default function AdminSlotsPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <Calendar className="w-4 h-4 text-[#4920E5]" />
+                        <Calendar className="w-4 h-4 text-white" />
                         <span className="font-semibold text-white">
                           {formatDate(slot.date)}
                         </span>

@@ -18,11 +18,11 @@ export async function POST(request: Request) {
     }
 
     // Validate device type
-    if (deviceType !== "iPhone" && deviceType !== "Camera+OBS") {
+    if (deviceType !== "iPhone" && deviceType !== "OBS Sistem") {
       return NextResponse.json(
         {
           success: false,
-          error: "Invalid device type. Must be 'iPhone' or 'Camera+OBS'",
+          error: "Invalid device type. Must be 'iPhone' or 'OBS Sistem'",
         },
         { status: 400 },
       )
@@ -36,10 +36,13 @@ export async function POST(request: Request) {
       )
     }
 
-    // Validate time slots
-    if (!Array.isArray(timeSlots) || timeSlots.length === 0) {
+    // Validate time slots (allow empty for package bookings)
+    if (!Array.isArray(timeSlots)) {
       return NextResponse.json(
-        { success: false, error: "Time slots must be a non-empty array" },
+        {
+          success: false,
+          error: "Time slots must be an array",
+        },
         { status: 400 },
       )
     }
