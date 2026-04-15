@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { motion, Easing } from "framer-motion"
 import { ArrowRight, Users, Video, Play, TrendingUp } from "lucide-react"
 
