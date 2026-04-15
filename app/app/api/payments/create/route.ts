@@ -36,6 +36,15 @@ export async function POST(request: Request) {
       )
     }
 
+    // Validate booking has a valid price
+    const price = Number(booking.price)
+    if (!price || price <= 0) {
+      return NextResponse.json(
+        { success: false, error: "Invalid booking price. Cannot create payment." },
+        { status: 400 },
+      )
+    }
+
     // Check if payment already exists
     const existingPayment = await prisma.payment.findFirst({
       where: {
@@ -51,11 +60,19 @@ export async function POST(request: Request) {
       )
     }
 
+    // Validate required fields
+    if (!booking.bookingCode || !booking.customerName || !booking.customerEmail || !booking.customerPhone) {
+      return NextResponse.json(
+        { success: false, error: "Missing required booking information" },
+        { status: 400 },
+      )
+    }
+
     // Create Midtrans transaction
     const transactionDetails = {
       transaction_details: {
         order_id: booking.bookingCode,
-        gross_amount: Number(booking.price),
+        gross_amount: price,
       },
       customer_details: {
         first_name: booking.customerName,
@@ -65,7 +82,7 @@ export async function POST(request: Request) {
       item_details: [
         {
           id: booking.packageId || "custom",
-          price: Number(booking.price),
+          price: price,
           quantity: 1,
           name: booking.package?.name
             ? `${booking.package.name} - ${booking.host.name}`
@@ -78,6 +95,12 @@ export async function POST(request: Request) {
         pending: `${process.env.NEXT_PUBLIC_APP_URL}/booking/pending?order_id=${booking.bookingCode}`,
       },
     }
+
+    console.log("Creating Midtrans transaction with:", {
+      orderId: transactionDetails.transaction_details.order_id,
+      grossAmount: transactionDetails.transaction_details.gross_amount,
+      isProduction: process.env.MIDTRANS_IS_PRODUCTION,
+    })
 
     const transaction = await snap.createTransaction(transactionDetails)
 
@@ -103,14 +126,38 @@ export async function POST(request: Request) {
     })
   } catch (error) {
     console.error("Failed to create payment:", error)
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { success: false, error: "Validation failed", details: error.issues },
         { status: 400 },
       )
     }
+
+    // Handle Midtrans API errors
+    if (error instanceof Error) {
+      console.error("Midtrans error details:", {
+        name: error.name,
+        message: error.message,
+        cause: (error as any).cause,
+      })
+
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Payment error: ${error.message}`,
+          details: error.message,
+        },
+        { status: 500 },
+      )
+    }
+
     return NextResponse.json(
-      { success: false, error: "Failed to create payment" },
+      {
+        success: false,
+        error: "Failed to create payment",
+        details: "Unknown error occurred",
+      },
       { status: 500 },
     )
   }

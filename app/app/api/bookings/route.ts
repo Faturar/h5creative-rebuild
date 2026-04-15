@@ -166,6 +166,17 @@ export async function POST(request: Request) {
     // Create booking
     const booking = await prisma.$transaction(
       async (tx: Prisma.TransactionClient) => {
+        // Check if studio slot is already booked
+        if (validatedData.studioSlotId) {
+          const existingBooking = await tx.booking.findUnique({
+            where: { studioSlotId: validatedData.studioSlotId },
+          })
+
+          if (existingBooking) {
+            throw new Error("Slot waktu ini sudah dipesan. Silakan pilih slot lain.")
+          }
+        }
+
         // Update studio slot as booked only if it's a preset slot
         if (validatedData.studioSlotId) {
           await tx.studioSlot.update({
@@ -265,6 +276,35 @@ export async function POST(request: Request) {
         { status: 400 },
       )
     }
+
+    // Handle Prisma unique constraint errors
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      const target = (error.meta?.target as string[]) || []
+      if (target.includes("studioSlotId")) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Slot waktu ini sudah dipesan. Silakan pilih slot waktu yang lain.",
+          },
+          { status: 409 },
+        )
+      }
+    }
+
+    // Handle custom booking errors
+    if (error instanceof Error) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: error.message,
+        },
+        { status: 400 },
+      )
+    }
+
     return NextResponse.json(
       {
         success: false,
