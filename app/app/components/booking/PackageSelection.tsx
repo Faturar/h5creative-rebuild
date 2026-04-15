@@ -571,12 +571,6 @@ export default function PackageSelection({
                       <span>Weekly Report</span>
                     </div>
                   )}
-                  {pkg.accountReport && (
-                    <div className="flex items-center gap-2 text-sm text-gray-300">
-                      <FileText className="w-4 h-4 text-[#12BB74]" />
-                      <span>Account Report</span>
-                    </div>
-                  )}
                 </div>
                 {!isValid && (
                   <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold whitespace-nowrap">

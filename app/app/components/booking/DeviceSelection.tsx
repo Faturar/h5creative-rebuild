@@ -19,8 +19,7 @@ export default function DeviceSelection({
       type: "iPhone" as DeviceType,
       icon: Smartphone,
       title: "iPhone",
-      description:
-        "Bisa pilih tema studio, pemilihan podium atau properti tambahan, fleksibilitas host untuk berdiri",
+      description: "Device live streaming dengan kualitas tinggi",
       color: "from-[#4920E5] to-[#6B21A8]",
       features: [
         "Bisa Pilih Tema Studio",
@@ -33,8 +32,7 @@ export default function DeviceSelection({
       type: "OBS Sistem" as DeviceType,
       icon: Video,
       title: "OBS Sistem",
-      description:
-        "Pemakaian Green Screen, bisa memakai animasi bergerak dan full desain, fleksibilitas desain untuk campaign",
+      description: "Sistem green screen dengan kamera profesional",
       color: "from-[#FF6B35] to-[#E85D04]",
       features: [
         "Pemakaian Green Screen",

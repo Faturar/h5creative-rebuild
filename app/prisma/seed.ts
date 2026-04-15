@@ -61,7 +61,7 @@ async function main() {
           data: {
             name: "Package A",
             packageType: "iPhone",
-            description: "Bisa Pilih Tema Studio, Pemilihan Podium atau Properti Tambahan, Fleksibelitas Host untuk Berdiri, Device Memakai Iphone Seri 11 Promax Keatas",
+            description: "",
             price: toDecimal(3000000),
             promoPrice: toDecimal(2100000),
             promoTitle: "Promo Launching",
@@ -89,7 +89,7 @@ async function main() {
           data: {
             name: "Package B",
             packageType: "iPhone",
-            description: "Bisa Pilih Tema Studio, Pemilihan Podium atau Properti Tambahan, Fleksibelitas Host untuk Berdiri, Device Memakai Iphone Seri 11 Promax Keatas",
+            description: "",
             price: toDecimal(4500000),
             promoPrice: toDecimal(3640000),
             promoTitle: "Promo Launching",
@@ -117,7 +117,7 @@ async function main() {
           data: {
             name: "Package C",
             packageType: "iPhone",
-            description: "Bisa Pilih Tema Studio, Pemilihan Podium atau Properti Tambahan, Fleksibelitas Host untuk Berdiri, Device Memakai Iphone Seri 11 Promax Keatas",
+            description: "",
             price: toDecimal(8000000),
             promoPrice: toDecimal(6760000),
             promoTitle: "Promo Launching",
@@ -145,7 +145,7 @@ async function main() {
           data: {
             name: "Package E",
             packageType: "iPhone",
-            description: "Bisa Pilih Tema Studio, Pemilihan Podium atau Properti Tambahan, Fleksibelitas Host untuk Berdiri, Device Memakai Iphone Seri 11 Promax Keatas",
+            description: "",
             price: toDecimal(11700000),
             promoPrice: toDecimal(9360000),
             promoTitle: "Promo Launching",
