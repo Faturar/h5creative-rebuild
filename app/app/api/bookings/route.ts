@@ -17,8 +17,8 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const bookingSchema = z.object({
   packageId: z.string().uuid().nullable().optional(),
-  hostId: z.string().uuid(),
-  studioId: z.string().uuid(),
+  hostId: z.string().nullable(),
+  studioId: z.string().nullable(),
   studioSlotId: z.string().uuid().nullable().optional(),
   date: z.string(),
   startTime: z.string(),
@@ -98,6 +98,36 @@ export async function POST(request: Request) {
       }
     }
 
+    // Handle default host (will be chosen later)
+    let actualHostId = validatedData.hostId
+    if (!validatedData.hostId || validatedData.hostId === "00000000-0000-0000-0000-000000000001") {
+      const firstHost = await prisma.host.findFirst({
+        where: { isActive: true },
+      })
+      if (!firstHost) {
+        return NextResponse.json(
+          { success: false, error: "No active host available" },
+          { status: 404 },
+        )
+      }
+      actualHostId = firstHost.id
+    }
+
+    // Handle default studio (kantor utama)
+    let actualStudioId = validatedData.studioId
+    if (!validatedData.studioId || validatedData.studioId === "00000000-0000-0000-0000-000000000001") {
+      const firstStudio = await prisma.studio.findFirst({
+        where: { isActive: true },
+      })
+      if (!firstStudio) {
+        return NextResponse.json(
+          { success: false, error: "No active studio available" },
+          { status: 404 },
+        )
+      }
+      actualStudioId = firstStudio.id
+    }
+
     // For custom bookings, deviceType and totalHours are required
     if (!packageData && (!validatedData.deviceType || !validatedData.totalHours)) {
       return NextResponse.json(
@@ -126,7 +156,7 @@ export async function POST(request: Request) {
     }
 
     // Calculate dynamic pricing if device type and total hours are provided
-    let price = packageData ? Number(packageData.promoPrice || packageData.price) : 0
+    const price = packageData ? Number(packageData.promoPrice || packageData.price) : 0
     let basePrice = price
     let surcharge = 0
     let finalPrice = price
@@ -190,8 +220,8 @@ export async function POST(request: Request) {
           data: {
             bookingCode,
             ...(validatedData.packageId && { packageId: validatedData.packageId }),
-            hostId: validatedData.hostId,
-            studioId: validatedData.studioId,
+            hostId: actualHostId!,
+            studioId: actualStudioId!,
             ...(validatedData.studioSlotId && { studioSlotId: validatedData.studioSlotId }),
             date: new Date(validatedData.date),
             startTime: validatedData.startTime,

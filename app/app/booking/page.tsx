@@ -8,15 +8,12 @@ import {
   XCircle,
   Package,
   User,
-  MapPin,
   Calendar,
   CreditCard,
   Video,
 } from "lucide-react"
 import DeviceSelection from "@/components/booking/DeviceSelection"
 import PackageSelection from "@/components/booking/PackageSelection"
-import HostSelection from "@/components/booking/HostSelection"
-import StudioSelection from "@/components/booking/StudioSelection"
 import TimeSlotSelection from "@/components/booking/TimeSlotSelection"
 import CustomerForm from "@/components/booking/CustomerForm"
 import PaymentSection from "@/components/booking/PaymentSection"
@@ -27,8 +24,6 @@ import FloatingNavigation from "@/components/booking/FloatingNavigation"
 type BookingStep =
   | "device"
   | "package"
-  | "host"
-  | "studio"
   | "slot"
   | "customer"
   | "payment"
@@ -119,6 +114,36 @@ export default function BookingPage() {
   }, [bookingData.deviceType])
 
   useEffect(() => {
+    const fetchDefaultStudio = async () => {
+      try {
+        const response = await fetch("/api/studios")
+        const result = await response.json()
+        if (result.success && result.data.length > 0) {
+          setBookingData((prev) => ({ ...prev, studioId: result.data[0].id }))
+        }
+      } catch (error) {
+        console.error("Failed to fetch studio:", error)
+      }
+    }
+    fetchDefaultStudio()
+  }, [])
+
+  useEffect(() => {
+    const fetchDefaultHost = async () => {
+      try {
+        const response = await fetch("/api/hosts")
+        const result = await response.json()
+        if (result.success && result.data.length > 0) {
+          setBookingData((prev) => ({ ...prev, hostId: result.data[0].id }))
+        }
+      } catch (error) {
+        console.error("Failed to fetch host:", error)
+      }
+    }
+    fetchDefaultHost()
+  }, [])
+
+  useEffect(() => {
     if (bookingData.packageId && packages.length > 0) {
       const selectedPackage = packages.find(
         (p) => p.id === bookingData.packageId,
@@ -157,8 +182,6 @@ export default function BookingPage() {
   const steps = [
     { id: "device", title: "Pilih Perangkat", icon: Video },
     { id: "package", title: "Pilih Paket", icon: Package },
-    { id: "host", title: "Pilih Host", icon: User },
-    { id: "studio", title: "Pilih Studio", icon: MapPin },
     { id: "slot", title: "Pilih Waktu", icon: Calendar },
     { id: "customer", title: "Data Pelanggan", icon: User },
     { id: "payment", title: "Pembayaran", icon: CreditCard },
@@ -226,10 +249,6 @@ export default function BookingPage() {
               bookingData.customDays !== null &&
               bookingData.customDays >= 6))
         )
-      case "host":
-        return bookingData.hostId !== null
-      case "studio":
-        return bookingData.studioId !== null
       case "slot":
         return (
           (bookingData.studioSlotId !== null ||
@@ -255,6 +274,11 @@ export default function BookingPage() {
 
   const handleSubmit = async () => {
     if (!canProceed()) return
+
+    if (!bookingData.hostId || !bookingData.studioId) {
+      setError("Host dan studio harus dipilih sebelum melanjutkan")
+      return
+    }
 
     setIsSubmitting(true)
     setError(null)
@@ -345,8 +369,8 @@ export default function BookingPage() {
       {/* Right Main Content */}
       <div className="flex flex-col flex-3 items-center justify-center mx-auto py-4 md:py-6 lg:py-12 px-4 md:px-8 xl:px-8 bg-[url('/assets/images/Ellipse.svg')] bg-center bg-no-repeat bg-contain bg-[length:540px]">
         {/* Progress Steps */}
-        <div className="w-full max-w-4xl mb-4 md:mb-6 lg:mb-8">
-          <div className="grid grid-cols-4 lg:grid-cols-7 justify-center overflow-x-auto pb-2 scrollbar-hide">
+          <div className="w-full max-w-4xl mb-4 md:mb-6 lg:mb-8">
+            <div className="grid grid-cols-3 lg:grid-cols-5 justify-center overflow-x-auto pb-2 scrollbar-hide">
             {steps.map((step, index) => {
               const isActive = step.id === currentStep
               const isCompleted = index < stepIndex
@@ -561,23 +585,6 @@ export default function BookingPage() {
                         setPackageValidationWarning(null)
                       }
                     }}
-                  />
-                )}
-                {currentStep === "host" && (
-                  <HostSelection
-                    packageId={bookingData.packageId}
-                    selectedHostId={bookingData.hostId}
-                    onSelect={(hostId) =>
-                      setBookingData((prev) => ({ ...prev, hostId }))
-                    }
-                  />
-                )}
-                {currentStep === "studio" && (
-                  <StudioSelection
-                    selectedStudioId={bookingData.studioId}
-                    onSelect={(studioId) =>
-                      setBookingData((prev) => ({ ...prev, studioId }))
-                    }
                   />
                 )}
                 {currentStep === "slot" && (
