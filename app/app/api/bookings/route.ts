@@ -100,7 +100,10 @@ export async function POST(request: Request) {
 
     // Handle default host (will be chosen later)
     let actualHostId = validatedData.hostId
-    if (!validatedData.hostId || validatedData.hostId === "00000000-0000-0000-0000-000000000001") {
+    if (
+      !validatedData.hostId ||
+      validatedData.hostId === "00000000-0000-0000-0000-000000000001"
+    ) {
       const firstHost = await prisma.host.findFirst({
         where: { isActive: true },
       })
@@ -115,7 +118,10 @@ export async function POST(request: Request) {
 
     // Handle default studio (kantor utama)
     let actualStudioId = validatedData.studioId
-    if (!validatedData.studioId || validatedData.studioId === "00000000-0000-0000-0000-000000000001") {
+    if (
+      !validatedData.studioId ||
+      validatedData.studioId === "00000000-0000-0000-0000-000000000001"
+    ) {
       const firstStudio = await prisma.studio.findFirst({
         where: { isActive: true },
       })
@@ -129,7 +135,10 @@ export async function POST(request: Request) {
     }
 
     // For custom bookings, deviceType and totalHours are required
-    if (!packageData && (!validatedData.deviceType || !validatedData.totalHours)) {
+    if (
+      !packageData &&
+      (!validatedData.deviceType || !validatedData.totalHours)
+    ) {
       return NextResponse.json(
         {
           success: false,
@@ -140,8 +149,11 @@ export async function POST(request: Request) {
     }
 
     // Validate minimum purchase requirements
-    const bookingType = (packageData?.bookingType as "custom" | "package") || "custom"
-    const numberOfDays = packageData?.numberOfDays || (validatedData.totalHours ? Math.ceil(validatedData.totalHours / 2) : 0)
+    const bookingType =
+      (packageData?.bookingType as "custom" | "package") || "custom"
+    const numberOfDays =
+      packageData?.numberOfDays ||
+      (validatedData.totalHours ? Math.ceil(validatedData.totalHours / 2) : 0)
 
     const validation = validateMinimumDays(bookingType, numberOfDays)
     if (!validation.valid) {
@@ -149,14 +161,19 @@ export async function POST(request: Request) {
         {
           success: false,
           error: "Validasi gagal",
-          details: [validation.message || "Mohon cek kembali pilihan paket atau jumlah jam Anda."],
+          details: [
+            validation.message ||
+              "Mohon cek kembali pilihan paket atau jumlah jam Anda.",
+          ],
         },
         { status: 400 },
       )
     }
 
     // Calculate dynamic pricing if device type and total hours are provided
-    const price = packageData ? Number(packageData.promoPrice || packageData.price) : 0
+    const price = packageData
+      ? Number(packageData.promoPrice || packageData.price)
+      : 0
     let basePrice = price
     let surcharge = 0
     let finalPrice = price
@@ -203,7 +220,9 @@ export async function POST(request: Request) {
           })
 
           if (existingBooking) {
-            throw new Error("Slot waktu ini sudah dipesan. Silakan pilih slot lain.")
+            throw new Error(
+              "Slot waktu ini sudah dipesan. Silakan pilih slot lain.",
+            )
           }
         }
 
@@ -219,10 +238,14 @@ export async function POST(request: Request) {
         const newBooking = await tx.booking.create({
           data: {
             bookingCode,
-            ...(validatedData.packageId && { packageId: validatedData.packageId }),
+            ...(validatedData.packageId && {
+              packageId: validatedData.packageId,
+            }),
             hostId: actualHostId!,
             studioId: actualStudioId!,
-            ...(validatedData.studioSlotId && { studioSlotId: validatedData.studioSlotId }),
+            ...(validatedData.studioSlotId && {
+              studioSlotId: validatedData.studioSlotId,
+            }),
             date: new Date(validatedData.date),
             startTime: validatedData.startTime,
             endTime: validatedData.endTime,
@@ -249,7 +272,10 @@ export async function POST(request: Request) {
 
         return newBooking
       },
-      { maxWait: 10000 },
+      {
+        maxWait: 10000,
+        timeout: 16000,
+      },
     )
 
     try {
@@ -318,7 +344,8 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             success: false,
-            error: "Slot waktu ini sudah dipesan. Silakan pilih slot waktu yang lain.",
+            error:
+              "Slot waktu ini sudah dipesan. Silakan pilih slot waktu yang lain.",
           },
           { status: 409 },
         )
