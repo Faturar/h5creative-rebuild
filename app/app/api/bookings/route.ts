@@ -219,6 +219,7 @@ export async function POST(request: Request) {
 
         return newBooking
       },
+      { maxWait: 10000 },
     )
 
     try {
