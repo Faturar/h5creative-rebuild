@@ -132,25 +132,15 @@ export default function Services2() {
       <div className="container max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
         {/* HEADER */}
         <motion.div
-          className="flex flex-col md:flex-row justify-between items-start md:items-center mb-[50px] md:mb-[70px] gap-6"
+          className="mb-[50px] md:mb-[70px]"
           variants={itemVariants}
         >
-          <h2 className="font-bold text-[32px] leading-[1.1] md:text-[48px] lg:text-[40px] uppercase text-gray-900">
-            {SERVICES_SECTION_DATA.titleLine1} <br />
-            {SERVICES_SECTION_DATA.titleLine2}
+          <h2 className="font-bold text-[32px] leading-[1.1] md:text-[48px] lg:text-[40px] text-gray-900">
+            Optimasi Penjualan Kamu Sekarang!
           </h2>
-
-          <motion.a
-            href={SERVICES_SECTION_DATA.buttonLink}
-            className="bg-gradient-to-r from-[#2E2BFF] to-[#1C1AFF]
-            text-white font-semibold
-            px-6 py-3 md:px-8 md:py-4 rounded-full
-            transition duration-300 whitespace-nowrap"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {SERVICES_SECTION_DATA.buttonText}
-          </motion.a>
+          <p className="mt-4 text-[18px] leading-[28px] md:text-[20px] md:leading-[32px] text-gray-600">
+            Kami Bantu Live Streaming kamu deng gak ush slide2 dibuat coundown promo aja
+          </p>
         </motion.div>
 
         {/* GRID */}

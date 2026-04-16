@@ -590,7 +590,6 @@ export default function BookingPage() {
                 {currentStep === "slot" && (
                   <TimeSlotSelection
                     studioId={bookingData.studioId}
-                    selectedSlotId={bookingData.studioSlotId}
                     onSelect={(slotId, date, startTime, endTime) =>
                       setBookingData((prev) => {
                         const newTimeSlots = [
