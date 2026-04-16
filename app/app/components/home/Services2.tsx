@@ -1,9 +1,10 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion, Easing } from "framer-motion"
-import { Box } from "lucide-react"
+import { Box, Clock } from "lucide-react"
 
 import {
   SERVICES_DATA,
@@ -31,6 +32,76 @@ const itemVariants = {
       ease: [0.25, 0.1, 0.25, 1] as Easing,
     },
   },
+}
+
+function CountdownTimer() {
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 23,
+    minutes: 59,
+    seconds: 58,
+  })
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        let { days, hours, minutes, seconds } = prev
+
+        if (seconds > 0) {
+          seconds -= 1
+        } else if (minutes > 0) {
+          minutes -= 1
+          seconds = 59
+        } else if (hours > 0) {
+          hours -= 1
+          minutes = 59
+          seconds = 59
+        } else if (days > 0) {
+          days -= 1
+          hours = 23
+          minutes = 59
+          seconds = 59
+        }
+
+        return { days, hours, minutes, seconds }
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [])
+
+  return (
+    <div className="flex items-center gap-4 mt-6">
+      <Clock className="w-6 h-6 text-[#2E2BFF]" />
+      <div className="flex flex-col">
+        <span className="text-sm md:text-base font-semibold text-gray-700">
+          promo peluncuran yang akan habis pada tanggal 12
+        </span>
+        <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-1">
+            <span className="text-2xl md:text-3xl font-bold text-[#2E2BFF]">
+              {String(timeLeft.hours).padStart(2, "0")}
+            </span>
+            <span className="text-sm md:text-base text-gray-500">Jam</span>
+          </div>
+          <span className="text-2xl md:text-3xl text-gray-300">:</span>
+          <div className="flex items-center gap-1">
+            <span className="text-2xl md:text-3xl font-bold text-[#2E2BFF]">
+              {String(timeLeft.minutes).padStart(2, "0")}
+            </span>
+            <span className="text-sm md:text-base text-gray-500">Menit</span>
+          </div>
+          <span className="text-2xl md:text-3xl text-gray-300">:</span>
+          <div className="flex items-center gap-1">
+            <span className="text-2xl md:text-3xl font-bold text-[#2E2BFF]">
+              {String(timeLeft.seconds).padStart(2, "0")}
+            </span>
+            <span className="text-sm md:text-base text-gray-500">Detik</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 // Service Card Component
@@ -139,8 +210,9 @@ export default function Services2() {
             Optimasi Penjualan Kamu Sekarang!
           </h2>
           <p className="mt-4 text-[18px] leading-[28px] md:text-[20px] md:leading-[32px] text-gray-600">
-            Kami Bantu Live Streaming kamu deng gak ush slide2 dibuat coundown promo aja
+            Kami Bantu Live Streaming kamu dengan konsep, branding dan traffic yang meningkat!
           </p>
+          <CountdownTimer />
         </motion.div>
 
         {/* GRID */}

@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <>
       <Header />
-      {/*<HeroSection />
-      <AboutSection /> */}
+      {/* <HeroSection />
+      <AboutSection />  */}
       <Services2 />
       <LogoSection />
       <RecentWorkSection />
