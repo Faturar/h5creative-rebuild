@@ -5,10 +5,10 @@ import { Clock } from "lucide-react"
 
 export default function SidebarSlider() {
   return (
-    <div className="p-4 flex-1 flex flex-col justify-end overflow-hidden bg-[url('/assets/images/background/livestream.png')] bg-cover bg-center bg-no-repeat lg:sticky top-0 h-screen">
-      <div className="flex flex-col bg-white p-[24px] xl:p-[30px] lg:gap-2 xl:gap-4 rounded-[30px] sticky bottom-[16px] xl:bottom-[30px]">
+    <div className="p-4 flex-1 flex flex-col justify-end overflow-hidden bg-[url('/assets/images/background/livestream3.png')] bg-cover bg-center bg-no-repeat lg:sticky top-0 h-screen">
+      {/* <div className="flex flex-col bg-white p-[24px] xl:p-[30px] lg:gap-2 xl:gap-4 rounded-[30px] sticky bottom-[16px] xl:bottom-[30px]">
         <Slide1 />
-      </div>
+      </div> */}
     </div>
   )
 }
@@ -20,7 +20,8 @@ function Slide1() {
         Optimasi Penjualan Kamu Sekarang!
       </h1>
       <p className="text-sm xl:text-lg leading-6 xl:leading-8 text-gray-800">
-        Kami Bantu Live Streaming kamu dengan konsep, branding dan traffic yang meningkat!
+        Kami Bantu Live Streaming kamu dengan konsep, branding dan traffic yang
+        meningkat!
       </p>
       <CountdownTimer />
     </>

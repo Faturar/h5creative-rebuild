@@ -112,32 +112,48 @@ export function calculateTimeSlotSurcharge(
 
   const startMinutes = parseTime(startTime)
   const endMinutes = parseTime(endTime)
-  const duration = endMinutes - startMinutes
 
-  if (duration <= 0) return 0
+  if (endMinutes <= startMinutes) return 0
 
-  // Find applicable surcharge
-  // Check if the entire slot falls within a surcharge period
+  let totalSurcharge = 0
+
+  // Check each surcharge period and calculate overlap
   for (const surcharge of surcharges) {
     const surchargeStart = parseTime(surcharge.startTime)
     const surchargeEnd = parseTime(surcharge.endTime)
 
+    let overlapStart, overlapEnd
+
     // Handle overnight surcharges (e.g., 21:00 - 01:00)
     if (surchargeStart > surchargeEnd) {
-      // Slot is within surcharge period if it starts after surchargeStart
-      // or ends before surchargeEnd
-      if (startMinutes >= surchargeStart || endMinutes <= surchargeEnd) {
-        return surcharge.surcharge * (duration / 60)
+      // Surcharge crosses midnight
+      // Check overlap with first part (surchargeStart to 24:00)
+      overlapStart = Math.max(startMinutes, surchargeStart)
+      overlapEnd = Math.min(endMinutes, 24 * 60)
+
+      if (overlapStart < overlapEnd) {
+        totalSurcharge += surcharge.surcharge * ((overlapEnd - overlapStart) / 60)
+      }
+
+      // Check overlap with second part (00:00 to surchargeEnd)
+      overlapStart = Math.max(startMinutes, 0)
+      overlapEnd = Math.min(endMinutes, surchargeEnd)
+
+      if (overlapStart < overlapEnd) {
+        totalSurcharge += surcharge.surcharge * ((overlapEnd - overlapStart) / 60)
       }
     } else {
       // Normal time period
-      if (startMinutes >= surchargeStart && endMinutes <= surchargeEnd) {
-        return surcharge.surcharge * (duration / 60)
+      overlapStart = Math.max(startMinutes, surchargeStart)
+      overlapEnd = Math.min(endMinutes, surchargeEnd)
+
+      if (overlapStart < overlapEnd) {
+        totalSurcharge += surcharge.surcharge * ((overlapEnd - overlapStart) / 60)
       }
     }
   }
 
-  return 0
+  return totalSurcharge
 }
 
 /**
@@ -166,36 +182,65 @@ export async function calculateTotalPrice(
     }> = []
 
     for (const slot of timeSlots) {
-      const surcharge = calculateTimeSlotSurcharge(
+      const totalSurchargeForSlot = calculateTimeSlotSurcharge(
         slot.startTime,
         slot.endTime,
         surcharges,
       )
 
-      if (surcharge > 0) {
-        // Find which surcharge applies
+      if (totalSurchargeForSlot > 0) {
+        // Find which surcharge periods overlap with this slot
         const parseTime = (time: string): number => {
           const [hours, minutes] = time.split(":").map(Number)
           return hours * 60 + minutes
         }
 
-        const startMinutes = parseTime(slot.startTime)
-        const applicableSurcharge = surcharges.find((s) => {
-          const surchargeStart = parseTime(s.startTime)
-          const surchargeEnd = parseTime(s.endTime)
+        const slotStart = parseTime(slot.startTime)
+        const slotEnd = parseTime(slot.endTime)
 
+        for (const surcharge of surcharges) {
+          const surchargeStart = parseTime(surcharge.startTime)
+          const surchargeEnd = parseTime(surcharge.endTime)
+
+          let overlapStart, overlapEnd
+          let overlapDuration = 0
+
+          // Handle overnight surcharges (e.g., 21:00 - 01:00)
           if (surchargeStart > surchargeEnd) {
-            return startMinutes >= surchargeStart || startMinutes < surchargeEnd
-          } else {
-            return startMinutes >= surchargeStart && startMinutes < surchargeEnd
-          }
-        })
+            // Check overlap with first part (surchargeStart to 24:00)
+            overlapStart = Math.max(slotStart, surchargeStart)
+            overlapEnd = Math.min(slotEnd, 24 * 60)
 
-        slotSurcharges.push({
-          timeSlot: `${slot.startTime} - ${slot.endTime}`,
-          amount: surcharge,
-          reason: applicableSurcharge?.description || "Surcharge",
-        })
+            if (overlapStart < overlapEnd) {
+              overlapDuration += (overlapEnd - overlapStart) / 60
+            }
+
+            // Check overlap with second part (00:00 to surchargeEnd)
+            overlapStart = Math.max(slotStart, 0)
+            overlapEnd = Math.min(slotEnd, surchargeEnd)
+
+            if (overlapStart < overlapEnd) {
+              overlapDuration += (overlapEnd - overlapStart) / 60
+            }
+          } else {
+            // Normal time period
+            overlapStart = Math.max(slotStart, surchargeStart)
+            overlapEnd = Math.min(slotEnd, surchargeEnd)
+
+            if (overlapStart < overlapEnd) {
+              overlapDuration = (overlapEnd - overlapStart) / 60
+            }
+          }
+
+          if (overlapDuration > 0) {
+            const surchargeAmount = surcharge.surcharge * overlapDuration
+            slotSurcharges.push({
+              timeSlot: `${slot.startTime} - ${slot.endTime}`,
+              amount: surchargeAmount,
+              reason: surcharge.description,
+            })
+          }
+        }
       }
     }
 

@@ -59,8 +59,8 @@ export const FEATURED_SERVICE_DATA = {
 
 // Header Data
 export const HEADER_DATA = {
-  title: "DIGITAL ADVERTISING AGENCY FOR",
-  highlightedText: "BRAND GROWTH",
+  title: "WE COOK THE IDEAS AND SPEED",
+  highlightedText: "YOUR GROWTH",
   description:
     "We focus on artistic + innovative digital ideas for brand and business growth. Comprehensive 360° campaign solutions to help your brand succeed.",
   buttonText: "Get Started Now",

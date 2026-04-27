@@ -19,7 +19,7 @@ export default function SocialMediaPackageCard({ package: pkg, isHighlighted = f
     }).format(price)
   }
 
-  const discount = Math.round(((pkg.normalPrice - pkg.specialPrice) / pkg.normalPrice) * 100)
+  const discount = Math.round(((pkg.price - pkg.promoPrice) / pkg.price) * 100)
 
   return (
     <motion.div
@@ -51,11 +51,11 @@ export default function SocialMediaPackageCard({ package: pkg, isHighlighted = f
 
       <div className="text-center mb-4">
         <div className="text-sm text-gray-500 line-through mb-1">
-          {formatPrice(pkg.normalPrice)}
+          {formatPrice(pkg.price)}
         </div>
         <div className="flex items-center justify-center gap-2">
           <span className="text-3xl font-bold text-purple-600">
-            {formatPrice(pkg.specialPrice)}
+            {formatPrice(pkg.promoPrice)}
           </span>
           {discount > 0 && (
             <span className="bg-red-100 text-red-600 px-2 py-0.5 rounded text-xs font-semibold">

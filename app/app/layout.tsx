@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         suppressHydrationWarning
         className={`${manrope.className} bg-[#e8e4eb] font-sans text-[#101011]`}

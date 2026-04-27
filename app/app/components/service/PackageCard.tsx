@@ -20,7 +20,7 @@ export default function PackageCard({ package: pkg, isHighlighted = false }: Pac
     }).format(price)
   }
 
-  const discount = Math.round(((pkg.normalPrice - pkg.specialPrice) / pkg.normalPrice) * 100)
+  const discount = Math.round(((pkg.price - pkg.promoPrice) / pkg.price) * 100)
 
   return (
     <motion.div
@@ -48,19 +48,19 @@ export default function PackageCard({ package: pkg, isHighlighted = false }: Pac
         <div className="mb-3">
           <PackageStats
             totalHours={pkg.totalHours}
-            hosts={pkg.hosts}
-            days={pkg.days}
+            hosts={pkg.hostCount}
+            days={pkg.numberOfDays}
           />
         </div>
       </div>
 
       <div className="text-center mb-4">
         <div className="text-sm text-gray-500 line-through mb-1">
-          {formatPrice(pkg.normalPrice)}
+          {formatPrice(pkg.price)}
         </div>
         <div className="flex items-center justify-center gap-2">
           <span className="text-3xl font-bold text-purple-600">
-            {formatPrice(pkg.specialPrice)}
+            {formatPrice(pkg.promoPrice)}
           </span>
           {discount > 0 && (
             <span className="bg-red-100 text-red-600 px-2 py-0.5 rounded text-xs font-semibold">
@@ -80,20 +80,20 @@ export default function PackageCard({ package: pkg, isHighlighted = false }: Pac
         <div className="flex items-start gap-2 text-sm">
           <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
           <span className="text-gray-600">
-            Jam kerja: {pkg.worktime}
+            Jam kerja: {pkg.workTimeStart} - {pkg.workTimeEnd}
           </span>
         </div>
         <div className="flex items-start gap-2 text-sm">
           <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
           <span className="text-gray-600">
-            Hari kerja: {pkg.workdays}
+            Hari kerja: {pkg.workDays}
           </span>
         </div>
-        {pkg.twibbonDesigns > 0 && (
+        {pkg.twibbonDesignCount > 0 && (
           <div className="flex items-start gap-2 text-sm">
             <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
             <span className="text-gray-600">
-              {pkg.twibbonDesigns} {pkg.twibbonDesigns === 1 ? 'Twibbon Design' : 'Twibbon Designs'}
+              {pkg.twibbonDesignCount} {pkg.twibbonDesignCount === 1 ? 'Twibbon Design' : 'Twibbon Designs'}
             </span>
           </div>
         )}

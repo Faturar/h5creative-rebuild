@@ -77,14 +77,38 @@ export default function BookingSummary({
   }, [bookingData.packageId, bookingData.hostId, bookingData.studioId])
 
   useEffect(() => {
+    console.log("BookingSummary useEffect triggered:", {
+      packageId: bookingData.packageId,
+      deviceType: bookingData.deviceType,
+      totalHours: bookingData.totalHours,
+      timeSlots: bookingData.timeSlots,
+      startTime: bookingData.startTime,
+      endTime: bookingData.endTime,
+    })
+
     if (
+      !bookingData.packageId &&
       bookingData.deviceType &&
       bookingData.totalHours &&
-      bookingData.timeSlots
+      bookingData.timeSlots &&
+      bookingData.timeSlots.length > 0 &&
+      bookingData.timeSlots[0].startTime &&
+      bookingData.timeSlots[0].endTime
     ) {
       calculatePricing()
+    } else if (bookingData.packageId) {
+      setPricingBreakdown(null)
+    } else {
+      setPricingBreakdown(null)
     }
-  }, [bookingData.deviceType, bookingData.totalHours, bookingData.timeSlots, bookingData.packageId])
+  }, [
+    bookingData.deviceType,
+    bookingData.totalHours,
+    bookingData.timeSlots,
+    bookingData.packageId,
+    bookingData.startTime,
+    bookingData.endTime,
+  ])
 
   const fetchData = async () => {
     if (
@@ -139,23 +163,30 @@ export default function BookingSummary({
   const calculatePricing = async () => {
     if (!bookingData.deviceType || !bookingData.totalHours) return
 
+    const requestBody = {
+      deviceType: bookingData.deviceType,
+      totalHours: bookingData.totalHours,
+      timeSlots: bookingData.timeSlots || [],
+    }
+
+    console.log("BookingSummary - Calculating pricing with:", requestBody)
+
     try {
       const res = await fetch("/api/pricing/calculate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          deviceType: bookingData.deviceType,
-          totalHours: bookingData.totalHours,
-          timeSlots: bookingData.timeSlots || [],
-        }),
+        body: JSON.stringify(requestBody),
       })
 
       const result = await res.json()
 
       if (result.success) {
+        console.log("BookingSummary - Pricing calculation result:", result.data)
         setPricingBreakdown(result.data)
+      } else {
+        console.error("Pricing calculation failed:", result.error)
       }
     } catch (error) {
       console.error("Error calculating pricing:", error)
@@ -170,9 +201,9 @@ export default function BookingSummary({
     }).format(price)
   }
 
-  const totalPrice =
-    pricingBreakdown?.finalPrice ||
-    (packageData ? packageData.promoPrice || packageData.price : 0)
+  const totalPrice = packageData
+    ? Number(packageData.promoPrice || packageData.price)
+    : pricingBreakdown?.finalPrice || 0
 
   const hasData =
     bookingData.deviceType ||
@@ -189,7 +220,8 @@ export default function BookingSummary({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="hidden 2xl:block bg-white/5 backdrop-blur-sm rounded-[30px] p-4 md:p-6 border border-white/10"
+      className="bg-white/5 backdrop-blur-sm rounded-[30px] p-4 md:p-6 border border-white/10"
+      suppressHydrationWarning
     >
       <h3 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-6">
         Ringkasan
@@ -197,13 +229,13 @@ export default function BookingSummary({
 
       <div className="space-y-3 md:space-y-4">
         {bookingData.deviceType && (
-          <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-purple-500/20 rounded-2xl border border-purple-500/30">
-            <Video className="w-4 h-4 md:w-5 md:h-5 text-purple-400 flex-shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-white">
+          <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-purple-500/20 rounded-xl border border-purple-500/30">
+            <Video className="w-5 h-5 md:w-6 md:h-6 text-purple-400 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-xs md:text-sm text-gray-400 font-medium">
                 Perangkat
               </p>
-              <p className="text-xs md:text-sm text-gray-300">
+              <p className="text-sm md:text-base font-semibold text-white">
                 {bookingData.deviceType === "OBS Sistem"
                   ? "OBS Sistem"
                   : bookingData.deviceType}
@@ -211,190 +243,107 @@ export default function BookingSummary({
             </div>
           </div>
         )}
+
         {packageData && (
-          <div className="flex flex-col gap-3">
-            <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-[#4920E5]/20 rounded-2xl border border-[#4920E5]/30">
-              <Package className="w-4 h-4 md:w-5 md:h-5 text-[#4920E5] flex-shrink-0 mt-0.5" />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs md:text-sm font-medium text-white">
+          <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-[#4920E5]/20 rounded-xl border border-[#4920E5]/30">
+            <Package className="w-5 h-5 md:w-6 md:h-6 text-[#4920E5] flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-xs md:text-sm text-gray-400 font-medium">
+                Paket
+              </p>
+              <div className="flex items-baseline gap-2">
+                <p className="text-sm md:text-base font-semibold text-white">
                   {packageData.name}
                 </p>
-                <p className="text-xs md:text-sm text-[#4920E5] font-semibold">
+                <p className="text-sm md:text-base font-bold text-[#4920E5]">
                   {formatPrice(totalPrice)}
                 </p>
               </div>
             </div>
-            <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-2">
-              <PackageStats
-                totalHours={packageData.totalHours}
-                hosts={1}
-                days={packageData.numberOfDays}
-              />
-            </div>
           </div>
         )}
-        {hostData && (
-          <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-blue-500/20 rounded-2xl border border-blue-500/30">
-            <User className="w-4 h-4 md:w-5 md:h-5 text-blue-400 flex-shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-white">Host</p>
-              <p className="text-xs md:text-sm text-gray-300">
-                {hostData.name}
-              </p>
-            </div>
-          </div>
-        )}
-        {studioData && (
-          <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-[#12BB74]/20 rounded-2xl border border-[#12BB74]/30">
-            <MapPin className="w-4 h-4 md:w-5 md:h-5 text-[#12BB74] flex-shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-white">
-                Studio
-              </p>
-              <p className="text-xs md:text-sm text-gray-300">
-                {studioData.name}
-              </p>
-              <p className="text-xs text-gray-400">{studioData.location}</p>
-            </div>
-          </div>
-        )}
+
         {bookingData.date && bookingData.startTime && bookingData.endTime && (
-          <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-orange-500/20 rounded-2xl border border-orange-500/30">
-            <Calendar className="w-4 h-4 md:w-5 md:h-5 text-white flex-shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-white">
-                Jadwal
+          <div className="flex items-center gap-2 md:gap-3 p-3 md:p-4 bg-orange-500/20 rounded-xl border border-orange-500/30">
+            <Calendar className="w-5 h-5 md:w-6 md:h-6 text-white flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-xs md:text-sm text-gray-400 font-medium">
+                Waktu Live
               </p>
-              <p className="text-xs md:text-sm text-gray-300">
-                {new Date(bookingData.date).toLocaleDateString("id-ID", {
-                  weekday: "short",
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </p>
-              <div className="flex items-center gap-0.5 md:gap-1 mt-0.5 md:mt-1">
-                <Clock className="w-2.5 h-2.5 md:w-3 md:h-3 text-orange-400" />
-                <p className="text-xs md:text-sm text-gray-300">
+              <div className="flex items-center gap-2 md:gap-3 mt-1">
+                <p className="text-sm md:text-base font-semibold text-white">
+                  {new Date(bookingData.date).toLocaleDateString("id-ID", {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+                <Clock className="w-4 h-4 text-orange-400" />
+                <p className="text-sm md:text-base font-semibold text-orange-400">
                   {bookingData.startTime} - {bookingData.endTime}
                 </p>
               </div>
             </div>
           </div>
         )}
-        {totalPrice > 0 && (
-          <>
-            {/* Pricing Breakdown */}
-            {pricingBreakdown && (
-              <div className="pt-3 md:pt-4 border-t border-white/10">
-                <div className="flex items-center gap-2 mb-3">
-                  <DollarSign className="w-4 h-4 text-[#4920E5]" />
-                  <span className="font-semibold text-white">
-                    Rincian Harga
-                  </span>
-                </div>
 
-                {/* Base Price */}
-                <div className="space-y-2 mb-4">
-                  <div className="flex justify-between text-sm text-gray-300">
-                    <span>Harga dasar:</span>
-                    <span className="text-white font-medium">
-                      {formatPrice(pricingBreakdown.basePrice)}
-                    </span>
-                  </div>
-
-                  {/* Pricing Tier Info */}
+        {pricingBreakdown && !packageData && (
+          <div className="p-3 md:p-4 bg-[#12BB74]/10 border-2 border-[#12BB74]/30 rounded-xl">
+            <div className="flex items-start gap-2">
+              <DollarSign className="w-5 h-5 text-[#12BB74] flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm md:text-base font-bold text-[#12BB74] mb-2">
+                  Total Harga
+                </p>
+                <div className="space-y-1 text-sm">
+                  /{" "}
                   {pricingBreakdown.pricingTier && (
-                    <div className="flex justify-between text-sm text-gray-300">
-                      <span className="flex items-center gap-1">
-                        <TrendingDown className="w-3 h-3 text-[#12BB74]" />
-                        Harga per jam:
-                      </span>
-                      <span className="text-[#12BB74] font-medium">
-                        {formatPrice(pricingBreakdown.pricingTier.pricePerHour)}
+                    <div className="flex justify-between text-gray-300">
+                      <span>Harga dasar:</span>
+                      <span className="text-white font-medium">
+                        {formatPrice(pricingBreakdown.tieredPrice)}
                       </span>
                     </div>
                   )}
-
-                  {/* Total Hours */}
-                  <div className="flex justify-between text-sm text-gray-300">
-                    <span>Total jam:</span>
-                    <span className="text-white font-medium">
-                      {pricingBreakdown.totalHours} jam
+                  {pricingBreakdown.totalSurcharge > 0 && (
+                    <div className="flex justify-between text-gray-300">
+                      <span>Biaya tambahan:</span>
+                      <span className="text-white font-medium">
+                        {formatPrice(pricingBreakdown.totalSurcharge)}
+                      </span>
+                    </div>
+                  )}
+                  {pricingBreakdown.surcharges.length > 0 && (
+                    <div className="mt-2 pt-2 border-t border-white/10">
+                      <p className="text-xs text-gray-400 mb-1">
+                        Detail biaya tambahan:
+                      </p>
+                      {pricingBreakdown.surcharges.map(
+                        (surcharge: any, idx: number) => (
+                          <div
+                            key={idx}
+                            className="flex justify-between text-xs text-gray-400"
+                          >
+                            <span>
+                              {surcharge.timeSlot} ({surcharge.reason})
+                            </span>
+                            <span>+{formatPrice(surcharge.amount)}</span>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  )}
+                  <div className="flex justify-between text-base font-bold text-white mt-2 pt-2 border-t border-white/20">
+                    <span>Total:</span>
+                    <span className="text-[#12BB74]">
+                      / {formatPrice(pricingBreakdown.finalPrice)}
                     </span>
                   </div>
-
-                  {/* Surcharges */}
-                  {pricingBreakdown.surcharges &&
-                    pricingBreakdown.surcharges.length > 0 && (
-                      <div className="pt-2 border-t border-white/10">
-                        <div className="flex items-center gap-1 mb-2">
-                          <AlertCircle className="w-3 h-3 text-orange-400" />
-                          <span className="text-xs font-medium text-orange-400">
-                            Biaya tambahan waktu
-                          </span>
-                        </div>
-                        {pricingBreakdown.surcharges.map(
-                          (surcharge: any, index: number) => (
-                            <div
-                              key={index}
-                              className="flex justify-between text-xs text-gray-400 mb-1"
-                            >
-                              <span>{surcharge.timeSlot}</span>
-                              <span className="text-orange-400">
-                                +{formatPrice(surcharge.amount)}
-                              </span>
-                            </div>
-                          ),
-                        )}
-                        <div className="flex justify-between text-sm text-orange-400 mt-2">
-                          <span>Total biaya tambahan:</span>
-                          <span className="font-medium">
-                            +{formatPrice(pricingBreakdown.totalSurcharge)}
-                          </span>
-                        </div>
-                      </div>
-                    )}
                 </div>
-
-                {/* Savings Info */}
-                {pricingBreakdown.pricingTier &&
-                  pricingBreakdown.pricingTier.minHours > 0 && (
-                    <div className="p-3 bg-[#12BB74]/10 border border-[#12BB74]/30 rounded-xl mb-3">
-                      <div className="flex items-start gap-2">
-                        <TrendingDown className="w-4 h-4 text-[#12BB74] flex-shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-xs font-medium text-[#12BB74] mb-1">
-                            Hemat dengan tier pricing
-                          </p>
-                          <p className="text-xs text-[#12BB74]/80">
-                            Anda mendapatkan harga{" "}
-                            {formatPrice(
-                              pricingBreakdown.pricingTier.pricePerHour,
-                            )}
-                            /jam untuk pembelian {pricingBreakdown.totalHours}{" "}
-                            jam
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-              </div>
-            )}
-
-            {/* Total */}
-            <div className="pt-3 md:pt-4 border-t border-white/10">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 md:gap-2">
-                  <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-[#4920E5]" />
-                  <span className="font-semibold text-white">Total</span>
-                </div>
-                <span className="text-xl md:text-2xl font-bold text-[#4920E5]">
-                  {formatPrice(totalPrice)}
-                </span>
               </div>
             </div>
-          </>
+          </div>
         )}
       </div>
     </motion.div>

@@ -8,6 +8,8 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
+  DollarSign,
+  Info,
 } from "lucide-react"
 import { useTheme } from "@/contexts/ThemeContext"
 
@@ -45,6 +47,8 @@ interface Package {
   name: string
   price: number
   promoPrice: number | null
+  totalHours?: number
+  numberOfDays?: number
 }
 
 export default function PaymentSection({
@@ -62,6 +66,7 @@ export default function PaymentSection({
   useEffect(() => {
     if (bookingData.packageId) {
       fetchPackage()
+      setPricingBreakdown(null)
     } else if (bookingData.deviceType && bookingData.totalHours) {
       calculatePricing()
       setLoading(false)
@@ -131,8 +136,9 @@ export default function PaymentSection({
   }
 
   const totalPrice =
-    pricingBreakdown?.finalPrice ||
-    (packageData ? packageData.promoPrice || packageData.price : 0)
+    packageData
+      ? packageData.promoPrice || packageData.price
+      : pricingBreakdown?.finalPrice || 0
 
   return (
     <div>
@@ -379,6 +385,192 @@ export default function PaymentSection({
             </div>
           </div>
         )}
+
+        {/* Rincian Harga - Detailed Price Breakdown */}
+        {(pricingBreakdown || packageData) && (
+          <div
+            className={`${isDark ? "bg-[#12BB74]/10 border-2 border-[#12BB74]/30" : "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200"} rounded-xl p-6`}
+          >
+            <div className="flex items-start gap-3 mb-4">
+              <DollarSign
+                className={`w-6 h-6 flex-shrink-0 mt-0.5 ${isDark ? "text-[#12BB74]" : "text-green-600"}`}
+              />
+              <div>
+                <h3
+                  className={`text-lg font-semibold ${isDark ? "text-white" : "text-gray-900"}`}
+                >
+                  Rincian Harga
+                </h3>
+                <p
+                  className={`text-xs md:text-sm ${isDark ? "text-gray-400" : "text-gray-600"}`}
+                >
+                  Detail pembayaran Anda
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {packageData ? (
+                <div className="space-y-3">
+                  {packageData.price && packageData.promoPrice && (
+                    <div className="p-4 bg-white/5 rounded-lg">
+                      <div className="flex justify-between items-center mb-2">
+                        <span
+                          className={`text-sm font-medium ${isDark ? "text-gray-300" : "text-gray-700"}`}
+                        >
+                          Harga Asli
+                        </span>
+                        <span
+                          className={`text-sm line-through text-gray-400`}
+                        >
+                          {formatPrice(packageData.price)}
+                        </span>
+                      </div>
+                      <div
+                        className={`flex justify-between text-xs ${isDark ? "text-gray-400" : "text-gray-500"}`}
+                      >
+                        <span>{packageData.totalHours} jam × {packageData.numberOfDays} hari</span>
+                        <span>Diskon</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {packageData.promoPrice && (
+                    <div
+                      className={`flex justify-between items-center p-4 rounded-lg ${isDark ? "bg-[#12BB74]/20 border-2 border-[#12BB74]/40" : "bg-green-100 border-2 border-green-300"}`}
+                    >
+                      <div>
+                        <span
+                          className={`text-base font-bold ${isDark ? "text-white" : "text-gray-900"}`}
+                        >
+                          Total Pembayaran
+                        </span>
+                        {packageData.promoPrice < packageData.price && (
+                          <p
+                            className={`text-xs text-[#12BB74]`}
+                          >
+                            Hemat {formatPrice(packageData.price - packageData.promoPrice)} (
+                            {Math.round(
+                              ((packageData.price - packageData.promoPrice) / packageData.price) * 100
+                            )}
+                            %)
+                          </p>
+                        )}
+                      </div>
+                      <span
+                        className={`text-2xl font-bold text-[#12BB74]`}
+                      >
+                        {formatPrice(packageData.promoPrice)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                    {pricingBreakdown.pricingTier && (
+                      <div className="p-4 bg-white/5 rounded-lg">
+                        <div className="flex justify-between items-center mb-2">
+                          <span
+                            className={`text-sm font-medium ${isDark ? "text-gray-300" : "text-gray-700"}`}
+                          >
+                            Harga dasar
+                          </span>
+                          <span
+                            className={`text-base font-bold ${isDark ? "text-white" : "text-gray-900"}`}
+                          >
+                            {formatPrice(pricingBreakdown.tieredPrice)}
+                          </span>
+                        </div>
+                        <div className={`flex justify-between text-xs ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+                          <span>
+                            {formatPrice(pricingBreakdown.pricingTier.pricePerHour)} × {pricingBreakdown.totalHours} jam
+                          </span>
+                          <span>Normal operational hours</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {pricingBreakdown.totalSurcharge > 0 && (
+                      <div
+                        className={`p-4 rounded-lg ${isDark ? "bg-orange-500/10 border border-orange-500/30" : "bg-orange-50 border border-orange-200"}`}
+                      >
+                        <div className="flex items-start gap-2 mb-3">
+                          <Info
+                            className={`w-4 h-4 flex-shrink-0 mt-0.5 ${isDark ? "text-orange-400" : "text-orange-600"}`}
+                          />
+                          <p
+                            className={`text-sm font-semibold ${isDark ? "text-orange-300" : "text-orange-800"}`}
+                          >
+                            Biaya Tambahan (Jam Non-Operasional)
+                          </p>
+                        </div>
+                        <div className="space-y-2">
+                          {pricingBreakdown.surcharges.map(
+                            (surcharge: any, index: number) => (
+                              <div
+                                key={index}
+                                className={`flex justify-between items-center py-2 border-b ${isDark ? "border-orange-400/20" : "border-orange-200"}`}
+                              >
+                                <div className="flex-1">
+                                  <div
+                                    className={`text-xs font-medium mb-1 ${isDark ? "text-gray-300" : "text-gray-700"}`}
+                                  >
+                                    {surcharge.timeSlot}
+                                  </div>
+                                  <div
+                                    className={`text-xs ${isDark ? "text-gray-400" : "text-gray-500"}`}
+                                  >
+                                    {surcharge.reason}
+                                  </div>
+                                </div>
+                                <span
+                                  className={`text-sm font-bold text-orange-600 flex-shrink-0 ml-4`}
+                                >
+                                  +{formatPrice(surcharge.amount)}
+                                </span>
+                              </div>
+                            ),
+                          )}
+                        </div>
+                        <div className="flex justify-between items-center mt-3 pt-2 border-t border-orange-500/30">
+                          <span
+                            className={`text-sm font-bold ${isDark ? "text-orange-300" : "text-orange-800"}`}
+                          >
+                            Total Biaya Tambahan
+                          </span>
+                          <span className="text-base font-bold text-orange-600">
+                            +{formatPrice(pricingBreakdown.totalSurcharge)}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    <div
+                      className={`flex justify-between items-center p-4 rounded-lg ${isDark ? "bg-[#12BB74]/20 border-2 border-[#12BB74]/40" : "bg-green-100 border-2 border-green-300"}`}
+                    >
+                      <div>
+                        <span
+                          className={`text-base font-bold ${isDark ? "text-white" : "text-gray-900"}`}
+                        >
+                          Total Pembayaran
+                        </span>
+                        <p
+                          className={`text-xs ${isDark ? "text-gray-400" : "text-gray-600"}`}
+                        >
+                          Termasuk semua biaya
+                        </p>
+                      </div>
+                      <span
+                        className={`text-2xl font-bold text-[#12BB74]`}
+                      >
+                        {formatPrice(pricingBreakdown.finalPrice)}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
         {/* Payment Information */}
         <div

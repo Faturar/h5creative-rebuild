@@ -1,18 +1,19 @@
 export interface LiveStreamingPackage {
   id: string
   name: string
-  type: 'iphone' | 'camera'
+  packageType: 'iPhone' | 'OBS Sistem'
   totalHours: number
-  days: number
+  numberOfDays: number
   durationPerSession: number
-  worktime: string
-  workdays: string
-  hosts: number
-  twibbonDesigns: number
+  workTimeStart: string
+  workTimeEnd: string
+  workDays: string
+  hostCount: number
+  twibbonDesignCount: number
   weeklyReport: boolean
   accountReport: boolean
-  normalPrice: number
-  specialPrice: number
+  price: number
+  promoPrice: number
   isPopular?: boolean
 }
 
@@ -25,8 +26,8 @@ export interface SocialMediaPackage {
   storiesPerMonth: number
   contentTypes: string[]
   features: string[]
-  normalPrice: number
-  specialPrice: number
+  price: number
+  promoPrice: number
   isPopular?: boolean
 }
 
@@ -34,67 +35,88 @@ export const iphonePackages: LiveStreamingPackage[] = [
   {
     id: 'iphone-a',
     name: 'Package A',
-    type: 'iphone',
+    packageType: 'iPhone',
     totalHours: 28,
-    days: 14,
+    numberOfDays: 14,
     durationPerSession: 2,
-    worktime: '09.00 – 20.00',
-    workdays: 'Mon – Sat',
-    hosts: 1,
-    twibbonDesigns: 0,
+    workTimeStart: '09:00',
+    workTimeEnd: '20:00',
+    workDays: 'Mon - Sat',
+    hostCount: 1,
+    twibbonDesignCount: 0,
     weeklyReport: false,
     accountReport: true,
-    normalPrice: 3000000,
-    specialPrice: 2100000,
+    price: 2100000,
+    promoPrice: 1680000,
   },
   {
     id: 'iphone-b',
     name: 'Package B',
-    type: 'iphone',
+    packageType: 'iPhone',
     totalHours: 52,
-    days: 26,
+    numberOfDays: 26,
     durationPerSession: 2,
-    worktime: '09.00 – 20.00',
-    workdays: 'Mon – Sat',
-    hosts: 1,
-    twibbonDesigns: 1,
+    workTimeStart: '09:00',
+    workTimeEnd: '20:00',
+    workDays: 'Mon - Sat',
+    hostCount: 1,
+    twibbonDesignCount: 1,
     weeklyReport: true,
     accountReport: true,
-    normalPrice: 4500000,
-    specialPrice: 3640000,
+    price: 3640000,
+    promoPrice: 2940000,
     isPopular: true,
   },
   {
     id: 'iphone-c',
     name: 'Package C',
-    type: 'iphone',
+    packageType: 'iPhone',
     totalHours: 104,
-    days: 26,
-    durationPerSession: 4,
-    worktime: '09.00 – 20.00',
-    workdays: 'Mon – Sun',
-    hosts: 1,
-    twibbonDesigns: 1,
+    numberOfDays: 26,
+    durationPerSession: 2,
+    workTimeStart: '09:00',
+    workTimeEnd: '20:00',
+    workDays: 'Mon - Sun',
+    hostCount: 1,
+    twibbonDesignCount: 1,
     weeklyReport: true,
     accountReport: true,
-    normalPrice: 8000000,
-    specialPrice: 6760000,
+    price: 5070000,
+    promoPrice: 3970000,
+  },
+  {
+    id: 'iphone-d',
+    name: 'Package D',
+    packageType: 'iPhone',
+    totalHours: 156,
+    numberOfDays: 26,
+    durationPerSession: 2,
+    workTimeStart: '09:00',
+    workTimeEnd: '20:00',
+    workDays: 'Mon - Sun',
+    hostCount: 1,
+    twibbonDesignCount: 2,
+    weeklyReport: true,
+    accountReport: true,
+    price: 6760000,
+    promoPrice: 5460000,
   },
   {
     id: 'iphone-e',
     name: 'Package E',
-    type: 'iphone',
+    packageType: 'iPhone',
     totalHours: 156,
-    days: 26,
-    durationPerSession: 6,
-    worktime: '09.00 – 20.00',
-    workdays: 'Mon – Sun',
-    hosts: 1,
-    twibbonDesigns: 2,
+    numberOfDays: 26,
+    durationPerSession: 2,
+    workTimeStart: '09:00',
+    workTimeEnd: '20:00',
+    workDays: 'Mon - Sun',
+    hostCount: 1,
+    twibbonDesignCount: 2,
     weeklyReport: true,
     accountReport: true,
-    normalPrice: 11700000,
-    specialPrice: 9360000,
+    price: 9360000,
+    promoPrice: 7860000,
   },
 ]
 
@@ -102,67 +124,71 @@ export const cameraPackages: LiveStreamingPackage[] = [
   {
     id: 'camera-a',
     name: 'Package A',
-    type: 'camera',
+    packageType: 'OBS Sistem',
     totalHours: 52,
-    days: 26,
+    numberOfDays: 26,
     durationPerSession: 2,
-    worktime: '09.00 – 20.00',
-    workdays: 'Mon – Sat',
-    hosts: 1,
-    twibbonDesigns: 1,
+    workTimeStart: '09:00',
+    workTimeEnd: '20:00',
+    workDays: 'Mon - Sat',
+    hostCount: 1,
+    twibbonDesignCount: 1,
     weeklyReport: true,
     accountReport: true,
-    normalPrice: 9000000,
-    specialPrice: 6500000,
+    price: 6000000,
+    promoPrice: 4500000,
   },
   {
     id: 'camera-b',
     name: 'Package B',
-    type: 'camera',
+    packageType: 'OBS Sistem',
     totalHours: 78,
-    days: 26,
-    durationPerSession: 3,
-    worktime: '09.00 – 20.00',
-    workdays: 'Mon – Sat',
-    hosts: 1,
-    twibbonDesigns: 1,
+    numberOfDays: 26,
+    durationPerSession: 2,
+    workTimeStart: '09:00',
+    workTimeEnd: '20:00',
+    workDays: 'Mon - Sat',
+    hostCount: 1,
+    twibbonDesignCount: 1,
     weeklyReport: true,
     accountReport: true,
-    normalPrice: 14000000,
-    specialPrice: 9000000,
+    price: 9000000,
+    promoPrice: 7300000,
   },
   {
     id: 'camera-c',
     name: 'Package C',
-    type: 'camera',
+    packageType: 'OBS Sistem',
     totalHours: 104,
-    days: 26,
-    durationPerSession: 4,
-    worktime: '09.00 – 20.00',
-    workdays: 'Mon – Sat',
-    hosts: 1,
-    twibbonDesigns: 2,
+    numberOfDays: 26,
+    durationPerSession: 2,
+    workTimeStart: '09:00',
+    workTimeEnd: '20:00',
+    workDays: 'Mon - Sat',
+    hostCount: 1,
+    twibbonDesignCount: 2,
     weeklyReport: true,
     accountReport: true,
-    normalPrice: 16000000,
-    specialPrice: 10900000,
+    price: 10900000,
+    promoPrice: 8600000,
     isPopular: true,
   },
   {
     id: 'camera-d',
     name: 'Package D',
-    type: 'camera',
+    packageType: 'OBS Sistem',
     totalHours: 156,
-    days: 26,
-    durationPerSession: 6,
-    worktime: '09.00 – 20.00',
-    workdays: 'Mon – Sun',
-    hosts: 2,
-    twibbonDesigns: 2,
+    numberOfDays: 26,
+    durationPerSession: 2,
+    workTimeStart: '09:00',
+    workTimeEnd: '20:00',
+    workDays: 'Mon - Sun',
+    hostCount: 2,
+    twibbonDesignCount: 2,
     weeklyReport: true,
     accountReport: true,
-    normalPrice: 22000000,
-    specialPrice: 14600000,
+    price: 14600000,
+    promoPrice: 11900000,
   },
 ]
 
@@ -194,8 +220,8 @@ export const socialMediaPackages: SocialMediaPackage[] = [
       'Hashtag Research',
       'Basic Analytics Report'
     ],
-    normalPrice: 4500000,
-    specialPrice: 3500000,
+    price: 4500000,
+    promoPrice: 3500000,
   },
   {
     id: 'smm-growth',
@@ -214,8 +240,8 @@ export const socialMediaPackages: SocialMediaPackage[] = [
       'Monthly Analytics Report',
       '2 Revisions per Month'
     ],
-    normalPrice: 7500000,
-    specialPrice: 5800000,
+    price: 7500000,
+    promoPrice: 5800000,
     isPopular: true,
   },
   {
@@ -238,7 +264,7 @@ export const socialMediaPackages: SocialMediaPackage[] = [
       'Priority Support',
       'LinkedIn Included (Optional)'
     ],
-    normalPrice: 12000000,
-    specialPrice: 9500000,
+    price: 12000000,
+    promoPrice: 9500000,
   }
 ]

@@ -2,13 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import {
-  Check,
-  Clock,
-  AlertCircle,
-  DollarSign,
-  Info,
-} from "lucide-react"
+import { Check, Clock, AlertCircle, Info, DollarSign } from "lucide-react"
 import { format } from "date-fns"
 import { id as localeId } from "date-fns/locale"
 
@@ -25,6 +19,9 @@ interface TimeSlotSelectionProps {
   customerPhone?: string
   deviceType?: string | null
   totalHours?: number | null
+  durationPerSession?: number | null
+  hoursPerDay?: number | null
+  bookingType?: string | null
 }
 
 export default function TimeSlotSelection({
@@ -35,6 +32,9 @@ export default function TimeSlotSelection({
   customerPhone = "",
   deviceType,
   totalHours,
+  durationPerSession,
+  hoursPerDay,
+  bookingType,
 }: TimeSlotSelectionProps) {
   const [selectionMode] = useState<"custom">("custom")
   const [customSlotData, setCustomSlotData] = useState({
@@ -44,51 +44,12 @@ export default function TimeSlotSelection({
   })
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set())
-  const [customSurcharge, setCustomSurcharge] = useState<{
-    hasSurcharge: boolean
-    amount: number
-    description: string
+  const [pricingBreakdown, setPricingBreakdown] = useState<any>(null)
+  const [selectedTime, setSelectedTime] = useState<{
+    date: string
+    startTime: string
+    endTime: string
   } | null>(null)
-
-  useEffect(() => {
-    if (customSlotData.startTime && customSlotData.endTime) {
-      fetchCustomSurcharge()
-    }
-  }, [customSlotData.startTime, customSlotData.endTime])
-
-  const fetchCustomSurcharge = async () => {
-    if (!customSlotData.startTime || !customSlotData.endTime) return
-
-    try {
-      const response = await fetch("/api/pricing/surcharge", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          startTime: customSlotData.startTime,
-          endTime: customSlotData.endTime,
-        }),
-      })
-
-      const result = await response.json()
-
-      if (result.success) {
-        setCustomSurcharge(result.data)
-      } else {
-        setCustomSurcharge({
-          hasSurcharge: false,
-          amount: 0,
-          description: "Normal operational hours",
-        })
-      }
-    } catch (error) {
-      console.error("Error fetching custom surcharge:", error)
-      setCustomSurcharge({
-        hasSurcharge: false,
-        amount: 0,
-        description: "Normal operational hours",
-      })
-    }
-  }
 
   const validateCustomTime = () => {
     const errors: string[] = []
@@ -117,14 +78,58 @@ export default function TimeSlotSelection({
       }
 
       const duration = endMinutesTotal - startMinutesTotal
+      const durationHours = duration / 60
+
       if (duration < 30) {
         errors.push("Durasi minimal adalah 30 menit")
       } else if (duration > 480) {
         errors.push("Durasi maksimal adalah 8 jam per sesi")
       }
+
+      const requiredHours =
+        bookingType === "package" ? durationPerSession : hoursPerDay
+
+      if (requiredHours && durationHours !== requiredHours) {
+        errors.push(
+          `Durasi harus sama dengan ${requiredHours} jam (jam per hari)`,
+        )
+      }
     }
 
     return errors
+  }
+
+  const calculatePricing = async (
+    date: string,
+    startTime: string,
+    endTime: string,
+  ) => {
+    if (!deviceType || !totalHours) return
+
+    try {
+      const response = await fetch("/api/pricing/calculate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          deviceType,
+          totalHours,
+          timeSlots: [
+            {
+              date,
+              startTime,
+              endTime,
+            },
+          ],
+        }),
+      })
+
+      const result = await response.json()
+      if (result.success) {
+        setPricingBreakdown(result.data)
+      }
+    } catch (error) {
+      console.error("Error calculating pricing:", error)
+    }
   }
 
   const handleCustomTimeSelect = () => {
@@ -137,9 +142,28 @@ export default function TimeSlotSelection({
 
     setValidationErrors([])
 
+    const selectedDate = format(new Date(), "yyyy-MM-dd")
+    console.log("TimeSlotSelection - Selecting time:", {
+      date: selectedDate,
+      startTime: customSlotData.startTime,
+      endTime: customSlotData.endTime,
+    })
+
+    setSelectedTime({
+      date: selectedDate,
+      startTime: customSlotData.startTime,
+      endTime: customSlotData.endTime,
+    })
+
+    calculatePricing(
+      selectedDate,
+      customSlotData.startTime,
+      customSlotData.endTime,
+    )
+
     onSelect(
       null,
-      format(new Date(), "yyyy-MM-dd"),
+      selectedDate,
       customSlotData.startTime,
       customSlotData.endTime,
     )
@@ -269,65 +293,84 @@ export default function TimeSlotSelection({
             Pilih Waktu Ini
           </button>
 
-          {customSurcharge?.hasSurcharge && (
-            <div className="mt-4 p-3 md:p-4 bg-orange-500/10 border border-orange-500/30 rounded-xl">
-              <div className="flex items-start gap-2 md:gap-3">
-                <DollarSign className="w-4 h-4 md:w-5 md:h-5 text-orange-400 flex-shrink-0 mt-0.5" />
+          {pricingBreakdown && selectedTime && (
+            <div className="mt-4 p-4 bg-[#12BB74]/10 border-2 border-[#12BB74]/30 rounded-xl">
+              <div className="flex items-start gap-2">
+                <DollarSign className="w-5 h-5 text-[#12BB74] flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <p className="text-sm md:text-base font-medium text-orange-300 mb-1">
-                    Biaya Tambahan Waktu
+                  <p className="text-base font-bold text-[#12BB74] mb-2">
+                    Estimasi Harga
                   </p>
-                  <p className="text-sm md:text-base text-orange-400">
-                    +Rp {customSurcharge.amount.toLocaleString("id-ID")} /{" "}
-                    {customSurcharge.description}
-                  </p>
+                  <div className="space-y-1 text-sm">
+                    {pricingBreakdown.pricingTier && (
+                      <div className="flex justify-between text-gray-300">
+                        <span>Harga dasar:</span>
+                        <span className="text-white font-medium">
+                          Rp {pricingBreakdown.tieredPrice.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                    )}
+                    {pricingBreakdown.totalSurcharge > 0 && (
+                      <div className="flex justify-between text-gray-300">
+                        <span>Biaya tambahan:</span>
+                        <span className="text-white font-medium">
+                          Rp {pricingBreakdown.totalSurcharge.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                    )}
+                    {pricingBreakdown.surcharges && pricingBreakdown.surcharges.length > 0 && (
+                      <div className="mt-2 pt-2 border-t border-white/10">
+                        <p className="text-xs text-gray-400 mb-1">Detail biaya tambahan:</p>
+                        {pricingBreakdown.surcharges.map((surcharge: any, idx: number) => (
+                          <div key={idx} className="flex justify-between text-xs text-gray-400">
+                            <span>{surcharge.timeSlot} ({surcharge.reason})</span>
+                            <span>+Rp {surcharge.amount.toLocaleString("id-ID")}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <div className="flex justify-between text-base font-bold text-white mt-2 pt-2 border-t border-white/20">
+                      <span>Total:</span>
+                      <span className="text-[#12BB74]">
+                        Rp {pricingBreakdown.finalPrice.toLocaleString("id-ID")}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           )}
-
-          {!customSurcharge?.hasSurcharge &&
-            customSlotData.startTime &&
-            customSlotData.endTime && (
-              <div className="mt-4 p-3 md:p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
-                <div className="flex items-start gap-2 md:gap-3">
-                  <Info className="w-4 h-4 md:w-5 md:h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm md:text-base font-medium text-green-300">
-                      Jam Normal
-                    </p>
-                    <p className="text-xs md:text-sm text-green-400">
-                      Tidak ada biaya tambahan untuk jam ini
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
 
           <div className="mt-6 p-4 md:p-5 bg-blue-500/10 border-2 border-blue-500/30 rounded-xl">
             <div className="flex items-start gap-2 md:gap-3">
               <Info className="w-5 h-5 md:w-6 md:h-6 text-blue-400 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="text-base md:text-lg font-bold text-blue-300 mb-3">
-                  Informasi Biaya Tambahan
+                  Informasi Waktu
                 </p>
                 <ul className="text-sm md:text-base text-blue-400 space-y-2">
                   <li className="flex items-center gap-3">
+                    <div className="w-2.5 h-2.5 rounded-full bg-purple-500 flex-shrink-0"></div>
+                    <span className="font-medium">
+                      Durasi harus sama dengan 2 jam
+                    </span>
+                  </li>
+                  <li className="flex items-center gap-3">
                     <div className="w-2.5 h-2.5 rounded-full bg-green-500 flex-shrink-0"></div>
                     <span className="font-medium">
-                      07:00 - 21:00: Harga normal
+                      07:00 - 21:00: Normal price
                     </span>
                   </li>
                   <li className="flex items-center gap-3">
                     <div className="w-2.5 h-2.5 rounded-full bg-orange-500 flex-shrink-0"></div>
                     <span className="font-medium">
-                      21:00 - 01:00: +Rp 15.000/jam
+                      21:00 - 01:00: +Rp 15,000/jam
                     </span>
                   </li>
                   <li className="flex items-center gap-3">
                     <div className="w-2.5 h-2.5 rounded-full bg-red-500 flex-shrink-0"></div>
                     <span className="font-medium">
-                      01:00 - 07:00: +Rp 20.000/jam
+                      01:00 - 07:00: +Rp 20,000/jam
                     </span>
                   </li>
                 </ul>

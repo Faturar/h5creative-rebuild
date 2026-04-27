@@ -334,43 +334,17 @@ export default function BookingPage() {
   }
 
   return (
-    <section className="bg-[#0B0B1B] flex flex-col lg:flex-row min-h-screen">
+    <section className="bg-[#0B0B1B] flex flex-col lg:flex-row min-h-screen" suppressHydrationWarning>
       {/* Left Sidebar */}
-      <div className="hidden lg:flex flex-1 flex-col justify-end overflow-hidden lg:sticky top-0 h-screen">
+      <div className="hidden lg:flex flex-1 flex-col justify-end overflow-hidden lg:sticky top-0 h-screen" suppressHydrationWarning>
         <SidebarSlider />
       </div>
-
-      {/* Mobile Testimonial Banner */}
-      {/* <div className="lg:hidden bg-gradient-to-r from-[#4920E5] to-[#6B21A8] p-4">
-        <div className="flex flex-col items-center text-white text-center">
-          <div className="flex h-8 items-center mb-2">
-            <Image
-              src={logoTesti5}
-              className="h-full object-contain"
-              alt="logo"
-            />
-          </div>
-          <p className="font-semibold text-sm md:text-base leading-tight mb-2">
-            Platform live streaming profesional untuk bisnis Anda
-          </p>
-          <div className="flex gap-1">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <Image
-                key={index}
-                src={starIcon}
-                className="w-5 h-5"
-                alt="star"
-              />
-            ))}
-          </div>
-        </div>
-      </div> */}
 
       {/* Right Main Content */}
       <div className="flex flex-col flex-3 items-center justify-center mx-auto py-4 md:py-6 lg:py-12 px-4 md:px-8 xl:px-8 bg-[url('/assets/images/Ellipse.svg')] bg-center bg-no-repeat bg-contain bg-[length:540px]">
         {/* Progress Steps */}
-          <div className="w-full max-w-4xl mb-4 md:mb-6 lg:mb-8">
-            <div className="grid grid-cols-3 lg:grid-cols-5 justify-center overflow-x-auto pb-2 scrollbar-hide">
+        <div className="w-full max-w-4xl mb-4 md:mb-6 lg:mb-8">
+          <div className="grid grid-cols-3 lg:grid-cols-5 justify-center overflow-x-auto pb-2 scrollbar-hide">
             {steps.map((step, index) => {
               const isActive = step.id === currentStep
               const isCompleted = index < stepIndex
@@ -590,6 +564,17 @@ export default function BookingPage() {
                 {currentStep === "slot" && (
                   <TimeSlotSelection
                     studioId={bookingData.studioId}
+                    deviceType={bookingData.deviceType}
+                    totalHours={bookingData.totalHours}
+                    durationPerSession={
+                      bookingData.bookingType === "package" &&
+                      bookingData.packageId
+                        ? packages.find((p) => p.id === bookingData.packageId)
+                            ?.durationPerSession
+                        : null
+                    }
+                    hoursPerDay={bookingData.hoursPerDay}
+                    bookingType={bookingData.bookingType}
                     onSelect={(slotId, date, startTime, endTime) =>
                       setBookingData((prev) => {
                         const newTimeSlots = [
@@ -599,17 +584,20 @@ export default function BookingPage() {
                             endTime,
                           },
                         ]
-                        return {
+                        const updatedData = {
                           ...prev,
                           studioSlotId: slotId,
                           date,
                           startTime,
                           endTime,
                           totalHours:
-                            prev.customHours ||
-                            calculateHoursFromTimeSlots(newTimeSlots),
+                            bookingData.bookingType === "package"
+                              ? prev.totalHours
+                              : prev.customHours ||
+                                calculateHoursFromTimeSlots(newTimeSlots),
                           timeSlots: newTimeSlots,
                         }
+                        return updatedData
                       })
                     }
                   />
