@@ -151,7 +151,10 @@ export default function LiveStreamingPage() {
                       preload="metadata"
                       className="absolute inset-0 w-full h-full object-cover"
                     >
-                      <source src="/assets/video/portofolio-live/portofolio-purela.mp4" type="video/mp4" />
+                      <source
+                        src="/assets/video/portofolio-live/portofolio-purela.mp4"
+                        type="video/mp4"
+                      />
                     </video>
                     <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80">
                       <p className="text-white text-xs">Promo Terbatas! 🔥</p>
@@ -191,7 +194,10 @@ export default function LiveStreamingPage() {
                       preload="metadata"
                       className="absolute inset-0 w-full h-full object-cover"
                     >
-                      <source src="/assets/video/portofolio-live/portofolio-purela.mp4" type="video/mp4" />
+                      <source
+                        src="/assets/video/portofolio-live/portofolio-purela.mp4"
+                        type="video/mp4"
+                      />
                     </video>
                     <div className="absolute top-2 right-2 bg-black/50 px-2 py-1 rounded text-[10px] text-white flex items-center gap-1">
                       <Users className="w-3 h-3" /> 2.3K
@@ -233,10 +239,15 @@ export default function LiveStreamingPage() {
                       preload="metadata"
                       className="absolute inset-0 w-full h-full object-cover"
                     >
-                      <source src="/assets/video/portofolio-live/portofolio-purela.mp4" type="video/mp4" />
+                      <source
+                        src="/assets/video/portofolio-live/portofolio-purela.mp4"
+                        type="video/mp4"
+                      />
                     </video>
                     <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 p-2">
-                      <p className="text-white text-[10px]">Bundle Spesial! 🎁</p>
+                      <p className="text-white text-[10px]">
+                        Bundle Spesial! 🎁
+                      </p>
                     </div>
                   </div>
                 </div>
