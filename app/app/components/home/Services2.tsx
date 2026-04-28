@@ -201,20 +201,6 @@ export default function Services2() {
       variants={containerVariants}
     >
       <div className="container max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
-        {/* HEADER */}
-        <motion.div
-          className="mb-[50px] md:mb-[70px]"
-          variants={itemVariants}
-        >
-          <h2 className="font-bold text-[32px] leading-[1.1] md:text-[48px] lg:text-[40px] text-gray-900">
-            Optimasi Penjualan Kamu Sekarang!
-          </h2>
-          <p className="mt-4 text-[18px] leading-[28px] md:text-[20px] md:leading-[32px] text-gray-600">
-            Kami Bantu Live Streaming kamu dengan konsep, branding dan traffic yang meningkat!
-          </p>
-          <CountdownTimer />
-        </motion.div>
-
         {/* GRID */}
         <motion.div
           className="flex flex-col gap-[20px] md:gap-[30px]"

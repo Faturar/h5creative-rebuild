@@ -132,9 +132,9 @@ export default function LiveStreamingPage() {
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black p-4 flex flex-col">
                   <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-gray-700 rounded-full"></div>
+                      <div className="w-8 h-8 bg-blue-600 rounded-full"></div>
                       <span className="text-white text-xs font-bold">
-                        Toko Baju
+                        FASHION STORE
                       </span>
                     </div>
                     <div className="bg-red-600 px-2 py-1 rounded text-[10px] font-bold text-white flex items-center gap-1">
@@ -142,8 +142,18 @@ export default function LiveStreamingPage() {
                       LIVE
                     </div>
                   </div>
-                  <div className="flex-1 bg-gray-800 rounded-xl relative overflow-hidden">
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3">
+                  <div className="flex-1 rounded-xl relative overflow-hidden">
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="metadata"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    >
+                      <source src="/assets/video/portofolio-live/portofolio-purela.mp4" type="video/mp4" />
+                    </video>
+                    <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80">
                       <p className="text-white text-xs">Promo Terbatas! 🔥</p>
                     </div>
                   </div>
@@ -164,7 +174,7 @@ export default function LiveStreamingPage() {
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 bg-purple-600 rounded-full"></div>
                       <span className="text-white text-xs font-bold">
-                        Skincare ID
+                        PURELA OFFICIAL
                       </span>
                     </div>
                     <div className="bg-red-600 px-2 py-1 rounded text-[10px] font-bold text-white flex items-center gap-1">
@@ -172,18 +182,25 @@ export default function LiveStreamingPage() {
                       LIVE
                     </div>
                   </div>
-                  <div className="flex-1 bg-gradient-to-br from-purple-900 to-pink-900 rounded-xl relative overflow-hidden flex items-center justify-center">
-                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/30">
-                      <Play className="w-8 h-8 text-white ml-1" fill="white" />
-                    </div>
+                  <div className="flex-1 rounded-xl relative overflow-hidden">
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="metadata"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    >
+                      <source src="/assets/video/portofolio-live/portofolio-purela.mp4" type="video/mp4" />
+                    </video>
                     <div className="absolute top-2 right-2 bg-black/50 px-2 py-1 rounded text-[10px] text-white flex items-center gap-1">
-                      <Users className="w-3 h-3" /> 2.4K
+                      <Users className="w-3 h-3" /> 2.3K
                     </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-3 space-y-2">
+                    <div className="absolute bottom-0 left-0 right-0 p-3 space-y-2 bg-gradient-to-t from-black/80">
                       <div className="bg-white/10 backdrop-blur-md rounded-lg p-2 flex items-center gap-2">
                         <Play className="w-4 h-4 text-green-400" />
                         <span className="text-white text-[10px]">
-                          Serum Set disc 50%!
+                          Purela Baby Bundle 60% OFF!
                         </span>
                       </div>
                     </div>
@@ -202,13 +219,25 @@ export default function LiveStreamingPage() {
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black p-4 flex flex-col">
                   <div className="flex justify-between items-center mb-4">
-                    <div className="w-6 h-6 bg-blue-600 rounded-full"></div>
+                    <div className="w-6 h-6 bg-pink-600 rounded-full"></div>
                     <div className="bg-red-600 px-2 py-1 rounded text-[10px] font-bold text-white">
                       LIVE
                     </div>
                   </div>
-                  <div className="flex-1 bg-gray-800 rounded-xl relative">
-                    <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-blue-900/50"></div>
+                  <div className="flex-1 rounded-xl relative overflow-hidden">
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="metadata"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    >
+                      <source src="/assets/video/portofolio-live/portofolio-purela.mp4" type="video/mp4" />
+                    </video>
+                    <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 p-2">
+                      <p className="text-white text-[10px]">Bundle Spesial! 🎁</p>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -216,23 +245,19 @@ export default function LiveStreamingPage() {
           </div>
         </motion.div>
       </motion.section>
-
       <SpecialOfferSection />
       <CompanyOverviewSection />
       <ValuePropositionSection />
-      <ServicesDetailsSection />
+      <TestimonialsSection />
       <EquipmentShowcaseSection />
-      <StudioLocationsSection />
+      <ServicesDetailsSection />
+      {/* <StudioLocationsSection /> */}
       <WorkflowProcessSection />
       <PricingPackagesSection />
-      <TestimonialsSection />
       <ReportingSection />
       <AdditionalNotesSection />
-
-      <LiveStreamSlider />
-
+      {/* <LiveStreamSlider /> */}
       <FAQSection />
-
       <FooterFix />
     </>
   )

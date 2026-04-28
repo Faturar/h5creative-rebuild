@@ -57,14 +57,14 @@ export default function SpecialOfferSection() {
             variants={itemVariants}
           >
             Strategi "Gajian Sale" kami terbukti efektif. Lihat bagaimana kami
-            membantu brand skincare meroketkan penjualan mereka.
+            membantu brand Purela (baby skincare) meroketkan penjualan mereka.
           </motion.p>
 
           <ul className="space-y-4 mb-10">
             {[
-              "Interaksi Langsung dengan Calon Buyer",
-              "FOMO Effect & Flash Sale Mechanism",
-              "Host Profesional yang Closing Terus",
+              "Demo Live Produk Purela Bayi",
+              "Flash Sale FOMO - Stok Terbatas",
+              "Host Ramah & Knowledgeable Tentang Bayi",
             ].map((item, index) => (
               <motion.li
                 key={index}
@@ -99,17 +99,18 @@ export default function SpecialOfferSection() {
           transition={{ duration: 0.4 }}
         >
           {/* Phone/Video Frame Container */}
-          <div className="relative rounded-[2.5rem] border-4 border-gray-800 bg-gray-900 shadow-2xl overflow-hidden aspect-[9/16] md:aspect-[4/5] lg:aspect-square">
-            {/* Simulated Video Content Background */}
-            {/* Using a placeholder image representing skincare/white clothes/people */}
-            <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-              style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1596462502278-27bfdd403348?q=80&w=1000&auto=format&fit=crop')",
-                filter: "brightness(0.85)",
-              }}
-            ></div>
+          <div className="relative rounded-[2.5rem] border-4 border-gray-800 bg-gray-900 shadow-2xl overflow-hidden aspect-[9/16]">
+            {/* Video Element */}
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="/assets/video/portofolio-live/portofolio-purela.mp4" type="video/mp4" />
+            </video>
 
             {/* Gradient Overlay for Text Readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90"></div>
@@ -122,46 +123,41 @@ export default function SpecialOfferSection() {
                   LIVE
                 </span>
                 <span className="bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-0.5 rounded flex items-center gap-1 w-max">
-                  <Volume2 className="w-3 h-3" /> 1.2K
+                  <Volume2 className="w-3 h-3" /> 2.3K
                 </span>
               </div>
 
               {/* Brand Watermark */}
               <div className="bg-white/10 backdrop-blur-md border border-white/10 px-2 py-1 rounded-lg">
                 <span className="text-[10px] font-bold text-white tracking-wider">
-                  H5 CREATIVE WEBSITE
+                  PURELA OFFICIAL
                 </span>
               </div>
             </div>
 
-            {/* Video UI Elements - Center (Play Button) */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30 group-hover:scale-110 transition-transform duration-300 cursor-pointer">
-                <Play className="w-6 h-6 text-white ml-1 fill-white" />
-              </div>
-            </div>
+
 
             {/* Video UI Elements - Bottom (Gajian Sale Banner) */}
             <div className="absolute bottom-0 left-0 right-0 p-4">
-              <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 rounded-2xl shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+              <div className="bg-gradient-to-r from-blue-500 to-pink-500 p-4 rounded-2xl shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                 <div className="flex justify-between items-end mb-2">
                   <h3 className="text-white font-bold text-xl leading-tight">
-                    Gajian Sale 🔥
+                    Purela Baby Bundle 🍼
                   </h3>
                   <span className="bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded">
-                    50% OFF
+                    60% OFF
                   </span>
                 </div>
                 <p className="text-white/90 text-xs mb-3 line-clamp-1">
-                  Paket Skincare Glowing Kilau - Beli 1 Gratis 1!
+                  Paket Perawatan Bayi Lengkap - Beli 1 Gratis 2!
                 </p>
 
                 {/* Progress Bar Simulation */}
                 <div className="w-full bg-black/30 rounded-full h-1.5 mb-1 overflow-hidden">
-                  <div className="bg-white h-full rounded-full w-[70%]"></div>
+                  <div className="bg-white h-full rounded-full w-[85%]"></div>
                 </div>
                 <div className="flex justify-between text-[10px] text-white/80 font-medium">
-                  <span>Sold: 840</span>
+                  <span>Sold: 1024</span>
                   <span>Target: 1200</span>
                 </div>
               </div>
@@ -170,11 +166,11 @@ export default function SpecialOfferSection() {
             {/* Video Controls (Play/Pause/Time) */}
             <div className="absolute bottom-4 right-4 z-20">
               <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-                <span className="text-[10px] text-white font-mono">00:14</span>
+                <span className="text-[10px] text-white font-mono">00:42</span>
                 <div className="w-16 h-1 bg-gray-600 rounded-full overflow-hidden">
-                  <div className="w-[20%] h-full bg-red-500"></div>
+                  <div className="w-[58%] h-full bg-red-500"></div>
                 </div>
-                <span className="text-[10px] text-white font-mono">01:12</span>
+                <span className="text-[10px] text-white font-mono">01:15</span>
               </div>
             </div>
           </div>
